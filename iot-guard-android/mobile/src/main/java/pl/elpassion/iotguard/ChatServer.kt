@@ -62,24 +62,14 @@ class ChatServer(socketPort: Int = 80) : WebSocketServer(InetSocketAddress(socke
 
     companion object {
 
-//        fun log(message: String) = Log.i("ChatServer", message)
         fun log(message: String) = println(message)
 
-        fun start(port: Int = 80) {
+        fun launch(port: Int = 80) {
             WebSocketImpl.DEBUG = true
-            val server = ChatServer(port)
-            server.start()
-            log("ChatServer started on port: ${server.port}")
-//
-//            val sysin = BufferedReader(InputStreamReader(System.`in`))
-//            while (true) {
-//                val line = sysin.readLine()
-//                server.sendToAll(line)
-//                if (line == "exit") {
-//                    server.stop()
-//                    break
-//                }
-//            }
+            ChatServer(port).run {
+                start()
+                log("ChatServer started on address: $address port: $port")
+            }
         }
     }
 }
