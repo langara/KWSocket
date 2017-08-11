@@ -16,5 +16,5 @@ object DI {
 
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
 
-    var provideClient: () -> Client = { ClientImpl("ws://localhost:9999") }
+    var provideNewClient: (serverURI: String) -> Client = { ClientImpl(it) }
 }

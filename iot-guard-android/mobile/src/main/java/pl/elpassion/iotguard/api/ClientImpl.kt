@@ -15,7 +15,7 @@ class ClientImpl(serverURI: URI) : Client {
 
     override val events : Observable<Event> = eventsSubject.hide()
 
-    val client = object : WebSocketClient(serverURI) {
+    private val client = object : WebSocketClient(serverURI) {
         override fun onOpen(handshakedata: ServerHandshake?) = eventsSubject.onNext(Open())
         override fun onClose(code: Int, reason: String?, remote: Boolean) = eventsSubject.run { onNext(Close(code)); onComplete() }
         override fun onMessage(message: String) = eventsSubject.onNext(Message(message))
