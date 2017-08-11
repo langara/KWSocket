@@ -9,7 +9,7 @@ class ExampleWSActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.example_ws_activity)
-        ChatServer.launch(9999)
+        ExampleServer.launch(9999)
         connect.setOnClickListener {
             ExampleClient.launch()
             connect.isEnabled = false

@@ -9,27 +9,27 @@ import java.lang.Exception
 import java.net.InetSocketAddress
 
 
-class ChatServer(socketPort: Int = 80) : WebSocketServer(InetSocketAddress(socketPort)) {
+class ExampleServer(socketPort: Int = 80) : WebSocketServer(InetSocketAddress(socketPort)) {
 
     private val logger by lazy { DI.provideLogger() }
 
     override fun onOpen(conn: WebSocket, handshake: ClientHandshake) {
-        this.sendToAll("new connection: ${handshake.resourceDescriptor}")
-        logger.log("${conn.remoteSocketAddress.address.hostAddress} entered the room!")
+        this.sendToAll("ExampleServer: new connection: ${handshake.resourceDescriptor}")
+        logger.log("ExampleServer: ${conn.remoteSocketAddress.address.hostAddress} entered the room!")
     }
 
     override fun onClose(conn: WebSocket, code: Int, reason: String, remote: Boolean) {
-        this.sendToAll("$conn has left the room!")
-        logger.log("$conn has left the room!")
+        this.sendToAll("ExampleServer: $conn has left the room!")
+        logger.log("ExampleServer: $conn has left the room!")
     }
 
     override fun onMessage(conn: WebSocket, message: String) {
-        this.sendToAll(message)
-        logger.log("$conn: $message")
+        this.sendToAll("ExampleServer: $message")
+        logger.log("ExampleServer: $conn: $message")
     }
 
     override fun onFragment(conn: WebSocket, fragment: Framedata) {
-        logger.log("received fragment: $fragment")
+        logger.log("ExampleServer: received fragment: $fragment")
     }
 
     override fun onError(conn: WebSocket?, ex: Exception) {
@@ -40,7 +40,7 @@ class ChatServer(socketPort: Int = 80) : WebSocketServer(InetSocketAddress(socke
     }
 
     override fun onStart() {
-        logger.log("Server started!")
+        logger.log("ExampleServer: Server started!")
     }
 
     /**
@@ -65,9 +65,9 @@ class ChatServer(socketPort: Int = 80) : WebSocketServer(InetSocketAddress(socke
     companion object {
         fun launch(port: Int = 80) {
             WebSocketImpl.DEBUG = true
-            ChatServer(port).run {
+            ExampleServer(port).run {
                 start()
-                logger.log("ChatServer started on address: $address port: $port")
+                logger.log("ExampleServer started on address: $address port: $port")
             }
         }
     }
