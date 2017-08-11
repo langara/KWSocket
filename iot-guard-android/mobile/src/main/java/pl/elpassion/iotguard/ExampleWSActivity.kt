@@ -6,12 +6,17 @@ import kotlinx.android.synthetic.main.example_ws_activity.*
 
 class ExampleWSActivity : AppCompatActivity() {
 
+    private val logger by lazy { DI.provideLogger() }
+
+    private val client by lazy { DI.provideClient() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.example_ws_activity)
         ExampleServer.launch(9999)
+        client.events.subscribe { logger.log("ClientImpl got event: $it") }
         connect.setOnClickListener {
-            ExampleClient.launch()
+            client.connect()
             connect.isEnabled = false
         }
     }

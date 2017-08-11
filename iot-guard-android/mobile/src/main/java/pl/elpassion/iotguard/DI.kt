@@ -1,6 +1,8 @@
 package pl.elpassion.iotguard
 
 import android.app.Application
+import pl.elpassion.iotguard.api.Client
+import pl.elpassion.iotguard.api.ClientImpl
 
 object DI {
 
@@ -13,4 +15,6 @@ object DI {
     var provideLogger: () -> Logger = { simpleLogger }
 
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
+
+    var provideClient: () -> Client = { ClientImpl("ws://localhost:9999") }
 }
