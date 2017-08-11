@@ -10,26 +10,28 @@ import java.net.URI
 
 class ExampleClient : WebSocketClient {
 
+    private val logger by lazy { DI.provideLogger() }
+
     constructor(serverUri: URI, draft: Draft) : super(serverUri, draft) {}
 
     constructor(serverURI: URI) : super(serverURI) {}
 
     override fun onOpen(handshakedata: ServerHandshake) {
-        println("opened connection")
+        logger.log("opened connection")
         // if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
     }
 
     override fun onMessage(message: String) {
-        println("received: " + message)
+        logger.log("received: $message")
     }
 
     override fun onFragment(fragment: Framedata?) {
-        println("received fragment: " + String(fragment!!.payloadData.array()))
+        logger.log("received fragment: ${String(fragment!!.payloadData.array())}")
     }
 
     override fun onClose(code: Int, reason: String, remote: Boolean) {
         // The codecodes are documented in class org.java_websocket.framing.CloseFrame
-        println("Connection closed by " + if (remote) "remote peer" else "us")
+        logger.log("Connection closed by ${if (remote) "remote peer" else "us"}")
     }
 
     override fun onError(ex: Exception) {
