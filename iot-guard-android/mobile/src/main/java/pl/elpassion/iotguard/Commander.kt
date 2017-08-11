@@ -33,7 +33,7 @@ class CommanderModelImpl : CommanderModel {
 
     private val statesSubject = BehaviorSubject.createDefault<CommanderState>(Disconnected)
 
-    override val states: Observable<CommanderState> = statesSubject
+    override val states: Observable<CommanderState> = statesSubject.hide()
 
     override fun perform(action: CommanderAction) {
         logger.log("TODO: perform action: $action")
