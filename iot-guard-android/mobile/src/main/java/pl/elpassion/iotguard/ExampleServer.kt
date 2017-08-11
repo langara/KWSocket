@@ -32,8 +32,8 @@ class ExampleServer(socketPort: Int = 80) : WebSocketServer(InetSocketAddress(so
         logger.log("ExampleServer: received fragment: $fragment")
     }
 
-    override fun onError(conn: WebSocket?, ex: Exception) {
-        ex.printStackTrace()
+    override fun onError(conn: WebSocket?, exception: Exception) {
+        exception.printStackTrace()
         if (conn != null) {
             // some errors like port binding failed may not be assignable to a specific websocket
         }

@@ -33,5 +33,7 @@ interface Client : Endpoint {
     fun connect()
 }
 
-interface Server : Endpoint
+interface Server : Endpoint {
+    fun start()
+}
 
