@@ -29,11 +29,13 @@ object Connected : CommanderState()
 
 class CommanderModelImpl : CommanderModel {
 
+    private val logger by lazy { DI.provideLogger() }
+
     private val statesSubject = BehaviorSubject.createDefault<CommanderState>(Disconnected)
 
     override val states: Observable<CommanderState> = statesSubject
 
     override fun perform(action: CommanderAction) {
-        println("TODO: perform action: $action")
+        logger.log("TODO: perform action: $action")
     }
 }
