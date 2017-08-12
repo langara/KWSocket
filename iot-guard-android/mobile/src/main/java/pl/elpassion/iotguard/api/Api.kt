@@ -19,7 +19,7 @@ interface Endpoint : AutoCloseable {
     val events : Observable<Event>
     val messages : Observable<String> get() = events.ofType(Message::class.java).map { it.message }
 
-    fun sendToAll(message: String) {
+    fun send(message: String) {
         val con = connections
         synchronized(con) {
             for (c in con) {

@@ -19,7 +19,7 @@ class IoTGuardApp : Application() {
 
     companion object {
         init {
-            WebSocketImpl.DEBUG = true
+//            WebSocketImpl.DEBUG = true
             setupRxJavaErrorHandler()
         }
 
