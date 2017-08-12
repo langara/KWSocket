@@ -18,7 +18,7 @@
         android:id="@+id/connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect"
+        android:text="Connect and send some messages"
         />
 
 </android.support.constraint.ConstraintLayout>
