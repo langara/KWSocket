@@ -27,8 +27,8 @@ class ExampleWSActivity : AppCompatActivity() {
 
         client1.events.subscribe { logger.log("client1 got event: $it") }
         client2.events.subscribe { logger.log("client2 got event: $it") }
-        connect.setOnClickListener {
-            connect.isEnabled = false
+        connectButton.setOnClickListener {
+            connectButton.isEnabled = false
             client1.connect()
             client2.connect()
             later(300) { client1.send("Hi, it's client1") }
@@ -39,6 +39,6 @@ class ExampleWSActivity : AppCompatActivity() {
     }
 
     private fun later(delay: Long, block: () -> Unit) {
-        connect.postDelayed(block, delay)
+        connectButton.postDelayed(block, delay)
     }
 }
