@@ -1,7 +1,8 @@
-package pl.elpassion.iotguard
+package pl.elpassion.iotguard.commander
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import pl.elpassion.iotguard.DI
 
 
 interface Model<ActionType, StateType> {

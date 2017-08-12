@@ -5,6 +5,8 @@ import pl.elpassion.iotguard.api.Client
 import pl.elpassion.iotguard.api.ClientImpl
 import pl.elpassion.iotguard.api.Server
 import pl.elpassion.iotguard.api.ServerImpl
+import pl.elpassion.iotguard.commander.CommanderModel
+import pl.elpassion.iotguard.commander.CommanderModelImpl
 
 object DI {
 

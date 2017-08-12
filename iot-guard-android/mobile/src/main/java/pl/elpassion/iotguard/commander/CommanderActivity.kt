@@ -1,10 +1,12 @@
-package pl.elpassion.iotguard
+package pl.elpassion.iotguard.commander
 
 import android.os.Bundle
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.commander_activity.*
+import pl.elpassion.iotguard.DI
+import pl.elpassion.iotguard.R
 
 class CommanderActivity : RxAppCompatActivity() {
 

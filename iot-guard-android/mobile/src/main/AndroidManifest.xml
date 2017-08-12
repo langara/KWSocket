@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CommanderActivity"
+        <activity android:name=".commander.CommanderActivity"
             android:label="IoT Commander"
             >
             <intent-filter>
@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ExampleWSActivity"
+        <activity android:name=".example.ExampleWSActivity"
             android:label="IoT Example WS"
             >
             <intent-filter>
