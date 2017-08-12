@@ -28,14 +28,8 @@ class CommanderActivity : RxAppCompatActivity() {
         model.states
                 .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (!isFinishing) {
-                        showState(it)
-                    }
-                }
+                .subscribe { if(!isFinishing) showState(it) }
     }
 
-    private fun showState(state: CommanderState?) {
-        logger.log("TODO: show state: $state")
-    }
+    private fun showState(state: CommanderState) = logger.log("TODO: show state: $state")
 }
