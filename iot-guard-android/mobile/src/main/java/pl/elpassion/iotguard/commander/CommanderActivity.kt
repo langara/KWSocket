@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.commander_activity.*
 import pl.elpassion.iotguard.DI
 import pl.elpassion.iotguard.R
 import pl.elpassion.iotguard.TextViewLogger
+import pl.elpassion.iotguard.commander.CommanderAction.*
 
 class CommanderActivity : RxAppCompatActivity() {
 

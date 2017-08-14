@@ -7,6 +7,8 @@ import pl.elpassion.iotguard.api.Client
 import pl.elpassion.iotguard.api.Close
 import pl.elpassion.iotguard.api.Event
 import pl.elpassion.iotguard.api.Open
+import pl.elpassion.iotguard.commander.CommanderAction.*
+import pl.elpassion.iotguard.commander.CommanderState.*
 
 class CommanderImpl : Commander {
 
