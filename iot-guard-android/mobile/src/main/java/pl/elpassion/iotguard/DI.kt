@@ -5,16 +5,16 @@ import pl.elpassion.iotguard.api.Client
 import pl.elpassion.iotguard.api.ClientImpl
 import pl.elpassion.iotguard.api.Server
 import pl.elpassion.iotguard.api.ServerImpl
-import pl.elpassion.iotguard.commander.CommanderModel
-import pl.elpassion.iotguard.commander.CommanderModelImpl
+import pl.elpassion.iotguard.commander.Commander
+import pl.elpassion.iotguard.commander.CommanderImpl
 
 object DI {
 
-    private val commanderModel by lazy { CommanderModelImpl() }
+    private val commander by lazy { CommanderImpl() }
 
     private val simpleLogger by lazy { SimpleLogger() }
 
-    var provideCommanderModel: () -> CommanderModel = { commanderModel }
+    var provideCommander: () -> Commander = { commander }
 
     var provideLogger: () -> Logger = { simpleLogger }
 

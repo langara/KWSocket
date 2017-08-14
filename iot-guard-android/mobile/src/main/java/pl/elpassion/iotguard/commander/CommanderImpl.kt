@@ -8,7 +8,7 @@ import pl.elpassion.iotguard.api.Close
 import pl.elpassion.iotguard.api.Event
 import pl.elpassion.iotguard.api.Open
 
-class CommanderModelImpl : CommanderModel {
+class CommanderImpl : Commander {
 
     private val logger by lazy { DI.provideLogger() }
 
@@ -20,10 +20,10 @@ class CommanderModelImpl : CommanderModel {
 
     override fun perform(action: CommanderAction) {
         when(action) {
-            is Forward -> client?.send("forward")
-            is Backward -> client?.send("backward")
-            is Left -> client?.send("left")
-            is Right -> client?.send("right")
+            is MoveForward -> client?.send("move forward")
+            is MoveBackward -> client?.send("move backward")
+            is MoveLeft -> client?.send("move left")
+            is MoveRight -> client?.send("move right")
             is Stop -> client?.send("stop")
             is Connect -> connect(action.robotAddress)
         }
@@ -43,7 +43,7 @@ class CommanderModelImpl : CommanderModel {
         when (event) {
             is Open -> statesSubject.onNext(Connected)
             is Close -> statesSubject.onNext(Disconnected)
-            else -> logger.log("TODO: CommanderModel.onEvent($event)")
+            else -> logger.log("TODO: Commander.onEvent($event)")
         }
     }
 }
