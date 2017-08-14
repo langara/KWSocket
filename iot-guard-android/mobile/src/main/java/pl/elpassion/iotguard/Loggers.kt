@@ -1,6 +1,7 @@
 package pl.elpassion.iotguard
 
 import android.util.Log
+import android.widget.TextView
 
 
 interface Logger {
@@ -13,6 +14,13 @@ class SimpleLogger : Logger {
 
 class AndroidLogger(private val tag: String) : Logger {
     override fun log(message: Any?) {
+        Log.w(tag, message.toString())
+    }
+}
+
+class TextViewLogger(private val textView: TextView, private val tag: String) : Logger {
+    override fun log(message: Any?) {
+        textView.append("$tag $message\n")
         Log.w(tag, message.toString())
     }
 }

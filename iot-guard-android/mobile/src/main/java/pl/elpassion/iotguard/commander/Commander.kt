@@ -1,8 +1,6 @@
 package pl.elpassion.iotguard.commander
 
 import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
-import pl.elpassion.iotguard.DI
 
 
 interface Model<ActionType, StateType> {
@@ -20,6 +18,8 @@ object Forward : CommanderAction()
 object Backward : CommanderAction()
 object Left : CommanderAction()
 object Right : CommanderAction()
+object Stop : CommanderAction()
+data class Connect(val robotAddress: String) : CommanderAction()
 
 sealed class CommanderState
 
@@ -28,15 +28,3 @@ object Connected : CommanderState()
 
 
 
-class CommanderModelImpl : CommanderModel {
-
-    private val logger by lazy { DI.provideLogger() }
-
-    private val statesSubject = BehaviorSubject.createDefault<CommanderState>(Disconnected)
-
-    override val states: Observable<CommanderState> = statesSubject.hide()
-
-    override fun perform(action: CommanderAction) {
-        logger.log("TODO: perform action: $action")
-    }
-}

@@ -7,21 +7,24 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.commander_activity.*
 import pl.elpassion.iotguard.DI
 import pl.elpassion.iotguard.R
+import pl.elpassion.iotguard.TextViewLogger
 
 class CommanderActivity : RxAppCompatActivity() {
 
     private val model by lazy { DI.provideCommanderModel() }
 
-    private val logger by lazy { DI.provideLogger() }
+    private val logger by lazy { TextViewLogger(logsTextView, "IoT Guard") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.commander_activity)
         initModel()
-        forward.setOnClickListener { model.perform(Forward) }
-        backward.setOnClickListener { model.perform(Backward) }
-        left.setOnClickListener { model.perform(Left) }
-        right.setOnClickListener { model.perform(Right) }
+        forwardButton.setOnClickListener { model.perform(Forward) }
+        backwardButton.setOnClickListener { model.perform(Backward) }
+        leftButton.setOnClickListener { model.perform(Left) }
+        rightButton.setOnClickListener { model.perform(Right) }
+        stopButton.setOnClickListener { model.perform(Stop) }
+        connectButton.setOnClickListener { model.perform(Connect(robotAddress.text.toString())) }
     }
 
     protected fun initModel() {
