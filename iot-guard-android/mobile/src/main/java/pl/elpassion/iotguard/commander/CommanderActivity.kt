@@ -11,7 +11,7 @@ import pl.elpassion.iotguard.TextViewLogger
 
 class CommanderActivity : RxAppCompatActivity() {
 
-    private val model by lazy { DI.provideCommanderModel() }
+    private val commander by lazy { DI.provideCommander() }
 
     private val logger by lazy { TextViewLogger(logsTextView, "IoT Guard") }
 
@@ -19,16 +19,16 @@ class CommanderActivity : RxAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.commander_activity)
         initModel()
-        forwardButton.setOnClickListener { model.perform(Forward) }
-        backwardButton.setOnClickListener { model.perform(Backward) }
-        leftButton.setOnClickListener { model.perform(Left) }
-        rightButton.setOnClickListener { model.perform(Right) }
-        stopButton.setOnClickListener { model.perform(Stop) }
-        connectButton.setOnClickListener { model.perform(Connect(robotAddress.text.toString())) }
+        forwardButton.setOnClickListener { commander.perform(MoveForward) }
+        backwardButton.setOnClickListener { commander.perform(MoveBackward) }
+        leftButton.setOnClickListener { commander.perform(MoveLeft) }
+        rightButton.setOnClickListener { commander.perform(MoveRight) }
+        stopButton.setOnClickListener { commander.perform(Stop) }
+        connectButton.setOnClickListener { commander.perform(Connect(robotAddress.text.toString())) }
     }
 
     protected fun initModel() {
-        model.states
+        commander.states
                 .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { if(!isFinishing) showState(it) }

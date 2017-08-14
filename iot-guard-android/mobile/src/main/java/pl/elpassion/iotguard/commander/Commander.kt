@@ -3,21 +3,17 @@ package pl.elpassion.iotguard.commander
 import io.reactivex.Observable
 
 
-interface Model<ActionType, StateType> {
-
-    val states: Observable<StateType>
-
-    fun perform(action: ActionType)
+interface Commander {
+    val states : Observable<CommanderState>
+    fun perform(action: CommanderAction)
 }
-
-interface CommanderModel : Model<CommanderAction, CommanderState>
 
 sealed class CommanderAction
 
-object Forward : CommanderAction()
-object Backward : CommanderAction()
-object Left : CommanderAction()
-object Right : CommanderAction()
+object MoveForward : CommanderAction()
+object MoveBackward : CommanderAction()
+object MoveLeft : CommanderAction()
+object MoveRight : CommanderAction()
 object Stop : CommanderAction()
 data class Connect(val robotAddress: String) : CommanderAction()
 
