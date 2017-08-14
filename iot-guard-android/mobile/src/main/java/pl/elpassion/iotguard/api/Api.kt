@@ -14,23 +14,17 @@ data class Close(val code: Int, override val source: Socket? = null) : Event(sou
 
 data class Message(val message: String, override val source: Socket? = null) : Event(source)
 
+data class Error(val exception: Exception, override val source: Socket? = null) : Event(source)
+
 interface Endpoint : AutoCloseable {
     val connections: List<Socket> // client will have at most one. server can have many
-    val events : Observable<Event>
-    val messages : Observable<String> get() = events.ofType(Message::class.java).map { it.message }
-
-    fun send(message: String) {
-        val con = connections
-        synchronized(con) {
-            for (c in con) {
-                c.send(message)
-            }
-        }
-    }
+    val events: Observable<Event>
+    val messages: Observable<String> get() = events.ofType(Message::class.java).map { it.message }
+    fun send(message: String) = connections.forEach { it.send(message) }
 }
 
 interface Client : Endpoint {
-    fun connect()
+    fun connect(serverURI: String)
 }
 
 interface Server : Endpoint {
