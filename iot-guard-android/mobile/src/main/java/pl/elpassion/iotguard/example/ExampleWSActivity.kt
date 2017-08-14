@@ -9,13 +9,14 @@ import pl.elpassion.iotguard.R
 class ExampleWSActivity : AppCompatActivity() {
 
     private val port = 9999
+    private val uri = "ws://localhost:$port"
 
     private val logger by lazy { DI.provideLogger() }
 
     private val server by lazy { DI.provideNewServer(port) }
 
-    private val client1 by lazy { DI.provideNewClient("ws://localhost:$port") }
-    private val client2 by lazy { DI.provideNewClient("ws://localhost:$port") }
+    private val client1 by lazy { DI.provideNewClient() }
+    private val client2 by lazy { DI.provideNewClient() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +28,14 @@ class ExampleWSActivity : AppCompatActivity() {
 
         client1.events.subscribe { logger.log("client1 got event: $it") }
         client2.events.subscribe { logger.log("client2 got event: $it") }
-        connectButton.setOnClickListener {
-            connectButton.isEnabled = false
-            client1.connect()
-            client2.connect()
-            later(300) { client1.send("Hi, it's client1") }
+
+        later(500) {
+            client1.connect(uri)
+            client2.connect(uri)
+        }
+
+        sendButton.setOnClickListener {
+            later(500) { client1.send("Hi, it's client1") }
             later(600) { client2.send("Hi, it's client2") }
             later(700) { server.connections[0].send("Private msg to first client") }
             later(800) { server.connections[1].send("Private msg to second client") }
@@ -39,6 +43,6 @@ class ExampleWSActivity : AppCompatActivity() {
     }
 
     private fun later(delay: Long, block: () -> Unit) {
-        connectButton.postDelayed(block, delay)
+        sendButton.postDelayed(block, delay)
     }
 }

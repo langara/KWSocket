@@ -6,7 +6,7 @@
   - (for example emulator-5554 IS a serial number)
 - forward some port from dev machine to one of emulators: adb -s emulator-5554 forward tcp:9909 tcp:9999
 - run chat server (ExampleWSActivity) on emulator with forwarded port (chat server listens on port 9999)
-    - click "connect and..." to test communication with local clients (watch logcat)
+    - click "send some..." to test communication with local clients (watch logcat)
 - run client (commander) (CommanderActivity) on second emulator
     - enter host loopback addr (as available from emulator virtual router) and forwarded port to activity edit text: ws://10.0.2.2:9909
         - 10.0.2.2 is always forwarded to dev machine loopback interface

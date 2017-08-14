@@ -22,5 +22,5 @@ object DI {
 
     var provideNewServer: (port: Int) -> Server = { ServerImpl(it) }
 
-    var provideNewClient: (serverURI: String) -> Client = { ClientImpl(it) }
+    var provideNewClient: () -> Client = { ClientImpl() }
 }
