@@ -20,6 +20,10 @@ class StreamingActivity : AppCompatActivity(), Session.Callback, SurfaceHolder.C
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.streaming_activity)
+        startButton.setOnClickListener {
+            session?.configure()
+            startButton.isEnabled = false
+        }
         session = createSession()
         surfaceView.holder.addCallback(this)
     }
