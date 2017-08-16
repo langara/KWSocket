@@ -20,7 +20,7 @@ object DI {
 
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
 
-    var provideNewServer: (port: Int) -> Server = { ServerImpl(it) }
+    var provideNewServer: () -> Server = { ServerImpl() }
 
     var provideNewClient: () -> Client = { ClientImpl() }
 }

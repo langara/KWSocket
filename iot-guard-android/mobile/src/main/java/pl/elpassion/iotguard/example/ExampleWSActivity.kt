@@ -13,7 +13,7 @@ class ExampleWSActivity : AppCompatActivity() {
 
     private val logger by lazy { DI.provideLogger() }
 
-    private val server by lazy { DI.provideNewServer(port) }
+    private val server by lazy { DI.provideNewServer() }
 
     private val client1 by lazy { DI.provideNewClient() }
     private val client2 by lazy { DI.provideNewClient() }
@@ -24,7 +24,7 @@ class ExampleWSActivity : AppCompatActivity() {
 
         server.events.subscribe { logger.log("server got event: $it") }
         server.messages.subscribe { server.send(it) }
-        server.start()
+        server.start(port)
 
         client1.events.subscribe { logger.log("client1 got event: $it") }
         client2.events.subscribe { logger.log("client2 got event: $it") }

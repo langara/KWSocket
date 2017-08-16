@@ -16,6 +16,8 @@ data class Message(val message: String, override val source: Socket? = null) : E
 
 data class Error(val exception: Exception, override val source: Socket? = null) : Event(source)
 
+object Start : Event()
+
 interface Endpoint : AutoCloseable {
     val connections: List<Socket> // client will have at most one. server can have many
     val events: Observable<Event>
@@ -28,6 +30,6 @@ interface Client : Endpoint {
 }
 
 interface Server : Endpoint {
-    fun start()
+    fun start(socketPort: Int = 80)
 }
 
