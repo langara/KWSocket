@@ -2,25 +2,24 @@ package pl.elpassion.iotguard.commander
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import pl.elpassion.iotguard.DI
-import pl.elpassion.iotguard.api.Close
-import pl.elpassion.iotguard.api.Event
-import pl.elpassion.iotguard.api.Open
+import pl.elpassion.iotguard.Logger
+import pl.elpassion.iotguard.api.*
 import pl.elpassion.iotguard.commander.CommanderAction.*
-import pl.elpassion.iotguard.commander.CommanderState.*
+import pl.elpassion.iotguard.commander.CommanderState.Connected
+import pl.elpassion.iotguard.commander.CommanderState.Disconnected
 
-class CommanderImpl : Commander {
+class CommanderImpl(private val client: Client, private val logger: Logger) : Commander {
 
-    private val logger by lazy { DI.provideLogger() }
-
-    private val client by lazy { DI.provideNewClient().apply { events.subscribe { onEvent(it) } } }
+    init {
+        client.events.subscribe { onEvent(it) }
+    }
 
     private val statesSubject = BehaviorSubject.createDefault<CommanderState>(Disconnected)
 
     override val states: Observable<CommanderState> = statesSubject.hide()
 
     override fun perform(action: CommanderAction) {
-        when(action) {
+        when (action) {
             is MoveForward -> client.send("move forward")
             is MoveBackward -> client.send("move backward")
             is MoveLeft -> client.send("move left")

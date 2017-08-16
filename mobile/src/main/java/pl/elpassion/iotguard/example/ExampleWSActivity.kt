@@ -6,6 +6,7 @@ import kotlinx.android.synthetic.main.example_ws_activity.*
 import pl.elpassion.iotguard.DI
 import pl.elpassion.iotguard.R
 import pl.elpassion.iotguard.api.messages
+import pl.elpassion.iotguard.api.send
 
 class ExampleWSActivity : AppCompatActivity() {
 

@@ -10,7 +10,7 @@ import pl.elpassion.iotguard.commander.CommanderImpl
 
 object DI {
 
-    private val commander by lazy { CommanderImpl() }
+    private val commander by lazy { CommanderImpl(provideNewClient(), provideLogger()) }
 
     private val simpleLogger by lazy { SimpleLogger() }
 

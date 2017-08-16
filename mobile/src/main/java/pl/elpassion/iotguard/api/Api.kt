@@ -21,10 +21,11 @@ object Start : Event()
 interface Endpoint : AutoCloseable {
     val connections: List<Socket> // client will have at most one. server can have many
     val events: Observable<Event>
-    fun send(message: String) = connections.forEach { it.send(message) }
 }
 
 val Endpoint.messages: Observable<String> get() = events.ofType(Message::class.java).map { it.message }
+
+fun Endpoint.send(message: String) = connections.forEach { it.send(message) }
 
 interface Client : Endpoint {
     fun connect(serverURI: String)
