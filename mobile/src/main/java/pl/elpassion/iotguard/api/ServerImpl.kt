@@ -20,8 +20,15 @@ class ServerImpl : Server {
     override val connections: List<Socket>
         get() = server?.connections()?.map { SocketImpl(it) } ?: emptyList()
 
-    override fun start(socketPort: Int) { close(); server = WSServer(socketPort).apply { start() } }
-    override fun close() { server?.stop(); server = null }
+    override fun start(socketPort: Int) {
+        close()
+        server = WSServer(socketPort).apply { start() }
+    }
+
+    override fun close() {
+        server?.stop()
+        server = null
+    }
 
     private inner class WSServer(socketPort: Int) : WebSocketServer(InetSocketAddress(socketPort)) {
         override fun onOpen(conn: WebSocket, handshake: ClientHandshake?) = eventsSubject.onNext(Open(SocketImpl(conn)))
