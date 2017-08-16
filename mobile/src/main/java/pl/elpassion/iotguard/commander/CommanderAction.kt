@@ -8,6 +8,7 @@ sealed class CommanderAction {
     object Stop : CommanderAction()
 
     data class Connect(val robotAddress: String) : CommanderAction()
+    data class Say(val sentence: String) : CommanderAction()
 }
 
 

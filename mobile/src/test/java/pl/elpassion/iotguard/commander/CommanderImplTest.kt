@@ -91,6 +91,13 @@ class CommanderImplTest {
         events.onNext(Close(0))
         observer.assertLastValue(Disconnected)
     }
+
+    @Test
+    fun `Send say command`() {
+        val sentence = "Alice has a cat."
+        commander.perform(Say(sentence))
+        verify(socket).send("say $sentence")
+    }
 }
 
 
