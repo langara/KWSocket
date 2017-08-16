@@ -1,5 +1,6 @@
 package pl.elpassion.iotguard.streaming
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.SurfaceHolder
@@ -7,6 +8,7 @@ import kotlinx.android.synthetic.main.streaming_activity.*
 import net.majorkernelpanic.streaming.Session
 import net.majorkernelpanic.streaming.SessionBuilder
 import net.majorkernelpanic.streaming.audio.AudioQuality
+import net.majorkernelpanic.streaming.rtsp.RtspServer
 import net.majorkernelpanic.streaming.video.VideoQuality
 import pl.elpassion.iotguard.AndroidLogger
 import pl.elpassion.iotguard.R
@@ -26,6 +28,12 @@ class StreamingActivity : AppCompatActivity(), Session.Callback, SurfaceHolder.C
         }
         session = createSession()
         surfaceView.holder.addCallback(this)
+        startService(Intent(this, RtspServer::class.java))
+    }
+
+    override fun onDestroy() {
+        stopService(Intent(this, RtspServer::class.java))
+        super.onDestroy()
     }
 
     private fun createSession() = SessionBuilder.getInstance()
