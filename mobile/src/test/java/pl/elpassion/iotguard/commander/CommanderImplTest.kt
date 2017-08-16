@@ -8,6 +8,7 @@ import org.junit.Test
 import pl.elpassion.iotguard.SimpleLogger
 import pl.elpassion.iotguard.api.Client
 import pl.elpassion.iotguard.api.Socket
+import pl.elpassion.iotguard.commander.CommanderAction.*
 
 class CommanderImplTest {
 
@@ -23,32 +24,40 @@ class CommanderImplTest {
     val commander = CommanderImpl(client, logger)
 
     @Test
+    fun `Connect to websocket client`() {
+        val url = "ws://1.2.3.4"
+        commander.perform(Connect(url))
+        verify(client).connect(url)
+    }
+
+    @Test
     fun `Send move forward command`() {
-        commander.perform(CommanderAction.MoveForward)
+        commander.perform(MoveForward)
         verify(socket).send("move forward")
     }
 
     @Test
     fun `Send move backward command`() {
-        commander.perform(CommanderAction.MoveBackward)
+        commander.perform(MoveBackward)
         verify(socket).send("move backward")
     }
 
     @Test
     fun `Send move left command`() {
-        commander.perform(CommanderAction.MoveLeft)
+        commander.perform(MoveLeft)
         verify(socket).send("move left")
     }
 
     @Test
     fun `Send move right command`() {
-        commander.perform(CommanderAction.MoveRight)
+        commander.perform(MoveRight)
         verify(socket).send("move right")
     }
 
     @Test
     fun `Send stop command`() {
-        commander.perform(CommanderAction.Stop)
+        commander.perform(Stop)
         verify(socket).send("stop")
     }
+
 }
