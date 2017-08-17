@@ -2,6 +2,7 @@ package pl.elpassion.iotguard.commander
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,14 +18,15 @@ class CommanderActivity : RxAppCompatActivity() {
 
     private val commander by lazy { DI.provideCommander() }
 
-    private val logger by lazy { TextViewLogger(logsTextView, "IoT Guard") }
+    private val logger by lazy { TextViewLogger(logsTextView.apply { movementMethod = ScrollingMovementMethod() }, "IoT Guard") }
 
     private val speechRecognizer by lazy { SpeechRecognizer(commander, logger) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.commander_activity)
-        initModel()
+        DI.provideLogger = { logger }
+        initCommander()
         forwardButton.setOnClickListener { commander.perform(MoveForward) }
         backwardButton.setOnClickListener { commander.perform(MoveBackward) }
         leftButton.setOnClickListener { commander.perform(MoveLeft) }
@@ -34,14 +36,14 @@ class CommanderActivity : RxAppCompatActivity() {
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
     }
 
-    protected fun initModel() {
+    protected fun initCommander() {
         commander.states
                 .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { if (!isFinishing) showState(it) }
     }
 
-    private fun showState(state: CommanderState) = logger.log("TODO: show state: $state")
+    private fun showState(state: CommanderState) = logger.log("State: $state")
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == SPEECH_REQUEST_CODE)

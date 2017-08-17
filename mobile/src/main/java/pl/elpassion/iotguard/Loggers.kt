@@ -20,7 +20,9 @@ class AndroidLogger(private val tag: String) : Logger {
 
 class TextViewLogger(private val textView: TextView, private val tag: String) : Logger {
     override fun log(message: Any?) {
-        textView.append("$tag $message\n")
         Log.w(tag, message.toString())
+        textView.post {
+            textView.append("$tag $message\n")
+        }
     }
 }

@@ -2,9 +2,11 @@ package pl.elpassion.iotguard.example
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.method.ScrollingMovementMethod
 import kotlinx.android.synthetic.main.example_ws_activity.*
 import pl.elpassion.iotguard.DI
 import pl.elpassion.iotguard.R
+import pl.elpassion.iotguard.TextViewLogger
 import pl.elpassion.iotguard.api.messages
 import pl.elpassion.iotguard.api.send
 
@@ -13,7 +15,7 @@ class ExampleWSActivity : AppCompatActivity() {
     private val port = 9999
     private val uri = "ws://localhost:$port"
 
-    private val logger by lazy { DI.provideLogger() }
+    private val logger by lazy { TextViewLogger(exampleLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "IoT Guard") }
 
     private val server by lazy { DI.provideNewServer() }
 
@@ -23,6 +25,7 @@ class ExampleWSActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.example_ws_activity)
+        DI.provideLogger = { logger }
 
         server.events.subscribe { logger.log("server got event: $it") }
         server.messages.subscribe { server.send(it) }

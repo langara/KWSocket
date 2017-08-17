@@ -19,6 +19,7 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
     override val states: Observable<CommanderState> = statesSubject.hide()
 
     override fun perform(action: CommanderAction) {
+        logger.log("perform($action)")
         when (action) {
             is Connect -> connect(action.robotAddress)
             is Recognize -> recognize(action.speech)
