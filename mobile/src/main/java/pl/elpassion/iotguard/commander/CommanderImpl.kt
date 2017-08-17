@@ -21,6 +21,7 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
     override fun perform(action: CommanderAction) {
         when (action) {
             is Connect -> connect(action.robotAddress)
+            is Recognize -> recognize(action.speech)
             is MoveForward -> client.send("move forward")
             is MoveBackward -> client.send("move backward")
             is MoveLeft -> client.send("move left")
@@ -38,5 +39,17 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
             is Close -> statesSubject.onNext(Disconnected)
             else -> logger.log("TODO: Commander.onEvent($event)")
         }
+    }
+
+    private fun recognize(speech: String) {
+        val action = when(speech) {
+            "move forward" -> MoveForward
+            "move backward" -> MoveBackward
+            "move left" -> MoveLeft
+            "move right" -> MoveRight
+            "stop" -> Stop
+            else -> if (speech.startsWith("say ")) Say(speech.substring(4)) else null
+        }
+        action?.let { perform(it) } ?: logger.log("I don't understand: $speech")
     }
 }

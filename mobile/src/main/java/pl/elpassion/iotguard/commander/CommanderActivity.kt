@@ -1,5 +1,6 @@
 package pl.elpassion.iotguard.commander
 
+import android.content.Intent
 import android.os.Bundle
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
@@ -12,9 +13,13 @@ import pl.elpassion.iotguard.commander.CommanderAction.*
 
 class CommanderActivity : RxAppCompatActivity() {
 
+    private val SPEECH_REQUEST_CODE = 77
+
     private val commander by lazy { DI.provideCommander() }
 
     private val logger by lazy { TextViewLogger(logsTextView, "IoT Guard") }
+
+    private val speechRecognizer by lazy { SpeechRecognizer(commander, logger) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,14 +31,22 @@ class CommanderActivity : RxAppCompatActivity() {
         rightButton.setOnClickListener { commander.perform(MoveRight) }
         stopButton.setOnClickListener { commander.perform(Stop) }
         connectButton.setOnClickListener { commander.perform(Connect(robotAddress.text.toString())) }
+        listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
     }
 
     protected fun initModel() {
         commander.states
                 .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { if(!isFinishing) showState(it) }
+                .subscribe { if (!isFinishing) showState(it) }
     }
 
     private fun showState(state: CommanderState) = logger.log("TODO: show state: $state")
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == SPEECH_REQUEST_CODE)
+            speechRecognizer.handleSpeechRecognizerActivityResult(resultCode, data)
+        else
+            super.onActivityResult(requestCode, resultCode, data)
+    }
 }
