@@ -1,7 +1,10 @@
 package pl.elpassion.iotguard.commander
 
+import android.content.Context
 import android.content.Intent
+import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.text.format.Formatter
 import android.text.method.ScrollingMovementMethod
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
@@ -34,6 +37,7 @@ class CommanderActivity : RxAppCompatActivity() {
         stopButton.setOnClickListener { commander.perform(Stop) }
         connectButton.setOnClickListener { commander.perform(Connect(robotAddress.text.toString())) }
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
+        logWiFiDetails()
     }
 
     protected fun initCommander() {
@@ -50,5 +54,13 @@ class CommanderActivity : RxAppCompatActivity() {
             speechRecognizer.handleSpeechRecognizerActivityResult(resultCode, data)
         else
             super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun logWiFiDetails() {
+        val manager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val info = manager.connectionInfo
+        val addr = Formatter.formatIpAddress(info.ipAddress)
+        logger.log("Wifi info: $info")
+        logger.log("Wifi ip address: $addr")
     }
 }

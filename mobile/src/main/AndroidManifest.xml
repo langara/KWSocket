@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pl.elpassion.iotguard">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -16,34 +17,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".commander.CommanderActivity"
-            android:label="IoT Commander"
-            >
+        <activity
+            android:name=".commander.CommanderActivity"
+            android:label="IoT Commander">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".robot.RobotActivity"
-            android:label="IoT Robot"
-            >
+        <activity
+            android:name=".robot.RobotActivity"
+            android:label="IoT Robot">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".example.ExampleWSActivity"
-            android:label="IoT Example WS"
-            >
+        <activity
+            android:name=".example.ExampleWSActivity"
+            android:label="IoT Example WS">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".streaming.StreamingActivity"
+        <activity
+            android:name=".streaming.StreamingActivity"
             android:label="IoT Streaming Server">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +54,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer"/>
+        <service android:name="net.majorkernelpanic.streaming.rtsp.RtspServer" />
     </application>
 
 </manifest>

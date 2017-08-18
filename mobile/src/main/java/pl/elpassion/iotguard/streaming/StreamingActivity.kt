@@ -1,8 +1,11 @@
 package pl.elpassion.iotguard.streaming
 
+import android.content.Context
 import android.content.Intent
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.format.Formatter
 import android.view.SurfaceHolder
 import kotlinx.android.synthetic.main.streaming_activity.*
 import net.majorkernelpanic.streaming.Session
@@ -29,6 +32,7 @@ class StreamingActivity : AppCompatActivity(), Session.Callback, SurfaceHolder.C
         session = createSession()
         surfaceView.holder.addCallback(this)
         startService(Intent(this, RtspServer::class.java))
+        logWiFiDetails()
     }
 
     override fun onDestroy() {
@@ -83,5 +87,13 @@ class StreamingActivity : AppCompatActivity(), Session.Callback, SurfaceHolder.C
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
         logger.log("surfaceDestroyed: $holder")
         session?.stop()
+    }
+
+    private fun logWiFiDetails() {
+        val manager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val info = manager.connectionInfo
+        val addr = Formatter.formatIpAddress(info.ipAddress)
+        logger.log("Wifi info: $info")
+        logger.log("Wifi ip address: $addr")
     }
 }

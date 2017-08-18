@@ -4,8 +4,6 @@ import android.app.Application
 import android.util.Log
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
-import org.java_websocket.WebSocketImpl
-
 
 class IoTGuardApp : Application() {
 
