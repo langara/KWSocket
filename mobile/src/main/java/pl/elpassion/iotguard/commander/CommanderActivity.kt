@@ -18,7 +18,7 @@ class CommanderActivity : RxAppCompatActivity() {
 
     private val commander by lazy { DI.provideCommander() }
 
-    private val logger by lazy { TextViewLogger(logsTextView.apply { movementMethod = ScrollingMovementMethod() }, "IoT Guard") }
+    private val logger by lazy { TextViewLogger(commanderLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "IoT Guard") }
 
     private val speechRecognizer by lazy { SpeechRecognizer(commander, logger) }
 

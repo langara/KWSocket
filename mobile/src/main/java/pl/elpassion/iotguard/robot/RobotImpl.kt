@@ -28,11 +28,12 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     }
 
     private fun onEvent(event: Event) {
+        logger.log("onEvent($event)")
         when (event) {
             is Open -> statesSubject.onNext(RobotState.Enabled)
             is Close -> statesSubject.onNext(RobotState.Disabled)
             is Message -> onMessage(event.message)
-            else -> logger.log("TODO: Robot.onEvent($event)")
+            else -> logger.log("TODO: handle Robot.onEvent($event)")
         }
     }
 
@@ -40,7 +41,7 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
         if (message.startsWith("say "))
             say(message.substring(4))
         else
-            logger.log("TODO: Robot.onMessage($message)")
+            logger.log("TODO: handle Robot.onMessage($message)")
     }
 
     private fun say(speech: String) {
