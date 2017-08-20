@@ -36,6 +36,10 @@ class CommanderActivity : RxAppCompatActivity() {
         connectButton.setOnClickListener { commander.perform(Connect(robotAddress.text.toString())) }
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
         logger.logWifiDetails(this)
+        if(intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") ?: false) {
+            // app started with voice command, so we immediately listen for some more commands
+            listenButton.performClick()
+        }
     }
 
     protected fun initCommander() {
