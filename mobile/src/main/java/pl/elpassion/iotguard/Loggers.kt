@@ -1,5 +1,7 @@
 package pl.elpassion.iotguard
 
+import android.content.Context
+import android.net.wifi.WifiManager
 import android.util.Log
 import android.widget.TextView
 
@@ -26,3 +28,13 @@ class TextViewLogger(private val textView: TextView, private val tag: String) : 
         }
     }
 }
+
+fun Logger.logWifiDetails(context: Context) {
+  val manager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+  val info = manager.connectionInfo
+  val addr = info.ipAddress.toStringIpAddr()
+  log("Wifi info: $info")
+  log("Wifi ip address: $addr")
+}
+
+private fun Int.toStringIpAddr() = "${this and 0xff}.${this shr 8 and 0xff}.${this shr 16 and 0xff}.${this shr 24 and 0xff}"

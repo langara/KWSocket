@@ -1,10 +1,7 @@
 package pl.elpassion.iotguard.example
 
-import android.content.Context
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.format.Formatter
 import android.text.method.ScrollingMovementMethod
 import kotlinx.android.synthetic.main.example_ws_activity.*
 import pl.elpassion.iotguard.DI
@@ -12,6 +9,7 @@ import pl.elpassion.iotguard.R
 import pl.elpassion.iotguard.TextViewLogger
 import pl.elpassion.iotguard.api.messages
 import pl.elpassion.iotguard.api.send
+import pl.elpassion.iotguard.logWifiDetails
 
 class ExampleWSActivity : AppCompatActivity() {
 
@@ -37,7 +35,7 @@ class ExampleWSActivity : AppCompatActivity() {
         client1.events.subscribe { logger.log("client1 got event: $it") }
         client2.events.subscribe { logger.log("client2 got event: $it") }
 
-        logWiFiDetails()
+        logger.logWifiDetails(this)
 
         later(500) {
             client1.connect(uri)
@@ -54,13 +52,5 @@ class ExampleWSActivity : AppCompatActivity() {
 
     private fun later(delay: Long, block: () -> Unit) {
         sendButton.postDelayed(block, delay)
-    }
-
-    private fun logWiFiDetails() {
-        val manager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        val info = manager.connectionInfo
-        val addr = Formatter.formatIpAddress(info.ipAddress)
-        logger.log("Wifi info: $info")
-        logger.log("Wifi ip address: $addr")
     }
 }
