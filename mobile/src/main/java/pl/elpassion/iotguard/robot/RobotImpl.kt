@@ -21,11 +21,28 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     }
 
     private fun onMessage(message: String) {
-        if (message.startsWith("say "))
-            say(message.substring(4))
-        else
-            logger.log("TODO: handle Robot.onMessage($message)")
+
+        when (message) {
+            "move forward" -> moveForward()
+            "move backward" -> moveBackward()
+            "move left" -> moveLeft()
+            "move right" -> moveRight()
+            "stop" -> stop()
+            else ->
+                if (message.startsWith("say ")) {
+                    say(message.substring(4))
+                }
+                else {
+                    logger.log("TODO: handle Robot.onMessage($message)")
+                }
+        }
     }
+
+    private fun moveForward() {}
+    private fun moveBackward() {}
+    private fun moveLeft() {}
+    private fun moveRight() {}
+    private fun stop() {}
 
     private fun say(speech: String) {
         babbler.say(speech)
