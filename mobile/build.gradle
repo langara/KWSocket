@@ -31,6 +31,7 @@ dependencies {
     implementation "org.java-websocket:Java-WebSocket:1.3.4"
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.1.0"
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.1.0"
+    compileOnly 'com.google.android.things:androidthings:+'
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: "1.5.0"
     androidTestImplementation 'com.android.support.test:runner:1.0.0'
