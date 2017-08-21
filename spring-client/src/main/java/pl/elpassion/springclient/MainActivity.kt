@@ -14,7 +14,7 @@ import ua.naiksoftware.stomp.Stomp
 
 class MainActivity : AppCompatActivity() {
 
-    private val stompClient = Stomp.over(WebSocket::class.java, "ws://192.168.1.44:8080/iotguard/websocket")
+    private val stompClient = Stomp.over(WebSocket::class.java, "ws://192.168.1.122:8080/iotguard/websocket")
     private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
-
         rightButton.setOnTouchListener { view, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> send(Command.GO_RIGHT)
@@ -58,7 +57,6 @@ class MainActivity : AppCompatActivity() {
     private val Command.json: String
         get() = gson.toJson(this)
 }
-
 
 enum class Command {
     GO_LEFT,

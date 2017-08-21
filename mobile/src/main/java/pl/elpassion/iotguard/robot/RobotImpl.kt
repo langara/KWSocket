@@ -1,5 +1,6 @@
 package pl.elpassion.iotguard.robot
 
+import io.reactivex.disposables.Disposable
 import pl.elpassion.iotguard.Logger
 import pl.elpassion.iotguard.api.Event
 import pl.elpassion.iotguard.api.Message
@@ -7,8 +8,11 @@ import pl.elpassion.iotguard.api.Server
 
 class RobotImpl(private val server: Server, private val babbler: Babbler, private val logger: Logger) : Robot {
 
+    private val motorsController = MotorController()
+    private var disposable : Disposable? = null
+
     override fun start(serverPort: Int) {
-        server.events.subscribe { onEvent(it) }
+        disposable = server.events.subscribe { onEvent(it) }
         server.start(serverPort)
     }
 
@@ -23,28 +27,26 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     private fun onMessage(message: String) {
 
         when (message) {
-            "move forward" -> moveForward()
-            "move backward" -> moveBackward()
-            "move left" -> moveLeft()
-            "move right" -> moveRight()
-            "stop" -> stop()
+            "move forward" -> motorsController.moveForward()
+            "move backward" -> motorsController.moveBackward()
+            "move left" -> motorsController.moveLeft()
+            "move right" -> motorsController.moveRight()
+            "stop" -> motorsController.stop()
             else ->
                 if (message.startsWith("say ")) {
                     say(message.substring(4))
-                }
-                else {
+                } else {
                     logger.log("TODO: handle Robot.onMessage($message)")
                 }
         }
     }
 
-    private fun moveForward() {}
-    private fun moveBackward() {}
-    private fun moveLeft() {}
-    private fun moveRight() {}
-    private fun stop() {}
-
     private fun say(speech: String) {
         babbler.say(speech)
+    }
+
+    override fun turnOff() {
+        disposable?.dispose()
+        motorsController.releasePins()
     }
 }
