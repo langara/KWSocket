@@ -21,7 +21,7 @@ class RobotActivity : RxAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.robot_activity)
         DI.provideLogger = { logger }
-        robot.perform(RobotAction.Start(9999))
+        robot.start(9999)
         logger.logWifiDetails(this)
         val manager = PeripheralManagerService()
         val portList = manager.getGpioList()
