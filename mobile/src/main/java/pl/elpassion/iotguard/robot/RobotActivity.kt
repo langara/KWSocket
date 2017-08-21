@@ -2,6 +2,7 @@ package pl.elpassion.iotguard.robot
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import com.google.android.things.pio.PeripheralManagerService
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import kotlinx.android.synthetic.main.robot_activity.*
 import pl.elpassion.iotguard.DI
@@ -21,5 +22,8 @@ class RobotActivity : RxAppCompatActivity() {
         DI.provideLogger = { logger }
         robot.perform(RobotAction.Start(9999))
         logger.logWifiDetails(this)
+        val manager = PeripheralManagerService()
+        val portList = manager.getGpioList()
+        logger.log("List of available ports: $portList")
     }
 }
