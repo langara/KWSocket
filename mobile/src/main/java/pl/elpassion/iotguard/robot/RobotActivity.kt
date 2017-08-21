@@ -26,22 +26,29 @@ class RobotActivity : RxAppCompatActivity() {
         val manager = PeripheralManagerService()
         val portList = manager.getGpioList()
         logger.log("List of available ports: $portList")
+        val gpio2 = manager.openGpio("BCM2").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH)}
         val gpio3 = manager.openGpio("BCM3").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH)}
-        val gpio4 = manager.openGpio("BCM4").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH)}
         val gpio23 = manager.openGpio("BCM23").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH)}
         val gpio24 = manager.openGpio("BCM24").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH)}
         for(i in 1..8)
             later( i * 1500) {
                 logger.log("changing gpio ports (i=$i)")
-                gpio3.value = i % 2 == 0
+                gpio2.value = i % 2 == 0
+                gpio2.value = i % 2 == 1
                 gpio3.value = i % 2 == 1
-                gpio4.value = i % 2 == 1
-                gpio4.value = i % 2 == 0
-                gpio23.value = i % 2 == 0
+                gpio3.value = i % 2 == 0
                 gpio23.value = i % 2 == 1
-                gpio24.value = i % 2 == 1
+                gpio23.value = i % 2 == 0
                 gpio24.value = i % 2 == 0
+                gpio24.value = i % 2 == 1
             }
+        later( 9 * 1500) {
+            gpio2.value = false
+            gpio3.value = false
+            gpio23.value = false
+            gpio24.value = false
+
+        }
     }
 
     private fun later(delay: Int, block: () -> Unit) {
