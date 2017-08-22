@@ -10,6 +10,8 @@ class MotorController {
     private val leftMotorBackward = manager.openGpio("BCM3").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
     private val rightMotorForward = manager.openGpio("BCM23").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
     private val rightMotorBackward = manager.openGpio("BCM24").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
+    private val leftMotorSpeedPwm = manager.openPwm("BCM18").apply { setPwmFrequencyHz(120.0) }
+    private val rightMotorSpeedPwm = manager.openPwm("BCM13").apply { setPwmFrequencyHz(120.0) }
 
     fun moveForward() {
         leftMotorForward.value = true
@@ -51,10 +53,15 @@ class MotorController {
         leftMotorBackward.close()
         rightMotorForward.close()
         rightMotorBackward.close()
+        leftMotorSpeedPwm.close()
+        rightMotorSpeedPwm.close()
     }
 
-    fun moveEngines(left: Int, right: Int) {
-        println("TODO: moveEngines($left, $right)")
+    fun moveWheels(left: Int, right: Int) {
+        leftMotorSpeedPwm.setPwmDutyCycle(left.toDouble())
+        leftMotorSpeedPwm.setEnabled(true)
+        rightMotorSpeedPwm.setPwmDutyCycle(right.toDouble())
+        rightMotorSpeedPwm.setEnabled(true)
     }
 
 }
