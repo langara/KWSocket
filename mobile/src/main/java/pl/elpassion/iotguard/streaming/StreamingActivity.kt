@@ -17,7 +17,7 @@ import java.util.*
 
 class StreamingActivity : AppCompatActivity() {
 
-    private val localChannel = UUID.randomUUID().toString().take(5)
+    private val localUser = UUID.randomUUID().toString().take(5)
     private var pubNub: Pubnub? = null
     private var rtcClient: PnRTCClient? = null
     private var localVideoSource: VideoSource? = null
@@ -30,7 +30,7 @@ class StreamingActivity : AppCompatActivity() {
         setContentView(R.layout.streaming_activity)
         initWebRtc()
         initSignalingService()
-        localChannelView.text = localChannel
+        localUserView.text = localUser
         connectButton.setOnClickListener { makeCall() }
     }
 
@@ -42,7 +42,7 @@ class StreamingActivity : AppCompatActivity() {
                 true, // Hardware Acceleration Enabled
                 null) // Render EGL Context
 
-        rtcClient = PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, localChannel)
+        rtcClient = PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, localUser)
 
         VideoRendererGui.setView(surfaceView, null)
         localRender = createVideoRenderer()
@@ -58,7 +58,7 @@ class StreamingActivity : AppCompatActivity() {
         rtcClient?.run {
             attachRTCListener(rtcListener)
             attachLocalMediaStream(mediaStream)
-            listenOn(localChannel)
+            listenOn(localUser)
             setMaxConnections(1)
         }
     }
@@ -81,9 +81,9 @@ class StreamingActivity : AppCompatActivity() {
     }
 
     private fun initSignalingService() {
-        val uuid = localChannel + Constants.STDBY_SUFFIX
+        val uuid = localUser.channel
         pubNub = Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY)
-        pubNub?.uuid = localChannel
+        pubNub?.uuid = localUser
         pubNub?.subscribe(uuid, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 if (message !is JSONObject) return
@@ -96,16 +96,17 @@ class StreamingActivity : AppCompatActivity() {
     }
 
     private fun makeCall() {
-        val remoteChannel = remoteChannelEditText.text.toString()
-        val remoteChannelStdBy = remoteChannel + Constants.STDBY_SUFFIX
+        val remoteUser = remoteUserEditText.text.toString()
         val message = JSONObject()
-        message.put(Constants.CALL_USER, localChannel)
-        pubNub?.publish(remoteChannelStdBy, message, object : Callback() {
+        message.put(Constants.CALL_USER, localUser)
+        pubNub?.publish(remoteUser.channel, message, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
-                rtcClient?.connect(remoteChannel, true)
+                rtcClient?.connect(remoteUser, true)
             }
         })
     }
+
+    private val String.channel get() = this + "-channel"
 
     companion object {
         private const val VIDEO_TRACK_ID = "video-track-id"
