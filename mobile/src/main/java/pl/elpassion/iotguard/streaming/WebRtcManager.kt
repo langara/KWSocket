@@ -11,8 +11,7 @@ import org.json.JSONObject
 import org.webrtc.*
 import pl.elpassion.iotguard.BuildConfig
 
-class WebRtcManager(activity: Activity, surfaceView: GLSurfaceView,
-                    private val username: String) {
+class WebRtcManager(activity: Activity, surfaceView: GLSurfaceView, private val username: String) {
 
     private var pubNub: Pubnub? = null
     private var rtcClient: PnRTCClient? = null
@@ -22,7 +21,7 @@ class WebRtcManager(activity: Activity, surfaceView: GLSurfaceView,
 
     init {
         PeerConnectionFactory.initializeAndroidGlobals(
-                this, // Context
+                activity, // Context
                 true, // Audio Enabled
                 true, // Video Enabled
                 true, // Hardware Acceleration Enabled
