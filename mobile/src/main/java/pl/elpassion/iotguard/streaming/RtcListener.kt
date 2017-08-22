@@ -26,15 +26,15 @@ class RtcListener(private val activity: Activity,
             if (remoteStream.videoTracks.isNotEmpty()) {
                 remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRenderer))
             }
-            updateRenderer(remoteRenderer, 0, 0, 100, 100)
-            updateRenderer(localRenderer, 72, 72, 25, 25)
+            updateRenderer(remoteRenderer, 0, 0, 100, 100, false)
+            updateRenderer(localRenderer, 72, 72, 25, 25, true)
         }
     }
 
     private fun updateRenderer(renderer: VideoRenderer.Callbacks?,
-                               x: Int, y: Int, width: Int, height: Int) {
+                               x: Int, y: Int, width: Int, height: Int, mirror: Boolean) {
         val scalingType = VideoRendererGui.ScalingType.SCALE_ASPECT_FILL
-        VideoRendererGui.update(renderer, x, y, width, height, scalingType, false)
+        VideoRendererGui.update(renderer, x, y, width, height, scalingType, mirror)
     }
 
     override fun onMessage(peer: PnPeer?, message: Any?) {
