@@ -7,9 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import com.pubnub.api.Callback
 import com.pubnub.api.Pubnub
 import kotlinx.android.synthetic.main.streaming_activity.*
-import me.kevingleason.pnwebrtc.PnPeer
 import me.kevingleason.pnwebrtc.PnRTCClient
-import me.kevingleason.pnwebrtc.PnRTCListener
 import org.json.JSONObject
 import org.webrtc.*
 import pl.elpassion.iotguard.BuildConfig
@@ -55,8 +53,9 @@ class StreamingActivity : AppCompatActivity() {
         mediaStream.addTrack(createVideoTrack(factory))
         mediaStream.addTrack(createAudioTrack(factory))
 
+        val rtcListener = RtcListener(this, localRender, remoteRender)
         rtcClient?.run {
-            attachRTCListener(RtcListener())
+            attachRTCListener(rtcListener)
             attachLocalMediaStream(mediaStream)
             listenOn(localChannel)
             setMaxConnections(1)
@@ -102,34 +101,6 @@ class StreamingActivity : AppCompatActivity() {
                 rtcClient?.connect(remoteChannel, true)
             }
         })
-    }
-
-    private inner class RtcListener : PnRTCListener() {
-
-        override fun onLocalStream(localStream: MediaStream) {
-            super.onLocalStream(localStream)
-            runOnUiThread { localStream.videoTracks[0].addRenderer(VideoRenderer(localRender)) }
-        }
-
-        override fun onAddRemoteStream(remoteStream: MediaStream, peer: PnPeer) {
-            super.onAddRemoteStream(remoteStream, peer)
-            runOnUiThread {
-                remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRender))
-                VideoRendererGui.update(remoteRender, 0, 0, 100, 100,
-                        VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
-                VideoRendererGui.update(localRender, 72, 72, 25, 25,
-                        VideoRendererGui.ScalingType.SCALE_ASPECT_FIT, true)
-            }
-        }
-
-        override fun onMessage(peer: PnPeer?, message: Any?) {
-            super.onMessage(peer, message)
-        }
-
-        override fun onPeerConnectionClosed(peer: PnPeer?) {
-            super.onPeerConnectionClosed(peer)
-            finish()
-        }
     }
 
     companion object {
