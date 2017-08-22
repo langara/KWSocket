@@ -87,8 +87,8 @@ class StreamingActivity : AppCompatActivity() {
         pubNub?.subscribe(uuid, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 if (message !is JSONObject) return
-                if (message.has(Constants.CALL_USER)) {
-                    user = message.getString(Constants.CALL_USER)
+                if (message.has(CALL_USER)) {
+                    user = message.getString(CALL_USER)
                     rtcClient?.connect(user, false)
                 }
             }
@@ -98,7 +98,7 @@ class StreamingActivity : AppCompatActivity() {
     private fun makeCall() {
         val remoteUser = remoteUserEditText.text.toString()
         val message = JSONObject()
-        message.put(Constants.CALL_USER, localUser)
+        message.put(CALL_USER, localUser)
         pubNub?.publish(remoteUser.channel, message, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 rtcClient?.connect(remoteUser, true)
@@ -112,5 +112,6 @@ class StreamingActivity : AppCompatActivity() {
         private const val VIDEO_TRACK_ID = "video-track-id"
         private const val AUDIO_TRACK_ID = "audio-track-id"
         private const val LOCAL_MEDIA_STREAM_ID = "local-media-stream"
+        private const val CALL_USER = "call_user"
     }
 }
