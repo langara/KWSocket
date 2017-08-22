@@ -27,6 +27,7 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
             is MoveBackward -> client.send("move backward")
             is MoveLeft -> client.send("move left")
             is MoveRight -> client.send("move right")
+            is MoveEngines -> client.send("move engines ${action.left} ${action.right}")
             is Stop -> client.send("stop")
             is Say -> client.send("say ${action.sentence}")
         }

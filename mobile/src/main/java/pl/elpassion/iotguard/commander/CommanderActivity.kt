@@ -3,6 +3,8 @@ package pl.elpassion.iotguard.commander
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.view.MotionEvent
+import android.view.View
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,6 +37,7 @@ class CommanderActivity : RxAppCompatActivity() {
         stopButton.setOnClickListener { commander.perform(Stop) }
         connectButton.setOnClickListener { commander.perform(Connect(robotAddress.text.toString())) }
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
+        touchpad.setOnTouchListener(this::onTouch)
         logger.logWifiDetails(this)
         if(intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") ?: false) {
             // app started with voice command, so we immediately listen for some more commands
@@ -42,7 +45,22 @@ class CommanderActivity : RxAppCompatActivity() {
         }
     }
 
-    protected fun initCommander() {
+    private fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
+        val width = view.width.toFloat()
+        val height = view.height.toFloat()
+        val x = motionEvent.x.coerceIn(0f..width)
+        val y = height - motionEvent.y.coerceIn(0f..height)
+        val speed = y * 100 / height // 0..100
+        val turn = x * 200 / width - 100
+        val left = (speed - turn.coerceAtLeast(0f)).coerceAtLeast(0f)
+        val right = (speed + turn.coerceAtMost(0f)).coerceAtLeast(0f)
+        logger.log("left: $left")
+        logger.log("right: $right")
+        commander.perform(MoveEngines(left.toInt(), right.toInt()))
+        return true
+    }
+
+    private fun initCommander() {
         commander.states
                 .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
