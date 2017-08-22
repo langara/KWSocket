@@ -20,7 +20,7 @@
             android:ems="10"
             android:hint="Robot address"
             android:inputType="textPersonName"
-            android:text="ws://192.168.1.87:9999" />
+            android:text="ws://192.168.1.38:9999" />
 
         <Button
             android:id="@+id/connectButton"
