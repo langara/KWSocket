@@ -14,14 +14,18 @@ class RtcListener(private val activity: Activity,
     override fun onLocalStream(localStream: MediaStream) {
         super.onLocalStream(localStream)
         activity.runOnUiThread {
-            localStream.videoTracks[0].addRenderer(VideoRenderer(localRenderer))
+            if (localStream.videoTracks.isNotEmpty()) {
+                localStream.videoTracks[0].addRenderer(VideoRenderer(localRenderer))
+            }
         }
     }
 
     override fun onAddRemoteStream(remoteStream: MediaStream, peer: PnPeer) {
         super.onAddRemoteStream(remoteStream, peer)
         activity.runOnUiThread {
-            remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRenderer))
+            if (remoteStream.videoTracks.isNotEmpty()) {
+                remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRenderer))
+            }
             updateRenderer(remoteRenderer, 0, 0, 100, 100)
             updateRenderer(localRenderer, 72, 72, 25, 25)
         }

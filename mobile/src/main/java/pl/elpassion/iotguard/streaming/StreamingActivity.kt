@@ -49,8 +49,9 @@ class StreamingActivity : AppCompatActivity() {
         remoteRender = createVideoRenderer()
 
         val factory = PeerConnectionFactory()
+
         val mediaStream = factory.createLocalMediaStream(LOCAL_MEDIA_STREAM_ID)
-        mediaStream.addTrack(createVideoTrack(factory))
+        createVideoTrack(factory)?.let { mediaStream.addTrack(it) }
         mediaStream.addTrack(createAudioTrack(factory))
 
         val rtcListener = RtcListener(this, localRender, remoteRender)
@@ -65,10 +66,13 @@ class StreamingActivity : AppCompatActivity() {
     private fun createVideoRenderer() = VideoRendererGui.create(0, 0, 100, 100,
             VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
 
-    private fun createVideoTrack(factory: PeerConnectionFactory): VideoTrack {
-        val capturer = VideoCapturerAndroid.create(VideoCapturerAndroid.getNameOfBackFacingDevice())
-        localVideoSource = factory.createVideoSource(capturer, rtcClient?.videoConstraints())
-        return factory.createVideoTrack(VIDEO_TRACK_ID, localVideoSource)
+    private fun createVideoTrack(factory: PeerConnectionFactory): VideoTrack? {
+        val cameraDevice = VideoCapturerAndroid.getNameOfBackFacingDevice()
+        val capturer = VideoCapturerAndroid.create(cameraDevice)
+        return if (capturer != null) {
+            localVideoSource = factory.createVideoSource(capturer, rtcClient?.videoConstraints())
+            factory.createVideoTrack(VIDEO_TRACK_ID, localVideoSource)
+        } else null
     }
 
     private fun createAudioTrack(factory: PeerConnectionFactory): AudioTrack {
