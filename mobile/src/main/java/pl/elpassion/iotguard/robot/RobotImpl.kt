@@ -37,7 +37,7 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
                     say(message.substring(4))
                 } else if (message.startsWith("move wheels ")) {
                     val (left, right) = message.substring("move wheels ".length).split(" ")
-                    motorsController.moveEngines(left.toInt(), right.toInt())
+                    motorsController.moveWheels(left.toInt(), right.toInt())
                 } else {
                     logger.log("TODO: handle Robot.onMessage($message)")
                 }

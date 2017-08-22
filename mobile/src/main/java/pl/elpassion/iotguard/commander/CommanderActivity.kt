@@ -56,7 +56,7 @@ class CommanderActivity : RxAppCompatActivity() {
         val right = (speed + turn.coerceAtMost(0f)).coerceAtLeast(0f)
         logger.log("left: $left")
         logger.log("right: $right")
-        commander.perform(MoveEngines(left.toInt(), right.toInt()))
+        commander.perform(MoveWheels(left.toInt(), right.toInt()))
         return true
     }
 
