@@ -25,7 +25,6 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     }
 
     private fun onMessage(message: String) {
-
         when (message) {
             "move forward" -> motorsController.moveForward()
             "move backward" -> motorsController.moveBackward()
@@ -38,6 +37,9 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
                 } else if (message.startsWith("move wheels ")) {
                     val (left, right) = message.substring("move wheels ".length).split(" ")
                     motorsController.moveWheels(left.toInt(), right.toInt())
+                } else if (message.startsWith("joystick ")) {
+                    val (degree, power) = message.substring("joystick ".length).split("#")
+                    motorsController.moveEngines(degree.toInt(), power.toDouble())
                 } else {
                     logger.log("TODO: handle Robot.onMessage($message)")
                 }

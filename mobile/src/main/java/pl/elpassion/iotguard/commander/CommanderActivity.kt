@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.MotionEvent
 import android.view.View
+import com.jmedeisis.bugstick.JoystickListener
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -39,10 +40,23 @@ class CommanderActivity : RxAppCompatActivity() {
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
         touchpad.setOnTouchListener(this::onTouch)
         logger.logWifiDetails(this)
-        if(intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") ?: false) {
+        if (intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") ?: false) {
             // app started with voice command, so we immediately listen for some more commands
             listenButton.performClick()
         }
+        joystick.setJoystickListener(object : JoystickListener {
+            override fun onDrag(degrees: Float, offset: Float) {
+                commander.perform(MoveEnginesByJoystick(degrees.toInt(), offset.toDouble()))
+            }
+
+            override fun onDown() {
+
+            }
+
+            override fun onUp() {
+                commander.perform(MoveEnginesByJoystick(0, 0.0))
+            }
+        })
     }
 
     private fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
