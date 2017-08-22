@@ -1,89 +1,140 @@
+@file:Suppress("INACCESSIBLE_TYPE")
+
 package pl.elpassion.iotguard.streaming
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.SurfaceHolder
+import com.pubnub.api.Callback
+import com.pubnub.api.Pubnub
 import kotlinx.android.synthetic.main.streaming_activity.*
-import net.majorkernelpanic.streaming.Session
-import net.majorkernelpanic.streaming.SessionBuilder
-import net.majorkernelpanic.streaming.audio.AudioQuality
-import net.majorkernelpanic.streaming.rtsp.RtspServer
-import net.majorkernelpanic.streaming.video.VideoQuality
-import pl.elpassion.iotguard.AndroidLogger
+import me.kevingleason.pnwebrtc.PnPeer
+import me.kevingleason.pnwebrtc.PnRTCClient
+import me.kevingleason.pnwebrtc.PnRTCListener
+import org.json.JSONObject
+import org.webrtc.*
+import pl.elpassion.iotguard.BuildConfig
 import pl.elpassion.iotguard.R
-import pl.elpassion.iotguard.logWifiDetails
-import java.lang.Exception
+import java.util.*
 
-class StreamingActivity : AppCompatActivity(), Session.Callback, SurfaceHolder.Callback {
 
-    private val logger = AndroidLogger("IoT Streaming")
-    private var session: Session? = null
+class StreamingActivity : AppCompatActivity() {
+
+    private val localChannel = UUID.randomUUID().toString().take(5)
+    private var pubNub: Pubnub? = null
+    private var rtcClient: PnRTCClient? = null
+    private var localVideoSource: VideoSource? = null
+    private var localRender: VideoRenderer.Callbacks? = null
+    private var remoteRender: VideoRenderer.Callbacks? = null
+    private var user: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.streaming_activity)
-        startButton.setOnClickListener {
-            session?.configure()
-            startButton.isEnabled = false
+        initWebRtc()
+        initSignalingService()
+        localChannelView.text = localChannel
+        connectButton.setOnClickListener { makeCall() }
+    }
+
+    private fun initWebRtc() {
+        PeerConnectionFactory.initializeAndroidGlobals(
+                this, // Context
+                true, // Audio Enabled
+                true, // Video Enabled
+                true, // Hardware Acceleration Enabled
+                null) // Render EGL Context
+
+        rtcClient = PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, localChannel)
+
+        VideoRendererGui.setView(surfaceView, null)
+        localRender = createVideoRenderer()
+        remoteRender = createVideoRenderer()
+
+        val factory = PeerConnectionFactory()
+        val mediaStream = factory.createLocalMediaStream(LOCAL_MEDIA_STREAM_ID)
+        mediaStream.addTrack(createVideoTrack(factory))
+        mediaStream.addTrack(createAudioTrack(factory))
+
+        rtcClient?.run {
+            attachRTCListener(RtcListener())
+            attachLocalMediaStream(mediaStream)
+            listenOn(localChannel)
+            setMaxConnections(1)
         }
-        session = createSession()
-        surfaceView.holder.addCallback(this)
-        startService(Intent(this, RtspServer::class.java))
-        logger.logWifiDetails(this)
     }
 
-    override fun onDestroy() {
-        stopService(Intent(this, RtspServer::class.java))
-        super.onDestroy()
+    private fun createVideoRenderer() = VideoRendererGui.create(0, 0, 100, 100,
+            VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
+
+    private fun createVideoTrack(factory: PeerConnectionFactory): VideoTrack {
+        val capturer = VideoCapturerAndroid.create(VideoCapturerAndroid.getNameOfBackFacingDevice())
+        localVideoSource = factory.createVideoSource(capturer, rtcClient?.videoConstraints())
+        return factory.createVideoTrack(VIDEO_TRACK_ID, localVideoSource)
     }
 
-    private fun createSession() = SessionBuilder.getInstance()
-            .setCallback(this)
-            .setSurfaceView(surfaceView)
-            .setContext(applicationContext)
-            .setAudioEncoder(SessionBuilder.AUDIO_NONE)
-            .setAudioQuality(AudioQuality(16000, 32000))
-            .setVideoEncoder(SessionBuilder.VIDEO_H264)
-            .setVideoQuality(VideoQuality(320, 240, 20, 500000))
-            .build()
-
-    override fun onPreviewStarted() {
-        logger.log("onPreviewStarted")
+    private fun createAudioTrack(factory: PeerConnectionFactory): AudioTrack {
+        val audioSource = factory.createAudioSource(rtcClient?.audioConstraints())
+        return factory.createAudioTrack(AUDIO_TRACK_ID, audioSource)
     }
 
-    override fun onSessionConfigured() {
-        logger.log("onSessionConfigured")
-        session?.start()
+    private fun initSignalingService() {
+        val uuid = localChannel + Constants.STDBY_SUFFIX
+        pubNub = Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY)
+        pubNub?.uuid = localChannel
+        pubNub?.subscribe(uuid, object : Callback() {
+            override fun successCallback(channel: String, message: Any) {
+                if (message !is JSONObject) return
+                if (message.has(Constants.CALL_USER)) {
+                    user = message.getString(Constants.CALL_USER)
+                    rtcClient?.connect(user, false)
+                }
+            }
+        })
     }
 
-    override fun onSessionStarted() {
-        logger.log("onSessionStarted")
+    private fun makeCall() {
+        val remoteChannel = remoteChannelEditText.text.toString()
+        val remoteChannelStdBy = remoteChannel + Constants.STDBY_SUFFIX
+        val message = JSONObject()
+        message.put(Constants.CALL_USER, localChannel)
+        pubNub?.publish(remoteChannelStdBy, message, object : Callback() {
+            override fun successCallback(channel: String, message: Any) {
+                rtcClient?.connect(remoteChannel, true)
+            }
+        })
     }
 
-    override fun onSessionStopped() {
-        logger.log("onSessionStopped")
+    private inner class RtcListener : PnRTCListener() {
+
+        override fun onLocalStream(localStream: MediaStream) {
+            super.onLocalStream(localStream)
+            runOnUiThread { localStream.videoTracks[0].addRenderer(VideoRenderer(localRender)) }
+        }
+
+        override fun onAddRemoteStream(remoteStream: MediaStream, peer: PnPeer) {
+            super.onAddRemoteStream(remoteStream, peer)
+            runOnUiThread {
+                remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRender))
+                VideoRendererGui.update(remoteRender, 0, 0, 100, 100,
+                        VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
+                VideoRendererGui.update(localRender, 72, 72, 25, 25,
+                        VideoRendererGui.ScalingType.SCALE_ASPECT_FIT, true)
+            }
+        }
+
+        override fun onMessage(peer: PnPeer?, message: Any?) {
+            super.onMessage(peer, message)
+        }
+
+        override fun onPeerConnectionClosed(peer: PnPeer?) {
+            super.onPeerConnectionClosed(peer)
+            finish()
+        }
     }
 
-    override fun onBitrateUpdate(bitrate: Long) {
-        logger.log("onBitrateUpdate: $bitrate")
-    }
-
-    override fun onSessionError(reason: Int, streamType: Int, e: Exception?) {
-        logger.log("onSessionError: $reason, $streamType, $e")
-    }
-
-    override fun surfaceCreated(holder: SurfaceHolder?) {
-        logger.log("surfaceCreated: $holder")
-        session?.startPreview()
-    }
-
-    override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-        logger.log("surfaceChanged: $holder, $format, $width, $height")
-    }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        logger.log("surfaceDestroyed: $holder")
-        session?.stop()
+    companion object {
+        private const val VIDEO_TRACK_ID = "video-track-id"
+        private const val AUDIO_TRACK_ID = "audio-track-id"
+        private const val LOCAL_MEDIA_STREAM_ID = "local-media-stream"
     }
 }

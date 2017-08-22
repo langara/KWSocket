@@ -4,15 +4,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <net.majorkernelpanic.streaming.gl.SurfaceView
+    <android.opengl.GLSurfaceView
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start"/>
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/localChannelView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Local channel" />
+
+        <EditText
+            android:id="@+id/remoteChannelEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Remote channel" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/connectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connect" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>
