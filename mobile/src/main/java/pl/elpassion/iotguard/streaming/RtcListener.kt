@@ -43,6 +43,5 @@ class RtcListener(private val activity: Activity,
 
     override fun onPeerConnectionClosed(peer: PnPeer?) {
         super.onPeerConnectionClosed(peer)
-        activity.finish()
     }
 }

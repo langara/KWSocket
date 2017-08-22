@@ -73,6 +73,10 @@ class WebRtcManager(activity: Activity, surfaceView: GLSurfaceView, private val 
         })
     }
 
+    fun cancelCall() {
+        rtcClient?.closeAllConnections()
+    }
+
     private fun createVideoRenderer() = VideoRendererGui.create(0, 0, 100, 100,
             VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
 

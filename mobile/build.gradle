@@ -44,6 +44,7 @@ dependencies {
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.1.0"
     implementation 'io.pristine:libjingle:9694@aar'
     implementation 'com.pubnub:pubnub-android:3.7.4'
+    implementation 'com.elpassion.android.commons:view:0.0.21'
     provided 'com.google.android.things:androidthings:0.5-devpreview'
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: "1.5.0"

@@ -2,6 +2,8 @@ package pl.elpassion.iotguard.streaming
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.elpassion.android.view.hide
+import com.elpassion.android.view.show
 import kotlinx.android.synthetic.main.streaming_activity.*
 import pl.elpassion.iotguard.R
 import java.util.*
@@ -18,11 +20,20 @@ class StreamingActivity : AppCompatActivity() {
         webRtcManager?.startListening()
         localUserView.text = username
         connectButton.setOnClickListener { callUser() }
+        disconnectButton.setOnClickListener { cancelCall() }
     }
 
     private fun callUser() {
+        connectButton.hide()
+        disconnectButton.show()
         val remoteUsername = remoteUserEditText.text.toString()
         webRtcManager?.callUser(remoteUsername)
+    }
+
+    private fun cancelCall() {
+        disconnectButton.hide()
+        connectButton.show()
+        webRtcManager?.cancelCall()
     }
 
     private fun createRandomUsername() = UUID.randomUUID().toString().take(5)
