@@ -9,7 +9,7 @@ import pl.elpassion.iotguard.api.Server
 class RobotImpl(private val server: Server, private val babbler: Babbler, private val logger: Logger) : Robot {
 
     private val motorsController = MotorController()
-    private var disposable : Disposable? = null
+    private var disposable: Disposable? = null
 
     override fun start(serverPort: Int) {
         disposable = server.events.subscribe { onEvent(it) }
@@ -35,6 +35,9 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
             else ->
                 if (message.startsWith("say ")) {
                     say(message.substring(4))
+                } else if (message.startsWith("move wheels ")) {
+                    val (left, right) = message.substring("move wheels ".length).split(" ")
+                    motorsController.moveEngines(left.toInt(), right.toInt())
                 } else {
                     logger.log("TODO: handle Robot.onMessage($message)")
                 }
