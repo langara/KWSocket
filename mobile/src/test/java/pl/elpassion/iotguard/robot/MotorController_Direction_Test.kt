@@ -16,7 +16,7 @@ class MotorController_Direction_Test {
     private val changeLeftMotorToForward = { leftMotorDirection = DIRECTION.FORWARD }
 
     @Test
-    fun `Should set left motor direction to backward in (-180,-135) `() {
+    fun `Should set left motor direction to backward in (135, 180) `() {
         setMotorDirections(changeLeftMotorToBackward)
         Assert.assertEquals(leftMotorDirection, DIRECTION.BACKWARD)
     }
