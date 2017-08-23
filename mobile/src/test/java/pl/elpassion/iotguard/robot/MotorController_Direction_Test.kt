@@ -8,6 +8,8 @@ class MotorController_Direction_Test {
 
     private val changeLeftMotorToBackward = mock<() -> Unit>()
     private val changeLeftMotorToForward = mock<() -> Unit>()
+    private val changeRightMotorToForward = mock<() -> Unit>()
+    private val changeRightMotorToBackward = mock<() -> Unit>()
 
     @Test
     fun `Should set left motor direction to backward in (135, 180) `() {
@@ -33,13 +35,23 @@ class MotorController_Direction_Test {
         verify(changeLeftMotorToForward).invoke()
     }
 
-    private fun setMotorDirections(degree: Int) = setMotorDirections(degree, changeLeftMotorToBackward, changeLeftMotorToForward)
+    @Test
+    fun `Should set right motor direction to backward in (0, 45) `() {
+        setMotorDirections(degree = 30)
+        verify(changeRightMotorToBackward).invoke()
+    }
+
+    private fun setMotorDirections(degree: Int) =
+            setMotorDirections(degree, changeLeftMotorToBackward, changeLeftMotorToForward, changeRightMotorToForward, changeRightMotorToBackward)
 
     private fun setMotorDirections(
             degree: Int,
             changeLeftMotorToBackward: () -> Unit,
-            changeLeftMotorToForward: () -> Unit) {
+            changeLeftMotorToForward: () -> Unit,
+            changeRightMotorToForward: () -> Unit,
+            changeRightMotorToBackward: () -> Unit) {
 
+        changeRightMotorToBackward()
         if (degree.isBetween(-135, 0) or degree.isBetween(135, 180)) {
             changeLeftMotorToBackward()
         } else {
