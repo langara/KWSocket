@@ -60,16 +60,19 @@ class CommanderActivity : RxAppCompatActivity() {
     }
 
     private fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
+        if (motionEvent.action == MotionEvent.ACTION_UP) {
+            commander.perform(Stop)
+            return true
+        }
         val width = view.width.toFloat()
         val height = view.height.toFloat()
-        val x = motionEvent.x.coerceIn(0f..width)
-        val y = height - motionEvent.y.coerceIn(0f..height)
-        val speed = y * 100 / height // 0..100
-        val turn = x * 200 / width - 100
-        val left = (speed - turn.coerceAtLeast(0f)).coerceAtLeast(0f)
-        val right = (speed + turn.coerceAtMost(0f)).coerceAtLeast(0f)
-        logger.log("left: $left")
-        logger.log("right: $right")
+        var x = motionEvent.x.coerceIn(-width/2..width*1.5f) + width/2 // from 0 (left) to width * 2 (right)
+        var y = motionEvent.y.coerceIn(-height/2..height*1.5f) + height/2 // from 0 (top) to height * 2 (bottom)
+        x = x * 200 / (width * 2) - 100 // -100 (left) .. 100 (right)
+        y = y * 200 / (height * 2) - 100 // -100 (top) .. 100 (bottom)
+        y = -y // -100 (bottom) .. 100 (top)
+        val left = (x + y).coerceIn(-100f..100f)
+        val right = (y - x).coerceIn(-100f..100f)
         commander.perform(MoveWheels(left.toInt(), right.toInt()))
         return true
     }

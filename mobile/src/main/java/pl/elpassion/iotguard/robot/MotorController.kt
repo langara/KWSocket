@@ -38,6 +38,13 @@ class MotorController {
         moveWheels(leftPower, rightPower)
     }
 
+    fun setupWheelsAndMove(leftPower: Int, rightPower: Int) = setupWheelsAndMove(
+            leftDir = if (leftPower > 0) FORWARD else BACKWARD,
+            rightDir = if (rightPower > 0) FORWARD else BACKWARD,
+            leftPower = Math.abs(leftPower),
+            rightPower = Math.abs(rightPower)
+    )
+
     fun moveForward() = setupWheelsAndMove(FORWARD, FORWARD, 100, 100)
     fun moveBackward() = setupWheelsAndMove(BACKWARD, BACKWARD, 100, 100)
     fun moveLeft() = setupWheelsAndMove(BACKWARD, FORWARD, 100, 100)

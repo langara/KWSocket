@@ -5,7 +5,6 @@ import pl.elpassion.iotguard.Logger
 import pl.elpassion.iotguard.api.Event
 import pl.elpassion.iotguard.api.Message
 import pl.elpassion.iotguard.api.Server
-import pl.elpassion.iotguard.robot.MotorController.Direction.FORWARD
 
 class RobotImpl(private val server: Server, private val babbler: Babbler, private val logger: Logger) : Robot {
 
@@ -37,7 +36,7 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
                     say(message.substring(4))
                 } else if (message.startsWith("move wheels ")) {
                     val (left, right) = message.substring("move wheels ".length).split(" ")
-                    motorsController.setupWheelsAndMove(FORWARD, FORWARD, left.toInt(), right.toInt())
+                    motorsController.setupWheelsAndMove(left.toInt(), right.toInt())
                 } else if (message.startsWith("joystick ")) {
                     val (degree, power) = message.substring("joystick ".length).split("#")
                     motorsController.moveEngines(degree.toInt(), power.toDouble())
