@@ -2,6 +2,7 @@ package pl.elpassion.iotguard.streaming
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import com.elpassion.android.view.hide
 import com.elpassion.android.view.show
 import kotlinx.android.synthetic.main.streaming_activity.*
@@ -14,6 +15,7 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.streaming_activity)
         val username = "ALIEN" //createRandomUsername()
         webRtcManager = WebRtcManager(this, surfaceView, this, username)
