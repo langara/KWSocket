@@ -40,7 +40,10 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         leftButton.setOnClickListener { commander.perform(MoveLeft) }
         rightButton.setOnClickListener { commander.perform(MoveRight) }
         stopButton.setOnClickListener { commander.perform(Stop) }
-        connectButton.setOnClickListener { commander.perform(Connect(robotAddress.text.toString())) }
+        connectButton.setOnClickListener {
+            commander.perform(Connect(robotAddress.text.toString()))
+            webRtcManager?.callUser("ALIEN")
+        }
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
         touchpad.setOnTouchListener(this::onTouch)
         logger.logWifiDetails(this)
@@ -68,7 +71,6 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         val username = UUID.randomUUID().toString().take(5)
         webRtcManager = WebRtcManager(this, surfaceView, this, username)
         webRtcManager?.startListening()
-        webRtcManager?.callUser("ALIEN")
     }
 
     private fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
