@@ -53,7 +53,6 @@ class MotorController {
         rightMotorPower.close()
     }
 
-
     fun moveWheels(left: Int, right: Int) {
         leftMotorPower.setPwmDutyCycle(left.toDouble())
         rightMotorPower.setPwmDutyCycle(right.toDouble())
@@ -83,3 +82,24 @@ class MotorController {
         }
     }
 }
+
+fun setMotorDirections(
+        degree: Int,
+        changeLeftMotorToBackward: () -> Unit,
+        changeLeftMotorToForward: () -> Unit,
+        changeRightMotorToForward: () -> Unit,
+        changeRightMotorToBackward: () -> Unit) {
+
+    if (degree.isBetween(45, 180) or degree.isBetween(-45, 0)) {
+        changeRightMotorToForward()
+    } else {
+        changeRightMotorToBackward()
+    }
+    if (degree.isBetween(-135, 0) or degree.isBetween(135, 180)) {
+        changeLeftMotorToBackward()
+    } else {
+        changeLeftMotorToForward()
+    }
+}
+
+private fun Int.isBetween(from: Int, to: Int) = from <= this && this < to

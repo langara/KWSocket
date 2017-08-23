@@ -62,25 +62,5 @@ class MotorController_Direction_Test {
     private fun setMotorDirections(degree: Int) =
             setMotorDirections(degree, changeLeftMotorToBackward, changeLeftMotorToForward, changeRightMotorToForward, changeRightMotorToBackward)
 
-    private fun setMotorDirections(
-            degree: Int,
-            changeLeftMotorToBackward: () -> Unit,
-            changeLeftMotorToForward: () -> Unit,
-            changeRightMotorToForward: () -> Unit,
-            changeRightMotorToBackward: () -> Unit) {
-
-        if (degree.isBetween(45, 180) or degree.isBetween(-45, 0)) {
-            changeRightMotorToForward()
-        } else {
-            changeRightMotorToBackward()
-        }
-        if (degree.isBetween(-135, 0) or degree.isBetween(135, 180)) {
-            changeLeftMotorToBackward()
-        } else {
-            changeLeftMotorToForward()
-        }
-    }
-
-    fun Int.isBetween(from: Int, to: Int) = from <= this && this < to
 
 }
