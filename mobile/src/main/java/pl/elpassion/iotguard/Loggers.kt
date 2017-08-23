@@ -24,7 +24,13 @@ class TextViewLogger(private val textView: TextView, private val tag: String) : 
     override fun log(message: Any?) {
         Log.w(tag, message.toString())
         textView.post {
-            textView.append("$tag $message\n")
+            val line = "$tag $message\n"
+            if (textView.text.length > 2000) {
+                textView.text = line
+            }
+            else {
+                textView.append(line)
+            }
         }
     }
 }
