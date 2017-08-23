@@ -33,7 +33,7 @@ class MotorController {
         setupRightWheel(right)
     }
 
-    private fun setupWheelsAndMove(leftDir: Direction, rightDir: Direction, leftPower: Int, rightPower: Int) {
+    fun setupWheelsAndMove(leftDir: Direction, rightDir: Direction, leftPower: Int, rightPower: Int) {
         setupWheels(leftDir, rightDir)
         moveWheels(leftPower, rightPower)
     }
