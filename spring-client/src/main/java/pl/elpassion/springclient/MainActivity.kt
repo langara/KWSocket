@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
                     .subscribe({ topicMessage -> Log.e("!@#$%T", topicMessage.payload) })
 
         }
-        leftButton.setOnTouchListener { view, motionEvent ->
+        leftButton.setOnTouchListener { _, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> send(Command.GO_LEFT)
                 MotionEvent.ACTION_UP -> send(Command.GO_LEFT_STOP)
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             false
         }
 
-        rightButton.setOnTouchListener { view, motionEvent ->
+        rightButton.setOnTouchListener { _, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> send(Command.GO_RIGHT)
                 MotionEvent.ACTION_UP -> send(Command.GO_RIGHT_STOP)
