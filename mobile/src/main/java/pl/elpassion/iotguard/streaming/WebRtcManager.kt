@@ -125,7 +125,7 @@ class WebRtcManager(private val activity: Activity,
                     remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRender))
                 }
                 updateRenderer(remoteRender, 0, 0, 100, 100, false)
-                updateRenderer(localRender, 72, 72, 25, 25, true)
+                updateRenderer(localRender, 72, 72, 25, 25, false)
             }
         }
 
