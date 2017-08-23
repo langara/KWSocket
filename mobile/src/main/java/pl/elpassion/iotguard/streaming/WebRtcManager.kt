@@ -140,10 +140,12 @@ class WebRtcManager(private val activity: Activity,
 
         override fun onPeerStatusChanged(peer: PnPeer) {
             super.onPeerStatusChanged(peer)
-            when (peer.status) {
-                PnPeer.STATUS_CONNECTING -> listener.onConnecting(peer.id)
-                PnPeer.STATUS_CONNECTED -> listener.onConnected(peer.id)
-                PnPeer.STATUS_DISCONNECTED -> listener.onDisconnected(peer.id)
+            activity.runOnUiThread {
+                when (peer.status) {
+                    PnPeer.STATUS_CONNECTING -> listener.onConnecting(peer.id)
+                    PnPeer.STATUS_CONNECTED -> listener.onConnected(peer.id)
+                    PnPeer.STATUS_DISCONNECTED -> listener.onDisconnected(peer.id)
+                }
             }
         }
     }
