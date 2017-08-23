@@ -120,6 +120,7 @@ class WebRtcManager(private val activity: Activity,
         override fun onAddRemoteStream(remoteStream: MediaStream, peer: PnPeer) {
             super.onAddRemoteStream(remoteStream, peer)
             activity.runOnUiThread {
+                listener.onConnected(peer.id)
                 if (remoteStream.videoTracks.isNotEmpty()) {
                     remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRender))
                 }
