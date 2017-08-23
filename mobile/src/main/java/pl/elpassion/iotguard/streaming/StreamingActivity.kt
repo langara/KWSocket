@@ -15,7 +15,7 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.streaming_activity)
-        val username = createRandomUsername()
+        val username = "ALIEN" //createRandomUsername()
         webRtcManager = WebRtcManager(this, surfaceView, this, username)
         webRtcManager?.startListening()
         localUserView.text = username

@@ -15,8 +15,10 @@ import pl.elpassion.iotguard.R
 import pl.elpassion.iotguard.TextViewLogger
 import pl.elpassion.iotguard.commander.CommanderAction.*
 import pl.elpassion.iotguard.logWifiDetails
+import pl.elpassion.iotguard.streaming.WebRtcManager
+import java.util.*
 
-class CommanderActivity : RxAppCompatActivity() {
+class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListener {
 
     private val SPEECH_REQUEST_CODE = 77
 
@@ -25,6 +27,8 @@ class CommanderActivity : RxAppCompatActivity() {
     private val logger by lazy { TextViewLogger(commanderLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "IoT Guard") }
 
     private val speechRecognizer by lazy { SpeechRecognizer(commander, logger) }
+
+    private var webRtcManager: WebRtcManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +61,14 @@ class CommanderActivity : RxAppCompatActivity() {
                 commander.perform(MoveEnginesByJoystick(0, 0.0))
             }
         })
+        initWebRtc()
+    }
+
+    private fun initWebRtc() {
+        val username = UUID.randomUUID().toString().take(5)
+        webRtcManager = WebRtcManager(this, surfaceView, this, username)
+        webRtcManager?.startListening()
+        webRtcManager?.callUser("ALIEN")
     }
 
     private fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
@@ -92,4 +104,10 @@ class CommanderActivity : RxAppCompatActivity() {
         else
             super.onActivityResult(requestCode, resultCode, data)
     }
+
+    override fun onConnecting(remoteUser: String) = Unit
+
+    override fun onConnected(remoteUser: String) = Unit
+
+    override fun onDisconnected(remoteUser: String) = Unit
 }
