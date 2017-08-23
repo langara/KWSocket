@@ -18,21 +18,18 @@ class MotorController_Direction_Test {
     @Test
     fun `Should set left motor direction to forward in (-180, -135) `() {
         setMotorDirections(degree = -140)
-
         verify(changeLeftMotorToForward).invoke()
     }
 
     @Test
     fun `Should set left motor direction to backward in (-135, 0) `() {
         setMotorDirections(degree = -100)
-
         verify(changeLeftMotorToBackward).invoke()
     }
 
     @Test
     fun `Should set left motor direction to forward in (0, 135) `() {
         setMotorDirections(degree = 90)
-
         verify(changeLeftMotorToForward).invoke()
     }
 
