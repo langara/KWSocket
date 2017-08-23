@@ -4,6 +4,7 @@ import android.support.annotation.FloatRange
 import android.support.annotation.IntRange
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManagerService
+import pl.elpassion.iotguard.robot.MotorController.Direction.*
 
 class MotorController {
 
@@ -15,40 +16,33 @@ class MotorController {
     private val rightMotorBackward = manager.openGpio("BCM24").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
     private val rightMotorPower = manager.openPwm("PWM1").apply { setPwmFrequencyHz(120.0); setEnabled(true) }
 
-    fun moveForward() {
-        leftMotorForward.value = true
-        leftMotorBackward.value = false
-        rightMotorForward.value = true
-        rightMotorBackward.value = false
+    enum class Direction { FORWARD, BACKWARD, STOP }
+
+    private fun setupLeftWheel(direction: Direction) {
+        leftMotorForward.value = direction == FORWARD
+        leftMotorBackward.value = direction == BACKWARD
     }
 
-    fun moveBackward() {
-        leftMotorForward.value = false
-        leftMotorBackward.value = true
-        rightMotorForward.value = false
-        rightMotorBackward.value = true
+    private fun setupRightWheel(direction: Direction) {
+        rightMotorForward.value = direction == FORWARD
+        rightMotorBackward.value = direction == BACKWARD
     }
 
-    fun moveLeft() {
-        leftMotorForward.value = true
-        leftMotorBackward.value = false
-        rightMotorForward.value = false
-        rightMotorBackward.value = true
+    private fun setupWheels(left: Direction, right: Direction) {
+        setupLeftWheel(left)
+        setupRightWheel(right)
     }
 
-    fun moveRight() {
-        leftMotorForward.value = false
-        leftMotorBackward.value = true
-        rightMotorForward.value = true
-        rightMotorBackward.value = false
+    private fun setupWheelsAndMove(leftDir: Direction, rightDir: Direction, leftPower: Int, rightPower: Int) {
+        setupWheels(leftDir, rightDir)
+        moveWheels(leftPower, rightPower)
     }
 
-    fun stop() {
-        leftMotorForward.value = false
-        leftMotorBackward.value = false
-        rightMotorForward.value = false
-        rightMotorBackward.value = false
-    }
+    fun moveForward() = setupWheelsAndMove(FORWARD, FORWARD, 100, 100)
+    fun moveBackward() = setupWheelsAndMove(BACKWARD, BACKWARD, 100, 100)
+    fun moveLeft() = setupWheelsAndMove(BACKWARD, FORWARD, 100, 100)
+    fun moveRight() = setupWheelsAndMove(FORWARD, BACKWARD, 100, 100)
+    fun stop() = setupWheels(STOP, STOP)
 
     fun releasePins() {
         leftMotorForward.close()
@@ -62,9 +56,7 @@ class MotorController {
 
     fun moveWheels(left: Int, right: Int) {
         leftMotorPower.setPwmDutyCycle(left.toDouble())
-        leftMotorPower.setEnabled(true)
         rightMotorPower.setPwmDutyCycle(right.toDouble())
-        rightMotorPower.setEnabled(true)
     }
 
     fun moveEngines(@IntRange(from = -180, to = 180) angle: Int, @FloatRange(from = 0.0, to = 1.0) power: Double) {
@@ -90,5 +82,4 @@ class MotorController {
             rightMotorPower.setPwmDutyCycle(rightPower)
         }
     }
-
 }
