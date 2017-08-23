@@ -9,12 +9,12 @@ import pl.elpassion.iotguard.robot.MotorController.Direction.*
 class MotorController {
 
     private val manager = PeripheralManagerService()
-    private val leftMotorForward = manager.openGpio("BCM2").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
-    private val leftMotorBackward = manager.openGpio("BCM3").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
-    private val leftMotorPower = manager.openPwm("PWM0").apply { setPwmFrequencyHz(120.0);setEnabled(true) }
-    private val rightMotorForward = manager.openGpio("BCM23").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
-    private val rightMotorBackward = manager.openGpio("BCM24").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
-    private val rightMotorPower = manager.openPwm("PWM1").apply { setPwmFrequencyHz(120.0); setEnabled(true) }
+    private val rightMotorForward = manager.openGpio("BCM2").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
+    private val rightMotorBackward = manager.openGpio("BCM3").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
+    private val rightMotorPower = manager.openPwm("PWM0").apply { setPwmFrequencyHz(120.0);setEnabled(true) }
+    private val leftMotorForward = manager.openGpio("BCM23").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
+    private val leftMotorBackward = manager.openGpio("BCM24").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
+    private val leftMotorPower = manager.openPwm("PWM1").apply { setPwmFrequencyHz(120.0); setEnabled(true) }
 
     enum class Direction { FORWARD, BACKWARD, STOP }
 
@@ -58,25 +58,44 @@ class MotorController {
         rightMotorPower.setPwmDutyCycle(right.toDouble())
     }
 
+    fun changeRightMotorDirectionToForward() {
+        rightMotorForward.value = true
+        rightMotorBackward.value = false
+    }
+
+    fun changeLeftMotorDirectionToForward() {
+        leftMotorForward.value = true
+        leftMotorBackward.value = false
+    }
+
+    fun changeRightMotorDirectionToBackward() {
+        rightMotorForward.value = false
+        rightMotorBackward.value = true
+    }
+
+    fun changeLeftMotorDirectionToBackward() {
+        leftMotorForward.value = false
+        leftMotorBackward.value = true
+    }
+
     fun moveEngines(@IntRange(from = -180, to = 180) angle: Int, @FloatRange(from = 0.0, to = 1.0) power: Double) {
+        setMotorDirections(angle, this::changeLeftMotorDirectionToBackward, this::changeLeftMotorDirectionToForward, this::changeRightMotorDirectionToForward, this::changeRightMotorDirectionToBackward)
         if (angle < 0) {
-            moveBackward()
             setMotorsPower(angle.unaryMinus(), power)
         } else {
-            moveForward()
             setMotorsPower(angle, power)
         }
     }
 
     private fun setMotorsPower(angle: Int, power: Double) {
         if (angle < 90) {
-            val rightPower: Double = 100.0 * power
-            val leftPower: Double = power * 100.0 * (angle / 90.0)
+            val leftPower: Double = 100.0 * power
+            val rightPower: Double = power * 100.0 * Math.abs((angle / 45.0) - 1.0)
             rightMotorPower.setPwmDutyCycle(rightPower)
             leftMotorPower.setPwmDutyCycle(leftPower)
         } else {
-            val leftPower: Double = 100.0 * power
-            val rightPower: Double = power * 100.0 * (-angle / 90.0 + 2)
+            val rightPower: Double = 100.0 * power
+            val leftPower: Double = power * 100.0 * Math.abs((-angle / 45.0) + 3.0)
             leftMotorPower.setPwmDutyCycle(leftPower)
             rightMotorPower.setPwmDutyCycle(rightPower)
         }
