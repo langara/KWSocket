@@ -30,16 +30,28 @@ class MotorController_Direction_Test {
         verify(changeLeftMotorToForward).invoke()
     }
 
+    @Test
+    fun `Should set left motor direction to backward in (-135, 0) `() {
+        setMotorDirections(
+                degree = -100,
+                changeLeftMotorToBackward = changeLeftMotorToBackward,
+                changeLeftMotorToForward = mock())
+
+        verify(changeLeftMotorToBackward).invoke()
+    }
+
     private fun setMotorDirections(
             degree: Int,
             changeLeftMotorToBackward: () -> Unit,
             changeLeftMotorToForward: () -> Unit) {
 
-        if (degree < 0) {
-            changeLeftMotorToForward()
-        } else {
+        if (degree.isBetween(-135, 0) or degree.isBetween(135, 180)) {
             changeLeftMotorToBackward()
+        } else {
+            changeLeftMotorToForward()
         }
     }
+
+    fun Int.isBetween(from: Int, to: Int) = from <= this && this < to
 
 }
