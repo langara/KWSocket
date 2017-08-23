@@ -1,3 +1,5 @@
+@file:Suppress("IllegalIdentifier")
+
 package pl.elpassion.iotguard.robot
 
 import com.nhaarman.mockito_kotlin.mock

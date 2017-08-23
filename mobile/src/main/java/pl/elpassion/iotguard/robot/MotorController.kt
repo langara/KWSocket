@@ -116,16 +116,14 @@ fun setMotorDirections(
         changeRightMotorToForward: () -> Unit,
         changeRightMotorToBackward: () -> Unit) {
 
-    if (degree.isBetween(45, 180) or degree.isBetween(-45, 0)) {
+    if (degree in 45..180 || degree in -45..0) {
         changeRightMotorToForward()
     } else {
         changeRightMotorToBackward()
     }
-    if (degree.isBetween(-135, 0) or degree.isBetween(135, 180)) {
+    if (degree in -135..0 || degree in 135..180) {
         changeLeftMotorToBackward()
     } else {
         changeLeftMotorToForward()
     }
 }
-
-private fun Int.isBetween(from: Int, to: Int) = from <= this && this < to
