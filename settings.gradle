@@ -1,1 +1,1 @@
-include ':mobile', ':things', ':spring-client', ':pnwebrtc'
+include ':mobile', ':pnwebrtc'
