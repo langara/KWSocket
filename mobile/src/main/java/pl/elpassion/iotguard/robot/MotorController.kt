@@ -33,12 +33,12 @@ class MotorController {
         setupRightWheel(right)
     }
 
-    fun setupWheelsAndMove(leftDir: Direction, rightDir: Direction, leftPower: Int, rightPower: Int) {
+    fun setupWheelsAndMove(leftDir: Direction, rightDir: Direction, @IntRange(from = 0, to = 100) leftPower: Int, @IntRange(from = 0, to = 100) rightPower: Int) {
         setupWheels(leftDir, rightDir)
         moveWheels(leftPower, rightPower)
     }
 
-    fun setupWheelsAndMove(leftPower: Int, rightPower: Int) = setupWheelsAndMove(
+    fun setupWheelsAndMove(@IntRange(from = -100, to = 100) leftPower: Int, @IntRange(from = -100, to = 100) rightPower: Int) = setupWheelsAndMove(
             leftDir = if (leftPower > 0) FORWARD else BACKWARD,
             rightDir = if (rightPower > 0) FORWARD else BACKWARD,
             leftPower = Math.abs(leftPower),
@@ -65,28 +65,8 @@ class MotorController {
         rightMotorPower.setPwmDutyCycle(right.toDouble())
     }
 
-    fun changeRightMotorDirectionToForward() {
-        rightMotorForward.value = true
-        rightMotorBackward.value = false
-    }
-
-    fun changeLeftMotorDirectionToForward() {
-        leftMotorForward.value = true
-        leftMotorBackward.value = false
-    }
-
-    fun changeRightMotorDirectionToBackward() {
-        rightMotorForward.value = false
-        rightMotorBackward.value = true
-    }
-
-    fun changeLeftMotorDirectionToBackward() {
-        leftMotorForward.value = false
-        leftMotorBackward.value = true
-    }
-
     fun moveEngines(@IntRange(from = -180, to = 180) angle: Int, @FloatRange(from = 0.0, to = 1.0) power: Double) {
-        setMotorDirections(angle, this::changeLeftMotorDirectionToBackward, this::changeLeftMotorDirectionToForward, this::changeRightMotorDirectionToForward, this::changeRightMotorDirectionToBackward)
+        setMotorDirections(angle, { setupLeftWheel(BACKWARD) }, { setupLeftWheel(FORWARD) }, { setupRightWheel(FORWARD) }, { setupRightWheel(BACKWARD) })
         if (angle < 0) {
             setMotorsPower(angle.unaryMinus(), power)
         } else {
