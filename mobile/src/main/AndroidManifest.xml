@@ -11,7 +11,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="your.package.name.permission.C2D_MESSAGE" />
-    <permission android:name="your.package.name.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+
+    <permission
+        android:name="your.package.name.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
 
     <application
         android:name=".IoTGuardApp"
@@ -21,10 +24,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <uses-library android:name="com.google.android.things" android:required="false" />
+        <uses-library
+            android:name="com.google.android.things"
+            android:required="false" />
+
         <activity
             android:name=".commander.CommanderActivity"
-            android:label="IoT Commander">
+            android:label="IoT Commander"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,9 +65,9 @@
         </activity>
         <activity
             android:name=".streaming.StreamingActivity"
+            android:label="IoT Streaming Server"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:label="IoT Streaming Server">
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

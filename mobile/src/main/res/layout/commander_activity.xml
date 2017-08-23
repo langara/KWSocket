@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_weight="1"
             android:id="@+id/robotAddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_weight="1"
             android:ems="10"
             android:hint="Robot address"
             android:inputType="textPersonName"
@@ -34,110 +34,156 @@
     <TextView
         android:id="@+id/commanderLogsTextView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:gravity="bottom"/>
+        android:layout_height="50dp"
+        android:gravity="bottom" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-        <View
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="1dp" />
-
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/forwardButton"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:text="Forward"/>
-
-        <View
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="1dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/leftButton"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:text="Left" />
-
-        <TextView
-            android:id="@+id/touchpad"
-            android:layout_weight="1"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="TOUCH PAD"
+            android:layout_weight="2"
             android:gravity="center"
-            android:background="@color/colorPrimary"
-            android:textColor="@android:color/white"
-            />
+            android:orientation="vertical">
 
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/rightButton"
+            <com.jmedeisis.bugstick.Joystick
+                android:id="@+id/joystick"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:background="@drawable/bg_base"
+                app:force_square="true"
+                app:motion_constraint="None"
+                app:start_on_first_touch="true">
+
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_stick" />
+
+            </com.jmedeisis.bugstick.Joystick>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:scrollbars="vertical"
-            android:text="Right" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:paddingEnd="40dp"
+            android:paddingStart="40dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/forwardButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="#63ffffff"
+                    android:text="Forward"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/leftButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="#63ffffff"
+                    android:text="Left"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/touchpad"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="TOUCH PAD"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/rightButton"
+                    android:layout_margin="2dp"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:background="#63ffffff"
+                    android:scrollbars="vertical"
+                    android:text="Right"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/stopButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="#63ffffff"
+                    android:text="Stop"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/backwardButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="#63ffffff"
+                    android:text="Backward"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/listenButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="#63ffffff"
+                    android:text="Listen"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/stopButton"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:text="Stop" />
-
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/backwardButton"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:text="Backward"/>
-
-        <Button
-            android:id="@+id/listenButton"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:text="Listen" />
-    </LinearLayout>
-
-
-    <com.jmedeisis.bugstick.Joystick
-        android:layout_gravity="center"
-        android:id="@+id/joystick"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:background="@drawable/bg_base"
-        app:start_on_first_touch="true"
-        app:force_square="true"
-        app:motion_constraint="None">
-
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_stick" />
-
-    </com.jmedeisis.bugstick.Joystick>
 
 </LinearLayout>
