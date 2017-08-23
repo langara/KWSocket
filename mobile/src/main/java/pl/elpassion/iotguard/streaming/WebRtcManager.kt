@@ -6,12 +6,23 @@ import android.app.Activity
 import android.opengl.GLSurfaceView
 import com.pubnub.api.Callback
 import com.pubnub.api.Pubnub
+import me.kevingleason.pnwebrtc.PnPeer
 import me.kevingleason.pnwebrtc.PnRTCClient
+import me.kevingleason.pnwebrtc.PnRTCListener
 import org.json.JSONObject
 import org.webrtc.*
 import pl.elpassion.iotguard.BuildConfig
 
-class WebRtcManager(activity: Activity, surfaceView: GLSurfaceView, private val username: String) {
+class WebRtcManager(private val activity: Activity,
+                    surfaceView: GLSurfaceView,
+                    private val listener: ConnectionListener,
+                    private val username: String) {
+
+    interface ConnectionListener {
+        fun onConnecting(remoteUser: String)
+        fun onConnected(remoteUser: String)
+        fun onDisconnected(remoteUser: String)
+    }
 
     private var pubNub: Pubnub? = null
     private var rtcClient: PnRTCClient? = null
@@ -39,9 +50,8 @@ class WebRtcManager(activity: Activity, surfaceView: GLSurfaceView, private val 
         createVideoTrack(factory)?.let { mediaStream.addTrack(it) }
         mediaStream.addTrack(createAudioTrack(factory))
 
-        val rtcListener = RtcListener(activity, localRender, remoteRender)
         rtcClient?.run {
-            attachRTCListener(rtcListener)
+            attachRTCListener(RtcListener())
             attachLocalMediaStream(mediaStream)
             listenOn(username)
             setMaxConnections(1)
@@ -95,6 +105,48 @@ class WebRtcManager(activity: Activity, surfaceView: GLSurfaceView, private val 
     }
 
     private val String.channel get() = this + "-channel"
+
+    private inner class RtcListener : PnRTCListener() {
+
+        override fun onLocalStream(localStream: MediaStream) {
+            super.onLocalStream(localStream)
+            activity.runOnUiThread {
+                if (localStream.videoTracks.isNotEmpty()) {
+                    localStream.videoTracks[0].addRenderer(VideoRenderer(localRender))
+                }
+            }
+        }
+
+        override fun onAddRemoteStream(remoteStream: MediaStream, peer: PnPeer) {
+            super.onAddRemoteStream(remoteStream, peer)
+            activity.runOnUiThread {
+                if (remoteStream.videoTracks.isNotEmpty()) {
+                    remoteStream.videoTracks[0].addRenderer(VideoRenderer(remoteRender))
+                }
+                updateRenderer(remoteRender, 0, 0, 100, 100, false)
+                updateRenderer(localRender, 72, 72, 25, 25, true)
+            }
+        }
+
+        private fun updateRenderer(renderer: VideoRenderer.Callbacks?,
+                                   x: Int, y: Int, width: Int, height: Int, mirror: Boolean) {
+            val scalingType = VideoRendererGui.ScalingType.SCALE_ASPECT_FILL
+            VideoRendererGui.update(renderer, x, y, width, height, scalingType, mirror)
+        }
+
+        override fun onMessage(peer: PnPeer?, message: Any?) {
+            super.onMessage(peer, message)
+        }
+
+        override fun onPeerStatusChanged(peer: PnPeer) {
+            super.onPeerStatusChanged(peer)
+            when (peer.status) {
+                PnPeer.STATUS_CONNECTING -> listener.onConnecting(peer.id)
+                PnPeer.STATUS_CONNECTED -> listener.onConnected(peer.id)
+                PnPeer.STATUS_DISCONNECTED -> listener.onDisconnected(peer.id)
+            }
+        }
+    }
 
     companion object {
         private const val VIDEO_TRACK_ID = "video-track-id"

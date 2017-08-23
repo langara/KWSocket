@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.streaming_activity.*
 import pl.elpassion.iotguard.R
 import java.util.*
 
-class StreamingActivity : AppCompatActivity() {
+class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener {
 
     private var webRtcManager: WebRtcManager? = null
 
@@ -16,23 +16,38 @@ class StreamingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.streaming_activity)
         val username = createRandomUsername()
-        webRtcManager = WebRtcManager(this, surfaceView, username)
+        webRtcManager = WebRtcManager(this, surfaceView, this, username)
         webRtcManager?.startListening()
         localUserView.text = username
         connectButton.setOnClickListener { callUser() }
         disconnectButton.setOnClickListener { cancelCall() }
     }
 
-    private fun callUser() {
+    override fun onConnecting(remoteUser: String) {
         connectButton.hide()
         disconnectButton.show()
+        progressBar.show()
+    }
+
+    override fun onConnected(remoteUser: String) {
+        localUserView.hide()
+        remoteUserEditText.hide()
+        progressBar.hide()
+    }
+
+    override fun onDisconnected(remoteUser: String) {
+        disconnectButton.hide()
+        connectButton.show()
+        localUserView.show()
+        remoteUserEditText.show()
+    }
+
+    private fun callUser() {
         val remoteUsername = remoteUserEditText.text.toString()
         webRtcManager?.callUser(remoteUsername)
     }
 
     private fun cancelCall() {
-        disconnectButton.hide()
-        connectButton.show()
         webRtcManager?.cancelCall()
     }
 
