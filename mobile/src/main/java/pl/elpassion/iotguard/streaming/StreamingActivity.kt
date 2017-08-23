@@ -25,7 +25,6 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
 
     override fun onConnecting(remoteUser: String) {
         connectButton.hide()
-        disconnectButton.show()
         progressBar.show()
     }
 
@@ -33,6 +32,7 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
         localUserView.hide()
         remoteUserEditText.hide()
         progressBar.hide()
+        disconnectButton.show()
     }
 
     override fun onDisconnected(remoteUser: String) {
