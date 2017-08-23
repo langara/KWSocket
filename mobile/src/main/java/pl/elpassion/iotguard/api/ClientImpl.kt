@@ -1,7 +1,7 @@
 package pl.elpassion.iotguard.api
 
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import java.lang.Exception
@@ -9,9 +9,9 @@ import java.net.URI
 
 class ClientImpl : Client {
 
-    private val eventsSubject = PublishSubject.create<Event>()
+    private val eventsRelay = PublishRelay.create<Event>()
 
-    override val events: Observable<Event> = eventsSubject.hide()
+    override val events: Observable<Event> = eventsRelay.hide()
 
     private var client: WebSocketClient? = null
 
@@ -29,9 +29,9 @@ class ClientImpl : Client {
     }
 
     private inner class WSClient(serverURI: String) : WebSocketClient(URI(serverURI)) {
-        override fun onOpen(handshakedata: ServerHandshake?) = eventsSubject.onNext(Open())
-        override fun onClose(code: Int, reason: String?, remote: Boolean) = eventsSubject.onNext(Close(code))
-        override fun onMessage(message: String) = eventsSubject.onNext(Message(message))
-        override fun onError(exception: Exception) = eventsSubject.onNext(Error(exception))
+        override fun onOpen(handshakedata: ServerHandshake?) = eventsRelay.accept(Open())
+        override fun onClose(code: Int, reason: String?, remote: Boolean) = eventsRelay.accept(Close(code))
+        override fun onMessage(message: String) = eventsRelay.accept(Message(message))
+        override fun onError(exception: Exception) = eventsRelay.accept(Error(exception))
     }
 }

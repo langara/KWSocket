@@ -2,11 +2,11 @@
 
 package pl.elpassion.iotguard.commander
 
+import com.jakewharton.rxrelay2.PublishRelay
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.observers.TestObserver
-import io.reactivex.subjects.PublishSubject
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +18,7 @@ import pl.elpassion.iotguard.commander.CommanderState.Disconnected
 
 class CommanderImplTest {
 
-    val events = PublishSubject.create<Event>()
+    val events = PublishRelay.create<Event>()
     val socket = mock<Socket>()
     val client = mock<Client>()
     val observer = TestObserver<CommanderState>()
@@ -81,14 +81,14 @@ class CommanderImplTest {
 
     @Test
     fun `Change to connected state when connection opens`() {
-        events.onNext(Open())
+        events.accept(Open())
         observer.assertLastValue(Connected)
     }
 
     @Test
     fun `Change to disconnected state when connection closes`() {
-        events.onNext(Open())
-        events.onNext(Close(0))
+        events.accept(Open())
+        events.accept(Close(0))
         observer.assertLastValue(Disconnected)
     }
 

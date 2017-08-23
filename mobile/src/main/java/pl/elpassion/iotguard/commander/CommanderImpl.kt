@@ -1,7 +1,7 @@
 package pl.elpassion.iotguard.commander
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
 import pl.elpassion.iotguard.Logger
 import pl.elpassion.iotguard.api.*
 import pl.elpassion.iotguard.commander.CommanderAction.*
@@ -14,9 +14,9 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
         client.events.subscribe { onEvent(it) }
     }
 
-    private val statesSubject = BehaviorSubject.createDefault<CommanderState>(Disconnected)
+    private val statesRelay = BehaviorRelay.createDefault<CommanderState>(Disconnected)
 
-    override val states: Observable<CommanderState> = statesSubject.hide()
+    override val states: Observable<CommanderState> = statesRelay.hide()
 
     override fun perform(action: CommanderAction) {
         logger.log("perform($action)")
@@ -38,8 +38,8 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
 
     private fun onEvent(event: Event) {
         when (event) {
-            is Open -> statesSubject.onNext(Connected)
-            is Close -> statesSubject.onNext(Disconnected)
+            is Open -> statesRelay.accept(Connected)
+            is Close -> statesRelay.accept(Disconnected)
             else -> logger.log("TODO: Commander.onEvent($event)")
         }
     }

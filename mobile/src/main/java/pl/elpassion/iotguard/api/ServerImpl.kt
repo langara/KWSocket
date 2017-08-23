@@ -1,7 +1,7 @@
 package pl.elpassion.iotguard.api
 
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
@@ -11,9 +11,9 @@ import java.net.InetSocketAddress
 
 class ServerImpl : Server {
 
-    private val eventsSubject = PublishSubject.create<Event>()
+    private val eventsRelay = PublishRelay.create<Event>()
 
-    override val events: Observable<Event> = eventsSubject.hide()
+    override val events: Observable<Event> = eventsRelay.hide()
 
     private var server: WSServer? = null
 
@@ -31,10 +31,10 @@ class ServerImpl : Server {
     }
 
     private inner class WSServer(socketPort: Int) : WebSocketServer(InetSocketAddress(socketPort)) {
-        override fun onOpen(conn: WebSocket, handshake: ClientHandshake?) = eventsSubject.onNext(Open(SocketImpl(conn)))
-        override fun onClose(conn: WebSocket, code: Int, reason: String?, remote: Boolean) = eventsSubject.onNext(Close(code, SocketImpl(conn)))
-        override fun onMessage(conn: WebSocket, message: String) = eventsSubject.onNext(Message(message, SocketImpl(conn)))
-        override fun onError(conn: WebSocket?, exception: Exception) = eventsSubject.onNext(Error(exception))
-        override fun onStart() = eventsSubject.onNext(Start)
+        override fun onOpen(conn: WebSocket, handshake: ClientHandshake?) = eventsRelay.accept(Open(SocketImpl(conn)))
+        override fun onClose(conn: WebSocket, code: Int, reason: String?, remote: Boolean) = eventsRelay.accept(Close(code, SocketImpl(conn)))
+        override fun onMessage(conn: WebSocket, message: String) = eventsRelay.accept(Message(message, SocketImpl(conn)))
+        override fun onError(conn: WebSocket?, exception: Exception) = eventsRelay.accept(Error(exception))
+        override fun onStart() = eventsRelay.accept(Start)
     }
 }
