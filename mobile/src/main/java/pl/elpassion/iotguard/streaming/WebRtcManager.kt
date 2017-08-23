@@ -54,7 +54,7 @@ class WebRtcManager(private val activity: Activity,
             attachRTCListener(RtcListener())
             attachLocalMediaStream(mediaStream)
             listenOn(username)
-            setMaxConnections(1)
+            setMaxConnections(5)
         }
     }
 
