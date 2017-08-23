@@ -40,6 +40,17 @@ class MotorController_Direction_Test {
         verify(changeLeftMotorToBackward).invoke()
     }
 
+    @Test
+    fun `Should set left motor direction to forward in (0, 135) `() {
+
+        setMotorDirections(
+                degree = 90,
+                changeLeftMotorToBackward = changeLeftMotorToBackward,
+                changeLeftMotorToForward = changeLeftMotorToForward)
+
+        verify(changeLeftMotorToForward).invoke()
+    }
+
     private fun setMotorDirections(
             degree: Int,
             changeLeftMotorToBackward: () -> Unit,
