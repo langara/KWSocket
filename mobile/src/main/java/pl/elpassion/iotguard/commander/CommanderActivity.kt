@@ -119,5 +119,6 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
             override fun onUp() = emitter.onNext(Stop)
         }
         setJoystickListener(listener)
+        emitter.setCancellable { setJoystickListener(null) }
     }
 }
