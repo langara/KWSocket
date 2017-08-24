@@ -53,7 +53,7 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
     }
 
     private fun cancelCall() {
-        webRtcManager?.cancelCall()
+        webRtcManager?.cancelAllCalls()
     }
 
     private fun createRandomUsername() = UUID.randomUUID().toString().take(5)

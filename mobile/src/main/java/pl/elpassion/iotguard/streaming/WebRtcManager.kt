@@ -83,7 +83,7 @@ class WebRtcManager(private val activity: Activity,
         })
     }
 
-    fun cancelCall() {
+    fun cancelAllCalls() {
         rtcClient?.closeAllConnections()
     }
 

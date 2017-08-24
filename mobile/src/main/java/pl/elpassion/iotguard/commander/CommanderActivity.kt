@@ -53,6 +53,11 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         initWebRtc()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        webRtcManager?.cancelAllCalls()
+    }
+
     private fun mergeActions() = Observable.merge(listOf(
             forwardButton.clicks().map { MoveForward },
             backwardButton.clicks().map { MoveBackward },
