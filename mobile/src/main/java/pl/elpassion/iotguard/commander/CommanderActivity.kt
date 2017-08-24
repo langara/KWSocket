@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.MotionEvent
-import android.view.View
+import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.touches
 import com.jmedeisis.bugstick.JoystickListener
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.commander_activity.*
 import pl.elpassion.iotguard.DI
@@ -17,6 +19,7 @@ import pl.elpassion.iotguard.commander.CommanderAction.*
 import pl.elpassion.iotguard.logWifiDetails
 import pl.elpassion.iotguard.streaming.WebRtcManager
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListener {
 
@@ -35,17 +38,12 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         setContentView(R.layout.commander_activity)
         DI.provideLogger = { logger }
         initCommander()
-        forwardButton.setOnClickListener { commander.perform(MoveForward) }
-        backwardButton.setOnClickListener { commander.perform(MoveBackward) }
-        leftButton.setOnClickListener { commander.perform(MoveLeft) }
-        rightButton.setOnClickListener { commander.perform(MoveRight) }
-        stopButton.setOnClickListener { commander.perform(Stop) }
-        connectButton.setOnClickListener {
-            commander.perform(Connect(robotAddress.text.toString()))
-            webRtcManager?.callUser("ALIEN")
-        }
+        mergeActions()
+                .sample(100, TimeUnit.MILLISECONDS)
+                .bindToLifecycle(this)
+                .subscribe(commander.actions)
+
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
-        touchpad.setOnTouchListener(this::onTouch)
         logger.logWifiDetails(this)
         if (intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") ?: false) {
             // app started with voice command, so we immediately listen for some more commands
@@ -53,7 +51,7 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         }
         joystick.setJoystickListener(object : JoystickListener {
             override fun onDrag(degrees: Float, offset: Float) {
-                commander.perform(MoveEnginesByJoystick(degrees.toInt(), offset.toDouble()))
+                commander.actions.accept(MoveEnginesByJoystick(degrees.toInt(), offset.toDouble()))
             }
 
             override fun onDown() {
@@ -61,11 +59,24 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
             }
 
             override fun onUp() {
-                commander.perform(MoveEnginesByJoystick(0, 0.0))
+                commander.actions.accept(MoveEnginesByJoystick(0, 0.0))
             }
         })
         initWebRtc()
     }
+
+    private fun mergeActions() = Observable.merge(listOf(
+            forwardButton.clicks().map { MoveForward },
+            backwardButton.clicks().map { MoveBackward },
+            leftButton.clicks().map { MoveLeft },
+            rightButton.clicks().map { MoveRight },
+            stopButton.clicks().map { Stop },
+            connectButton
+                    .clicks()
+                    .map { Connect(robotAddress.text.toString()) }
+                    .doOnNext { webRtcManager?.callUser("ALIEN") },
+            touchpad.touches().map { it.toAction() }
+    ))
 
     private fun initWebRtc() {
         val username = UUID.randomUUID().toString().take(5)
@@ -73,22 +84,20 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         webRtcManager?.startListening()
     }
 
-    private fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-        if (motionEvent.action == MotionEvent.ACTION_UP) {
-            commander.perform(Stop)
-            return true
+    private fun MotionEvent.toAction(): CommanderAction {
+        if (action == MotionEvent.ACTION_UP) {
+            return Stop
         }
-        val width = view.width.toFloat()
-        val height = view.height.toFloat()
-        var x = motionEvent.x.coerceIn(-width/2..width*1.5f) + width/2 // from 0 (left) to width * 2 (right)
-        var y = motionEvent.y.coerceIn(-height/2..height*1.5f) + height/2 // from 0 (top) to height * 2 (bottom)
-        x = x * 200 / (width * 2) - 100 // -100 (left) .. 100 (right)
-        y = y * 200 / (height * 2) - 100 // -100 (top) .. 100 (bottom)
-        y = -y // -100 (bottom) .. 100 (top)
-        val left = (x + y).coerceIn(-100f..100f)
-        val right = (y - x).coerceIn(-100f..100f)
-        commander.perform(MoveWheels(left.toInt(), right.toInt()))
-        return true
+        val width = touchpad.width.toFloat()
+        val height = touchpad.height.toFloat()
+        var posx = x.coerceIn(-width / 2..width * 1.5f) + width / 2 // from 0 (left) to width * 2 (right)
+        var posy = y.coerceIn(-height / 2..height * 1.5f) + height / 2 // from 0 (top) to height * 2 (bottom)
+        posx = posx * 200 / (width * 2) - 100 // -100 (left) .. 100 (right)
+        posy = posy * 200 / (height * 2) - 100 // -100 (top) .. 100 (bottom)
+        posy = -posy // -100 (bottom) .. 100 (top)
+        val left = (posx + posy).coerceIn(-100f..100f)
+        val right = (posy - posx).coerceIn(-100f..100f)
+        return MoveWheels(left.toInt(), right.toInt())
     }
 
     private fun initCommander() {

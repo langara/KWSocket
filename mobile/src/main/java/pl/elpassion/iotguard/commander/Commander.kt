@@ -1,11 +1,11 @@
 package pl.elpassion.iotguard.commander
 
-import io.reactivex.Observable
-
+import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.PublishRelay
 
 interface Commander {
-    val states : Observable<CommanderState>
-    fun perform(action: CommanderAction)
+    val actions : PublishRelay<CommanderAction>
+    val states : BehaviorRelay<CommanderState>
 }
 
 

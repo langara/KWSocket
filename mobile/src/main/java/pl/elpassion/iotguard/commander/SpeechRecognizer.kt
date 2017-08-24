@@ -38,7 +38,7 @@ class SpeechRecognizer(private val commander: Commander, private val logger: Log
             //                }
             val speech = results[0].toLowerCase()
 
-            commander.perform(CommanderAction.Recognize(speech))
+            commander.actions.accept(CommanderAction.Recognize(speech))
         }
         Activity.RESULT_CANCELED -> logger.log("Voice recognition cancelled.")
         RecognizerIntent.RESULT_AUDIO_ERROR -> logger.log("Voice recognition: audio error.")

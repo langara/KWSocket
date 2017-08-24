@@ -1,7 +1,7 @@
 package pl.elpassion.iotguard.commander
 
 import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Observable
+import com.jakewharton.rxrelay2.PublishRelay
 import pl.elpassion.iotguard.Logger
 import pl.elpassion.iotguard.api.*
 import pl.elpassion.iotguard.commander.CommanderAction.*
@@ -10,15 +10,15 @@ import pl.elpassion.iotguard.commander.CommanderState.Disconnected
 
 class CommanderImpl(private val client: Client, private val logger: Logger) : Commander {
 
+    override val states = BehaviorRelay.createDefault<CommanderState>(Disconnected)
+    override val actions = PublishRelay.create<CommanderAction>()
+
     init {
         client.events.subscribe { onEvent(it) }
+        actions.subscribe(this::call)
     }
 
-    private val statesRelay = BehaviorRelay.createDefault<CommanderState>(Disconnected)
-
-    override val states: Observable<CommanderState> = statesRelay.hide()
-
-    override fun perform(action: CommanderAction) {
+    private fun call(action: CommanderAction) {
         logger.log("perform($action)")
         when (action) {
             is Connect -> connect(action.robotAddress)
@@ -38,8 +38,8 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
 
     private fun onEvent(event: Event) {
         when (event) {
-            is Open -> statesRelay.accept(Connected)
-            is Close -> statesRelay.accept(Disconnected)
+            is Open -> states.accept(Connected)
+            is Close -> states.accept(Disconnected)
             else -> logger.log("TODO: Commander.onEvent($event)")
         }
     }
@@ -53,6 +53,6 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
             "stop" -> Stop
             else -> if (speech.startsWith("say ")) Say(speech.substring(4)) else null
         }
-        action?.let { perform(it) } ?: logger.log("I don't understand: $speech")
+        action?.let { actions.accept(it) } ?: logger.log("I don't understand: $speech")
     }
 }
