@@ -6,6 +6,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.MotionEvent
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.touches
+import com.jmedeisis.bugstick.Joystick
 import com.jmedeisis.bugstick.JoystickListener
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
@@ -42,26 +43,12 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
                 .sample(100, TimeUnit.MILLISECONDS)
                 .bindToLifecycle(this)
                 .subscribe(commander.actions)
-
         listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
         logger.logWifiDetails(this)
         if (intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") ?: false) {
             // app started with voice command, so we immediately listen for some more commands
             listenButton.performClick()
         }
-        joystick.setJoystickListener(object : JoystickListener {
-            override fun onDrag(degrees: Float, offset: Float) {
-                commander.actions.accept(MoveEnginesByJoystick(degrees.toInt(), offset.toDouble()))
-            }
-
-            override fun onDown() {
-
-            }
-
-            override fun onUp() {
-                commander.actions.accept(MoveEnginesByJoystick(0, 0.0))
-            }
-        })
         initWebRtc()
     }
 
@@ -75,7 +62,8 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
                     .clicks()
                     .map { Connect(robotAddress.text.toString()) }
                     .doOnNext { webRtcManager?.callUser("ALIEN") },
-            touchpad.touches().map { it.toAction() }
+            touchpad.touches().map { it.toAction() },
+            joystick.actions()
     ))
 
     private fun initWebRtc() {
@@ -123,4 +111,13 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
     override fun onConnected(remoteUser: String) = Unit
 
     override fun onDisconnected(remoteUser: String) = Unit
+
+    private fun Joystick.actions() = Observable.create<CommanderAction> { emitter ->
+        val listener = object : JoystickListener {
+            override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(MoveEnginesByJoystick(degrees.toInt(), offset.toDouble()))
+            override fun onDown() = Unit
+            override fun onUp() = emitter.onNext(Stop)
+        }
+        setJoystickListener(listener)
+    }
 }
