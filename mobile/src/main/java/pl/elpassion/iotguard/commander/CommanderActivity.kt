@@ -114,7 +114,7 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
 
     private fun Joystick.actions() = Observable.create<CommanderAction> { emitter ->
         val listener = object : JoystickListener {
-            override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(MoveEnginesByJoystick(degrees.toInt(), offset.toDouble()))
+            override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(MoveEnginesByJoystick(degrees.toInt(), (offset * offset).toDouble()))
             override fun onDown() = Unit
             override fun onUp() = emitter.onNext(Stop)
         }
