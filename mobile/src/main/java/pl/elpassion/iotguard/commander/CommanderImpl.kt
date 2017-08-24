@@ -21,7 +21,7 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
     private fun call(action: CommanderAction) {
         logger.log("perform($action)")
         when (action) {
-            is Connect -> connect(action.robotAddress)
+            is Connect -> client.connect(action.robotAddress)
             is Recognize -> recognize(action.speech)
             is MoveForward -> client.send("move forward")
             is MoveBackward -> client.send("move backward")
@@ -33,8 +33,6 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
             is MoveEnginesByJoystick -> client.send("joystick ${action.degrees}#${action.power}")
         }
     }
-
-    private fun connect(robotAddress: String) = client.connect(robotAddress)
 
     private fun onEvent(event: Event) {
         when (event) {

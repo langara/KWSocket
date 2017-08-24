@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.MotionEvent
+import android.view.View
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.touches
 import com.jmedeisis.bugstick.Joystick
@@ -62,7 +63,7 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
                     .clicks()
                     .map { Connect(robotAddress.text.toString()) }
                     .doOnNext { webRtcManager?.callUser("ALIEN") },
-            touchpad.touches().map { it.toAction() },
+            touchpad.touchActions(),
             joystick.actions()
     ))
 
@@ -70,24 +71,6 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         val username = UUID.randomUUID().toString().take(5)
         webRtcManager = WebRtcManager(this, surfaceView, this, username)
         webRtcManager?.startListening()
-    }
-
-    private fun MotionEvent.toAction(): CommanderAction {
-        if (action == MotionEvent.ACTION_UP) {
-            return Stop
-        }
-        val width = touchpad.width.toFloat()
-        val height = touchpad.height.toFloat()
-        var posx = x.coerceIn(-width / 2..width * 1.5f) + width / 2 // 0 (left) .. width * 2 (right)
-        var posy = y.coerceIn(-height / 2..height * 1.5f) + height / 2 // 0 (top) .. height * 2 (bottom)
-        posx = posx * 200 / (width * 2) - 100 // -100 (left) .. 100 (right)
-        posy = posy * 200 / (height * 2) - 100 // -100 (top) .. 100 (bottom)
-        posy = -posy // -100 (bottom) .. 100 (top)
-        var left = (posx + posy).coerceIn(-100f..100f)
-        var right = (posy - posx).coerceIn(-100f..100f)
-        left *= Math.abs(left / 100) // more precision in the middle
-        right *= Math.abs(right / 100) // more precision in the middle
-        return MoveWheels(left.toInt(), right.toInt())
     }
 
     private fun initCommander() {
@@ -112,13 +95,31 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
 
     override fun onDisconnected(remoteUser: String) = Unit
 
-    private fun Joystick.actions() = Observable.create<CommanderAction> { emitter ->
-        val listener = object : JoystickListener {
-            override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(MoveEnginesByJoystick(degrees.toInt(), (offset * offset).toDouble()))
-            override fun onDown() = Unit
-            override fun onUp() = emitter.onNext(Stop)
+    companion object {
+
+        private fun Joystick.actions() = Observable.create<CommanderAction> { emitter ->
+            val listener = object : JoystickListener {
+                override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(MoveEnginesByJoystick(degrees.toInt(), (offset * offset).toDouble()))
+                override fun onDown() = Unit
+                override fun onUp() = emitter.onNext(Stop)
+            }
+            setJoystickListener(listener)
+            emitter.setCancellable { setJoystickListener(null) }
         }
-        setJoystickListener(listener)
-        emitter.setCancellable { setJoystickListener(null) }
+
+        private fun View.touchActions() = touches().map { it.toAction(width.toFloat(), height.toFloat()) }
+
+        private fun MotionEvent.toAction(width: Float, height: Float) = if (action == MotionEvent.ACTION_UP) Stop else {
+            var posx = x.coerceIn(-width / 2..width * 1.5f) + width / 2 // 0 (left) .. width * 2 (right)
+            var posy = y.coerceIn(-height / 2..height * 1.5f) + height / 2 // 0 (top) .. height * 2 (bottom)
+            posx = posx * 200 / (width * 2) - 100 // -100 (left) .. 100 (right)
+            posy = posy * 200 / (height * 2) - 100 // -100 (top) .. 100 (bottom)
+            posy = -posy // -100 (bottom) .. 100 (top)
+            var left = (posx + posy).coerceIn(-100f..100f)
+            var right = (posy - posx).coerceIn(-100f..100f)
+            left *= Math.abs(left / 100) // more precision in the middle
+            right *= Math.abs(right / 100) // more precision in the middle
+            MoveWheels(left.toInt(), right.toInt())
+        }
     }
 }
