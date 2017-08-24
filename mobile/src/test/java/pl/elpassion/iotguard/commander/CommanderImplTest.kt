@@ -40,37 +40,37 @@ class CommanderImplTest {
     @Test
     fun `Connect to websocket client`() {
         val url = "ws://1.2.3.4"
-        commander.perform(Connect(url))
+        commander.actions.accept(Connect(url))
         verify(client).connect(url)
     }
 
     @Test
     fun `Send move forward command`() {
-        commander.perform(MoveForward)
+        commander.actions.accept(MoveForward)
         verify(socket).send("move forward")
     }
 
     @Test
     fun `Send move backward command`() {
-        commander.perform(MoveBackward)
+        commander.actions.accept(MoveBackward)
         verify(socket).send("move backward")
     }
 
     @Test
     fun `Send move left command`() {
-        commander.perform(MoveLeft)
+        commander.actions.accept(MoveLeft)
         verify(socket).send("move left")
     }
 
     @Test
     fun `Send move right command`() {
-        commander.perform(MoveRight)
+        commander.actions.accept(MoveRight)
         verify(socket).send("move right")
     }
 
     @Test
     fun `Send stop command`() {
-        commander.perform(Stop)
+        commander.actions.accept(Stop)
         verify(socket).send("stop")
     }
 
@@ -95,7 +95,7 @@ class CommanderImplTest {
     @Test
     fun `Send say command`() {
         val sentence = "Alice has a cat."
-        commander.perform(Say(sentence))
+        commander.actions.accept(Say(sentence))
         verify(socket).send("say $sentence")
     }
 }
