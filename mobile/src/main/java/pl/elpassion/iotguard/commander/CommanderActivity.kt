@@ -90,13 +90,15 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
         }
         val width = touchpad.width.toFloat()
         val height = touchpad.height.toFloat()
-        var posx = x.coerceIn(-width / 2..width * 1.5f) + width / 2 // from 0 (left) to width * 2 (right)
-        var posy = y.coerceIn(-height / 2..height * 1.5f) + height / 2 // from 0 (top) to height * 2 (bottom)
+        var posx = x.coerceIn(-width / 2..width * 1.5f) + width / 2 // 0 (left) .. width * 2 (right)
+        var posy = y.coerceIn(-height / 2..height * 1.5f) + height / 2 // 0 (top) .. height * 2 (bottom)
         posx = posx * 200 / (width * 2) - 100 // -100 (left) .. 100 (right)
         posy = posy * 200 / (height * 2) - 100 // -100 (top) .. 100 (bottom)
         posy = -posy // -100 (bottom) .. 100 (top)
-        val left = (posx + posy).coerceIn(-100f..100f)
-        val right = (posy - posx).coerceIn(-100f..100f)
+        var left = (posx + posy).coerceIn(-100f..100f)
+        var right = (posy - posx).coerceIn(-100f..100f)
+        left *= Math.abs(left / 100) // more precision in the middle
+        right *= Math.abs(right / 100) // more precision in the middle
         return MoveWheels(left.toInt(), right.toInt())
     }
 
