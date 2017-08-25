@@ -23,8 +23,8 @@ class WebRtcManager(private val activity: Activity,
         fun onDisconnected(remoteUser: String)
     }
 
+    private val client by lazy { PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, username) }
     private var pubNub: Pubnub? = null
-    private var rtcClient: PnRTCClient? = null
     private var localVideoSource: VideoSource? = null
     private var localRender: VideoRenderer.Callbacks? = null
     private var remoteRender: VideoRenderer.Callbacks? = null
@@ -37,8 +37,6 @@ class WebRtcManager(private val activity: Activity,
                 true, // Hardware Acceleration Enabled
                 null) // Render EGL Context
 
-        rtcClient = PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, username)
-
         VideoRendererGui.setView(surfaceView, null)
         localRender = createVideoRenderer()
         remoteRender = createVideoRenderer()
@@ -49,7 +47,7 @@ class WebRtcManager(private val activity: Activity,
         createVideoTrack(factory)?.let { mediaStream.addTrack(it) }
         mediaStream.addTrack(createAudioTrack(factory))
 
-        rtcClient?.run {
+        client.run {
             attachRTCListener(RtcListener())
             attachLocalMediaStream(mediaStream)
             listenOn(username)
@@ -66,7 +64,7 @@ class WebRtcManager(private val activity: Activity,
                 if (message !is JSONObject) return
                 if (message.has(CALL_USER)) {
                     val remoteUsername = message.getString(CALL_USER)
-                    rtcClient?.connect(remoteUsername, false)
+                    client.connect(remoteUsername, false)
                 }
             }
         })
@@ -77,13 +75,13 @@ class WebRtcManager(private val activity: Activity,
         message.put(CALL_USER, username)
         pubNub?.publish(remoteUsername.channel, message, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
-                rtcClient?.connect(remoteUsername, true)
+                client.connect(remoteUsername, true)
             }
         })
     }
 
     fun cancelAllCalls() {
-        rtcClient?.closeAllConnections()
+        client.closeAllConnections()
     }
 
     private fun createVideoRenderer() = VideoRendererGui.create(0, 0, 100, 100,
@@ -93,13 +91,13 @@ class WebRtcManager(private val activity: Activity,
         val cameraDevice = VideoCapturerAndroid.getNameOfBackFacingDevice()
         val capturer = VideoCapturerAndroid.create(cameraDevice)
         return if (capturer != null) {
-            localVideoSource = factory.createVideoSource(capturer, rtcClient?.videoConstraints())
+            localVideoSource = factory.createVideoSource(capturer, client.videoConstraints())
             factory.createVideoTrack(VIDEO_TRACK_ID, localVideoSource)
         } else null
     }
 
     private fun createAudioTrack(factory: PeerConnectionFactory): AudioTrack {
-        val audioSource = factory.createAudioSource(rtcClient?.audioConstraints())
+        val audioSource = factory.createAudioSource(client.audioConstraints())
         return factory.createAudioTrack(AUDIO_TRACK_ID, audioSource)
     }
 
