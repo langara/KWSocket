@@ -1,1 +1,1 @@
-include ':mobile', ':pnwebrtc'
+include ':mobile', ':pnwebrtc', ':webrtc'

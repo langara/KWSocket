@@ -19,7 +19,7 @@ import pl.elpassion.iotguard.R
 import pl.elpassion.iotguard.TextViewLogger
 import pl.elpassion.iotguard.commander.CommanderAction.*
 import pl.elpassion.iotguard.logWifiDetails
-import pl.elpassion.iotguard.streaming.WebRtcManager
+import pl.elpassion.webrtc.WebRtcManager
 import java.util.*
 import java.util.concurrent.TimeUnit
 

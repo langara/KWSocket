@@ -1,6 +1,6 @@
 @file:Suppress("INACCESSIBLE_TYPE")
 
-package pl.elpassion.iotguard.streaming
+package pl.elpassion.webrtc
 
 import android.app.Activity
 import android.opengl.GLSurfaceView
@@ -11,7 +11,6 @@ import me.kevingleason.pnwebrtc.PnRTCClient
 import me.kevingleason.pnwebrtc.PnRTCListener
 import org.json.JSONObject
 import org.webrtc.*
-import pl.elpassion.iotguard.BuildConfig
 
 class WebRtcManager(private val activity: Activity,
                     surfaceView: GLSurfaceView,

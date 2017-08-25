@@ -14,10 +14,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        Properties pnProperties = getPubnubProperties()
-        buildConfigField "String", "PN_PUB_KEY", (pnProperties['PN_PUB_KEY'] ?: "\"\"")
-        buildConfigField "String", "PN_SUB_KEY", (pnProperties['PN_SUB_KEY'] ?: "\"\"")
     }
     buildTypes {
         release {
@@ -27,15 +23,8 @@ android {
     }
 }
 
-private Properties getPubnubProperties() {
-    def propsFile = rootProject.file('pubnub.properties')
-    def pubnubProperties = new Properties()
-    pubnubProperties.load(new FileInputStream(propsFile))
-    pubnubProperties
-}
-
 dependencies {
-    implementation project(':pnwebrtc')
+    implementation project(':webrtc')
     implementation 'com.jmedeisis:bugstick:0.2.2'
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.0.1'
@@ -45,8 +34,6 @@ dependencies {
     implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: '2.0.0'
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.1.0"
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.1.0"
-    implementation 'io.pristine:libjingle:9694@aar'
-    implementation 'com.pubnub:pubnub-android:3.7.4'
     implementation 'com.elpassion.android.commons:view:0.0.21'
     provided 'com.google.android.things:androidthings:0.5-devpreview'
     testImplementation 'junit:junit:4.12'
