@@ -63,8 +63,7 @@ class WebRtcManager(private val activity: Activity,
     }
 
     fun callUser(remoteUsername: String) {
-        val message = JSONObject()
-        message.put(CALL_USER, username)
+        val message = JSONObject().apply { put(CALL_USER, username) }
         pubNub.publish(remoteUsername.channel, message, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 client.connect(remoteUsername, true)
