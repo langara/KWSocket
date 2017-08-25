@@ -1,25 +1,22 @@
-package pl.elpassion.iotguard.streaming
+package pl.elpassion.iot.alien
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import com.elpassion.android.view.hide
 import com.elpassion.android.view.show
-import kotlinx.android.synthetic.main.streaming_activity.*
-import pl.elpassion.iotguard.R
-import pl.elpassion.webrtc.WebRtcManager
-import java.util.*
+import kotlinx.android.synthetic.main.alien_activity.*
 
-class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener {
+class AlienActivity : AppCompatActivity(), pl.elpassion.webrtc.WebRtcManager.ConnectionListener {
 
-    private var webRtcManager: WebRtcManager? = null
+    private var webRtcManager: pl.elpassion.webrtc.WebRtcManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        setContentView(R.layout.streaming_activity)
-        val username = createRandomUsername()
-        webRtcManager = WebRtcManager(this, surfaceView, this, username)
+        setContentView(R.layout.alien_activity)
+        val username = "ALIEN"
+        webRtcManager = pl.elpassion.webrtc.WebRtcManager(this, surfaceView, this, username)
         webRtcManager?.startListening()
         localUserView.text = username
         connectButton.setOnClickListener { callUser() }
@@ -57,5 +54,4 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
         webRtcManager?.cancelAllCalls()
     }
 
-    private fun createRandomUsername() = UUID.randomUUID().toString().take(5)
 }
