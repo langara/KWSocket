@@ -1,9 +1,9 @@
 package pl.elpassion.iotguard
 
 import android.app.Application
-import pl.elpassion.api.Client
+import pl.elpassion.iot.api.Client
 import pl.elpassion.iot.api.ClientImpl
-import pl.elpassion.api.Server
+import pl.elpassion.iot.api.Server
 import pl.elpassion.iot.api.ServerImpl
 import pl.elpassion.iotguard.robot.Babbler
 import pl.elpassion.iotguard.robot.Robot

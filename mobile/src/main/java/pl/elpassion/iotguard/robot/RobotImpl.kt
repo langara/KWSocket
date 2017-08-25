@@ -1,9 +1,9 @@
 package pl.elpassion.iotguard.robot
 
 import io.reactivex.disposables.Disposable
-import pl.elpassion.api.Event
-import pl.elpassion.api.Message
-import pl.elpassion.api.Server
+import pl.elpassion.iot.api.Event
+import pl.elpassion.iot.api.Message
+import pl.elpassion.iot.api.Server
 import pl.elpassion.loggers.Logger
 
 class RobotImpl(private val server: Server, private val babbler: Babbler, private val logger: Logger) : Robot {
