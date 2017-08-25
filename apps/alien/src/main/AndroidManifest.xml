@@ -25,7 +25,7 @@
 
         <activity
             android:name=".AlienActivity"
-            android:label="IoT Streaming Server"
+            android:label="IoT Alien"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>

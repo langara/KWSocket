@@ -3,55 +3,41 @@ package pl.elpassion.iot.alien
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
-import com.elpassion.android.view.hide
-import com.elpassion.android.view.show
 import kotlinx.android.synthetic.main.alien_activity.*
+import pl.elpassion.webrtc.WebRtcManager
 
-class AlienActivity : AppCompatActivity(), pl.elpassion.webrtc.WebRtcManager.ConnectionListener {
+class AlienActivity : AppCompatActivity(), WebRtcManager.ConnectionListener {
 
-    private var webRtcManager: pl.elpassion.webrtc.WebRtcManager? = null
+    private var webRtcManager: WebRtcManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.alien_activity)
         val username = "ALIEN"
-        webRtcManager = pl.elpassion.webrtc.WebRtcManager(this, surfaceView, this, username)
+        webRtcManager = WebRtcManager(this, surfaceView, this, username)
         webRtcManager?.startListening()
-        localUserView.text = username
-        connectButton.setOnClickListener { callUser() }
-        disconnectButton.setOnClickListener { cancelCall() }
+        log("Alien is ready")
+    }
+
+    override fun onDestroy() {
+        webRtcManager?.cancelAllCalls()
+        super.onDestroy()
     }
 
     override fun onConnecting(remoteUser: String) {
-        connectButton.hide()
-        progressBar.show()
-        streamingLogView.append("connecting with $remoteUser\n")
+        log("connecting with $remoteUser")
     }
 
     override fun onConnected(remoteUser: String) {
-        localUserView.hide()
-        remoteUserEditText.hide()
-        progressBar.hide()
-        disconnectButton.show()
-        streamingLogView.append("connected with $remoteUser\n")
+        log("connected with $remoteUser")
     }
 
     override fun onDisconnected(remoteUser: String) {
-        disconnectButton.hide()
-        connectButton.show()
-        localUserView.show()
-        remoteUserEditText.show()
-        streamingLogView.append("disconnected with $remoteUser\n")
+        log("disconnected with $remoteUser")
     }
 
-    private fun callUser() {
-        val remoteUsername = remoteUserEditText.text.toString()
-        webRtcManager?.callUser(remoteUsername)
+    private fun log(message: String) {
+        streamingLogView.append("$message\n")
     }
-
-    private fun cancelCall() {
-        webRtcManager?.cancelAllCalls()
-    }
-
 }
