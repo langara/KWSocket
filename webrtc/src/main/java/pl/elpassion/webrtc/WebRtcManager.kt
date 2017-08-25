@@ -50,9 +50,8 @@ class WebRtcManager(private val activity: Activity,
     }
 
     fun startListening() {
-        val uuid = username.channel
         pubNub.uuid = username
-        pubNub.subscribe(uuid, object : Callback() {
+        pubNub.subscribe(username.channel, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 if (message !is JSONObject) return
                 if (message.has(CALL_USER)) {
