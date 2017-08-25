@@ -1,6 +1,6 @@
 @file:Suppress("IllegalIdentifier")
 
-package pl.elpassion.iotguard.robot
+package pl.elpassion.iot.robot
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -63,6 +63,4 @@ class MotorController_Direction_Test {
 
     private fun setMotorDirections(degree: Int) =
             setMotorDirections(degree, changeLeftMotorToBackward, changeLeftMotorToForward, changeRightMotorToForward, changeRightMotorToBackward)
-
-
 }
