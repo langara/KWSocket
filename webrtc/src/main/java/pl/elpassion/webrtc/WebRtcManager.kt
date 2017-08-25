@@ -41,15 +41,9 @@ class WebRtcManager(private val activity: Activity,
         localRender = createVideoRenderer()
         remoteRender = createVideoRenderer()
 
-        val factory = PeerConnectionFactory()
-
-        val mediaStream = factory.createLocalMediaStream(LOCAL_MEDIA_STREAM_ID)
-        createVideoTrack(factory)?.let { mediaStream.addTrack(it) }
-        mediaStream.addTrack(createAudioTrack(factory))
-
         client.run {
             attachRTCListener(RtcListener())
-            attachLocalMediaStream(mediaStream)
+            attachLocalMediaStream(createMediaStream())
             listenOn(username)
             setMaxConnections(5)
         }
@@ -86,6 +80,14 @@ class WebRtcManager(private val activity: Activity,
 
     private fun createVideoRenderer() = VideoRendererGui.create(0, 0, 100, 100,
             VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
+
+    private fun createMediaStream(): MediaStream {
+        val factory = PeerConnectionFactory()
+        return factory.createLocalMediaStream(LOCAL_MEDIA_STREAM_ID).apply {
+            createVideoTrack(factory)?.let { addTrack(it) }
+            addTrack(createAudioTrack(factory))
+        }
+    }
 
     private fun createVideoTrack(factory: PeerConnectionFactory): VideoTrack? {
         val cameraDevice = VideoCapturerAndroid.getNameOfBackFacingDevice()
