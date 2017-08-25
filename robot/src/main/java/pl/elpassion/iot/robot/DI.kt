@@ -1,15 +1,13 @@
-package pl.elpassion.iotguard
+package pl.elpassion.iot.robot
 
 import android.app.Application
 import pl.elpassion.iot.api.Client
 import pl.elpassion.iot.api.ClientImpl
 import pl.elpassion.iot.api.Server
 import pl.elpassion.iot.api.ServerImpl
-import pl.elpassion.iotguard.robot.Babbler
-import pl.elpassion.iotguard.robot.Robot
-import pl.elpassion.iotguard.robot.RobotImpl
 import pl.elpassion.loggers.Logger
 import pl.elpassion.loggers.SimpleLogger
+import java.lang.UnsupportedOperationException
 
 object DI {
 

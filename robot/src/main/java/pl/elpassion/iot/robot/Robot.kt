@@ -1,4 +1,4 @@
-package pl.elpassion.iotguard.robot
+package pl.elpassion.iot.robot
 
 interface Robot {
     fun start(serverPort: Int)

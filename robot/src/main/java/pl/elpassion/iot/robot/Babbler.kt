@@ -1,4 +1,4 @@
-package pl.elpassion.iotguard.robot
+package pl.elpassion.iot.robot
 
 import android.content.Context
 import android.os.Build

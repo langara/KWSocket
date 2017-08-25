@@ -1,4 +1,4 @@
-package pl.elpassion.iotguard.robot
+package pl.elpassion.iot.robot
 
 import io.reactivex.disposables.Disposable
 import pl.elpassion.iot.api.Event

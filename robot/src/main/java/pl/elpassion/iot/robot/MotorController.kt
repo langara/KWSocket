@@ -1,10 +1,10 @@
-package pl.elpassion.iotguard.robot
+package pl.elpassion.iot.robot
 
 import android.support.annotation.FloatRange
 import android.support.annotation.IntRange
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManagerService
-import pl.elpassion.iotguard.robot.MotorController.Direction.*
+import pl.elpassion.iot.robot.MotorController.Direction.*
 
 class MotorController {
 

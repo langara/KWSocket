@@ -1,8 +1,7 @@
-package pl.elpassion.iotguard.robot
+package pl.elpassion.iot.robot
 
 import android.os.Bundle
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import pl.elpassion.iotguard.DI
 
 class RobotActivity : RxAppCompatActivity() {
 
