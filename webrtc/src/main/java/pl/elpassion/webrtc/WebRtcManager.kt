@@ -24,8 +24,8 @@ class WebRtcManager(private val activity: Activity,
     }
 
     private val client by lazy { PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, username) }
-    private var pubNub: Pubnub? = null
-    private var localVideoSource: VideoSource? = null
+    private val pubNub by lazy { Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY) }
+
     private var localRender: VideoRenderer.Callbacks? = null
     private var remoteRender: VideoRenderer.Callbacks? = null
 
@@ -51,9 +51,8 @@ class WebRtcManager(private val activity: Activity,
 
     fun startListening() {
         val uuid = username.channel
-        pubNub = Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY)
-        pubNub?.uuid = username
-        pubNub?.subscribe(uuid, object : Callback() {
+        pubNub.uuid = username
+        pubNub.subscribe(uuid, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 if (message !is JSONObject) return
                 if (message.has(CALL_USER)) {
@@ -67,7 +66,7 @@ class WebRtcManager(private val activity: Activity,
     fun callUser(remoteUsername: String) {
         val message = JSONObject()
         message.put(CALL_USER, username)
-        pubNub?.publish(remoteUsername.channel, message, object : Callback() {
+        pubNub.publish(remoteUsername.channel, message, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 client.connect(remoteUsername, true)
             }
@@ -93,7 +92,7 @@ class WebRtcManager(private val activity: Activity,
         val cameraDevice = VideoCapturerAndroid.getNameOfBackFacingDevice()
         val capturer = VideoCapturerAndroid.create(cameraDevice)
         return if (capturer != null) {
-            localVideoSource = factory.createVideoSource(capturer, client.videoConstraints())
+            val localVideoSource = factory.createVideoSource(capturer, client.videoConstraints())
             factory.createVideoTrack(VIDEO_TRACK_ID, localVideoSource)
         } else null
     }
