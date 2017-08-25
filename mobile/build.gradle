@@ -33,7 +33,7 @@ dependencies {
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.1.0"
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.1.0"
     implementation 'com.elpassion.android.commons:view:0.0.21'
-    provided 'com.google.android.things:androidthings:0.5-devpreview'
+    compileOnly 'com.google.android.things:androidthings:0.5-devpreview'
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: "1.5.0"
     androidTestImplementation 'com.android.support.test:runner:1.0.0'
