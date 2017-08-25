@@ -3,7 +3,7 @@ package pl.elpassion.iotguard.robot
 import android.content.Context
 import android.os.Build
 import android.speech.tts.TextToSpeech
-import pl.elpassion.iotguard.Logger
+import pl.elpassion.loggers.Logger
 import java.util.*
 
 class Babbler(context: Context, private val logger: Logger) : TextToSpeech.OnInitListener {

@@ -1,1 +1,1 @@
-include ':mobile', ':pnwebrtc', ':webrtc'
+include ':mobile', ':pnwebrtc', ':webrtc', ':commander', ':loggers', ':iot-api'

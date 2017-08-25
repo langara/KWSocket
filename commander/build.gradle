@@ -5,13 +5,17 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
+
+
     defaultConfig {
-        applicationId "pl.elpassion.iotguard"
+        applicationId "pl.elpassion.iot.commander"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -22,18 +26,15 @@ android {
 }
 
 dependencies {
-    implementation project(':loggers')
     implementation project(':webrtc')
+    implementation project(':loggers')
     implementation project(':iot-api')
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.0.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.jmedeisis:bugstick:0.2.2'
     implementation group: 'com.jakewharton.rxbinding2', name: 'rxbinding-kotlin', version: "2.0.0"
     implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: '2.0.0'
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.1.0"
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.1.0"
-    implementation 'com.elpassion.android.commons:view:0.0.21'
-    provided 'com.google.android.things:androidthings:0.5-devpreview'
+    implementation 'com.android.support:appcompat-v7:26.0.1'
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: "1.5.0"
     androidTestImplementation 'com.android.support.test:runner:1.0.0'

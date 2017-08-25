@@ -1,27 +1,23 @@
 package pl.elpassion.iotguard
 
 import android.app.Application
-import pl.elpassion.iotguard.api.Client
-import pl.elpassion.iotguard.api.ClientImpl
-import pl.elpassion.iotguard.api.Server
-import pl.elpassion.iotguard.api.ServerImpl
-import pl.elpassion.iotguard.commander.Commander
-import pl.elpassion.iotguard.commander.CommanderImpl
+import pl.elpassion.api.Client
+import pl.elpassion.iot.api.ClientImpl
+import pl.elpassion.api.Server
+import pl.elpassion.iot.api.ServerImpl
 import pl.elpassion.iotguard.robot.Babbler
 import pl.elpassion.iotguard.robot.Robot
 import pl.elpassion.iotguard.robot.RobotImpl
+import pl.elpassion.loggers.Logger
+import pl.elpassion.loggers.SimpleLogger
 
 object DI {
-
-    private val commander by lazy { CommanderImpl(provideNewClient(), provideLogger()) }
 
     private val robot by lazy { RobotImpl(provideNewServer(), provideBabbler(), provideLogger()) }
 
     private val logger by lazy { SimpleLogger() }
 
     private val babbler by lazy { Babbler(provideApplication(), provideLogger()) }
-
-    var provideCommander: () -> Commander = { commander }
 
     var provideRobot: () -> Robot = { robot }
 

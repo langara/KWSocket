@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.method.ScrollingMovementMethod
 import kotlinx.android.synthetic.main.example_ws_activity.*
+import pl.elpassion.api.messages
+import pl.elpassion.api.send
 import pl.elpassion.iotguard.DI
 import pl.elpassion.iotguard.R
-import pl.elpassion.iotguard.TextViewLogger
-import pl.elpassion.iotguard.api.messages
-import pl.elpassion.iotguard.api.send
-import pl.elpassion.iotguard.logWifiDetails
+import pl.elpassion.loggers.TextViewLogger
+import pl.elpassion.loggers.logWifiDetails
 
 class ExampleWSActivity : AppCompatActivity() {
 
