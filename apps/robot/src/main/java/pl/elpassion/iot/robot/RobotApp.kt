@@ -6,9 +6,9 @@ import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import pl.elpassion.loggers.AndroidLogger
 
-class IoTGuardApp : Application() {
+class RobotApp : Application() {
 
-    private val logger = AndroidLogger("IoT Guard")
+    private val logger = AndroidLogger("IoT Robot")
 
     override fun onCreate() {
         super.onCreate()

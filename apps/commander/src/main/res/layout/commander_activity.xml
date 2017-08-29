@@ -44,7 +44,7 @@
         <TextView
             android:id="@+id/commanderLogsTextView"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="100dp"
             android:gravity="bottom" />
 
         <LinearLayout

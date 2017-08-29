@@ -11,7 +11,7 @@ sealed class CommanderAction {
     data class MoveEnginesByJoystick(val degrees: Int, val power: Double) : CommanderAction()
     data class Connect(val robotAddress: String) : CommanderAction()
     data class Say(val sentence: String) : CommanderAction()
-    data class Recognize(val speech: String) : CommanderAction()
+    data class Recognize(val speech: List<String>) : CommanderAction()
 }
 
 

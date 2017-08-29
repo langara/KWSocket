@@ -1,7 +1,10 @@
 package pl.elpassion.iot.commander
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.text.method.ScrollingMovementMethod
 import android.view.MotionEvent
 import android.view.View
@@ -29,7 +32,9 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
 
     private val logger by lazy { TextViewLogger(commanderLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "IoT Guard") }
 
-    private val speechRecognizer by lazy { SpeechRecognizer(commander, logger) }
+    private val speechRecognizer by lazy { SpeechRecognizer() }
+
+    private var voiceControl = false
 
     private var webRtcManager: WebRtcManager? = null
 
@@ -42,9 +47,12 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
                 .sample(100, TimeUnit.MILLISECONDS)
                 .bindToLifecycle(this)
                 .subscribe(commander.actions)
-        listenButton.setOnClickListener { speechRecognizer.start(this, SPEECH_REQUEST_CODE) }
+        listenButton.setOnClickListener {
+            voiceControl = true
+            speechRecognizer.start(SPEECH_REQUEST_CODE)
+        }
         logger.logWifiDetails(this)
-        if (intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") ?: false) {
+        if (intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") == true) {
             // app started with voice command, so we immediately listen for some more commands
             listenButton.performClick()
         }
@@ -97,6 +105,46 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
     override fun onConnected(remoteUser: String) = Unit
 
     override fun onDisconnected(remoteUser: String) = Unit
+
+    inner class SpeechRecognizer {
+
+        fun start(speechRequestCode: Int) {
+            val intent = createIntent()
+            if (intent.resolveActivity(packageManager) != null) {
+                try {
+                    startActivityForResult(intent, speechRequestCode)
+                } catch (e: ActivityNotFoundException) {
+                    logger.log("Speech recognizer not found: $e")
+                } catch (e: SecurityException) {
+                    logger.log("Security exception: $e")
+                }
+
+            } else {
+                logger.log("No activity found for this intent: $intent")
+            }
+        }
+
+        fun handleSpeechRecognizerActivityResult(resultCode: Int, data: Intent?) = when (resultCode) {
+            Activity.RESULT_OK -> {
+                val speech = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                commander.actions.accept(CommanderAction.Recognize(speech))
+                if (voiceControl) {
+                    listenButton.performClick()
+                }
+                Unit
+            }
+            else -> {
+                logger.log("Voice recognition result code: $resultCode")
+                voiceControl = false
+            }
+        }
+
+        private fun createIntent() = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_PROMPT, "What's your command?")
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US")
+        }
+    }
 
     companion object {
 

@@ -42,15 +42,24 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
         }
     }
 
-    private fun recognize(speech: String) {
-        val action = when(speech) {
-            "move forward" -> MoveForward
-            "move backward" -> MoveBackward
-            "move left" -> MoveLeft
-            "move right" -> MoveRight
-            "stop" -> Stop
-            else -> if (speech.startsWith("say ")) Say(speech.substring(4)) else null
+    private fun recognize(speech: List<String>) {
+        val action = when {
+            speech.matchesCommand("forward", "ahead") -> MoveForward
+            speech.matchesCommand("back") -> MoveBackward
+            speech.matchesCommand("left") -> MoveLeft
+            speech.matchesCommand("right") -> MoveRight
+            speech.matchesCommand("stop", "cancel", "enough", "abort", "wait") -> Stop
+            else -> {
+                val command = speech[0].toLowerCase()
+                if (command.startsWith("say ")) Say(command.substring(4)) else null
+            }
         }
         action?.let { actions.accept(it) } ?: logger.log("I don't understand: $speech")
+    }
+
+    private fun List<String>.matchesCommand(vararg commands: String) = any { recognized ->
+        commands.any { command ->
+            recognized.contains(command, ignoreCase = true)
+        }
     }
 }
