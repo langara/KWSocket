@@ -29,7 +29,7 @@ val Endpoint.messages: Observable<String> get() = events.ofType(Message::class.j
 fun Endpoint.send(message: String) = connections.forEach { it.send(message) }
 
 interface Client : Endpoint {
-    fun connect(serverURI: String)
+    fun connect(address: String)
 }
 
 interface Server : Endpoint {

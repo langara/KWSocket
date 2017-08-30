@@ -18,9 +18,9 @@ class WSClient : Client {
     override val connections: List<Connection>
         get() = client?.connection?.let { listOf(WSConnection(it)) } ?: emptyList()
 
-    override fun connect(serverURI: String) {
+    override fun connect(address: String) {
         close()
-        client = WSClient(serverURI).apply { connect() }
+        client = WSClient(address).apply { connect() }
     }
 
     override fun close() {
