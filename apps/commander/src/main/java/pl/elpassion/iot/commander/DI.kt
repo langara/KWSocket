@@ -2,9 +2,9 @@ package pl.elpassion.iot.commander
 
 import android.app.Application
 import pl.elpassion.iot.api.Client
-import pl.elpassion.iot.api.ClientImpl
+import pl.elpassion.iot.api.WSClient
 import pl.elpassion.iot.api.Server
-import pl.elpassion.iot.api.ServerImpl
+import pl.elpassion.iot.api.WSServer
 import pl.elpassion.loggers.SimpleLogger
 
 object DI {
@@ -19,7 +19,7 @@ object DI {
 
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
 
-    var provideNewServer: () -> Server = { ServerImpl(9999) }
+    var provideNewServer: () -> Server = { WSServer(9999) }
 
-    var provideNewClient: () -> Client = { ClientImpl() }
+    var provideNewClient: () -> Client = { WSClient() }
 }

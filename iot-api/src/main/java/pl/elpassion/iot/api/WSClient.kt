@@ -7,7 +7,7 @@ import org.java_websocket.handshake.ServerHandshake
 import java.lang.Exception
 import java.net.URI
 
-class ClientImpl : Client {
+class WSClient : Client {
 
     private val eventsRelay = PublishRelay.create<Event>()
 
@@ -16,7 +16,7 @@ class ClientImpl : Client {
     private var client: WebSocketClient? = null
 
     override val connections: List<Connection>
-        get() = client?.connection?.let { listOf(ConnectionImpl(it)) } ?: emptyList()
+        get() = client?.connection?.let { listOf(WSConnection(it)) } ?: emptyList()
 
     override fun connect(serverURI: String) {
         close()

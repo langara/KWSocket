@@ -9,20 +9,20 @@ import java.lang.Exception
 import java.net.InetSocketAddress
 
 
-class ServerImpl(private val port: Int) : Server {
+class WSServer(private val port: Int) : Server {
 
     private val eventsRelay = PublishRelay.create<Event>()
 
     override val events: Observable<Event> = eventsRelay.hide()
 
-    private var server: WSServer? = null
+    private var server: WebSocketServerImpl? = null
 
     override val connections: List<Connection>
-        get() = server?.connections()?.map { ConnectionImpl(it) } ?: emptyList()
+        get() = server?.connections()?.map { WSConnection(it) } ?: emptyList()
 
     override fun start() {
         close()
-        server = WSServer(port).apply { start() }
+        server = WebSocketServerImpl(port).apply { start() }
     }
 
     override fun close() {
@@ -30,10 +30,10 @@ class ServerImpl(private val port: Int) : Server {
         server = null
     }
 
-    private inner class WSServer(socketPort: Int) : WebSocketServer(InetSocketAddress(socketPort)) {
-        override fun onOpen(conn: WebSocket, handshake: ClientHandshake?) = eventsRelay.accept(Open(ConnectionImpl(conn)))
-        override fun onClose(conn: WebSocket, code: Int, reason: String?, remote: Boolean) = eventsRelay.accept(Close(code, ConnectionImpl(conn)))
-        override fun onMessage(conn: WebSocket, message: String) = eventsRelay.accept(Message(message, ConnectionImpl(conn)))
+    private inner class WebSocketServerImpl(socketPort: Int) : WebSocketServer(InetSocketAddress(socketPort)) {
+        override fun onOpen(conn: WebSocket, handshake: ClientHandshake?) = eventsRelay.accept(Open(WSConnection(conn)))
+        override fun onClose(conn: WebSocket, code: Int, reason: String?, remote: Boolean) = eventsRelay.accept(Close(code, WSConnection(conn)))
+        override fun onMessage(conn: WebSocket, message: String) = eventsRelay.accept(Message(message, WSConnection(conn)))
         override fun onError(conn: WebSocket?, exception: Exception) = eventsRelay.accept(Error(exception))
         override fun onStart() = eventsRelay.accept(Start)
     }
