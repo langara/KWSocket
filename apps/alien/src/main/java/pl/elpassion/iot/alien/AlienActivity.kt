@@ -4,45 +4,39 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.alien_activity.*
-import pl.elpassion.webrtc.WebRtcManager
+import pl.elpassion.iot.api.Event
+import pl.elpassion.iot.api.Message
+import pl.elpassion.webrtc.WebRTCPeer
 
-class AlienActivity : AppCompatActivity(), WebRtcManager.ConnectionListener {
+class AlienActivity : AppCompatActivity() {
 
-    private var webRtcManager: WebRtcManager? = null
+    private lateinit var webRtcPeer: WebRTCPeer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.alien_activity)
         val username = "ALIEN"
-        webRtcManager = WebRtcManager(this, surfaceView, this, username)
-        webRtcManager?.startListening()
+        webRtcPeer = WebRTCPeer(this, surfaceView, username)
+        webRtcPeer.events.subscribe(this::onEvent)
+        webRtcPeer.start()
         log("Alien is ready")
     }
 
     override fun onDestroy() {
-        webRtcManager?.cancelAllCalls()
+        webRtcPeer.close()
         super.onDestroy()
     }
 
-    override fun onConnecting(remoteUser: String) {
-        log("connecting with $remoteUser")
-    }
-
-    override fun onConnected(remoteUser: String) {
-        log("connected with $remoteUser")
-    }
-
-    override fun onDisconnected(remoteUser: String) {
-        log("disconnected with $remoteUser")
-    }
-
-    override fun onMessage(remoteUser: String, message: String) {
-        log("message: $message")
-        webRtcManager?.transmit(remoteUser, "HEY") // TODO: remove it later
+    private fun onEvent(event: Event) {
+        log("AlienActivity.onEvent($event)")
+        if (event is Message)
+            event.source?.send("Hey!") // TODO: remove it later
     }
 
     private fun log(message: String) {
-        streamingLogView.append("$message\n")
+        streamingLogView.post {
+            streamingLogView.append("$message\n")
+        }
     }
 }

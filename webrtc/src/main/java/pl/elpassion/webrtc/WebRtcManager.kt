@@ -80,6 +80,10 @@ class WebRtcManager(private val activity: Activity,
         client.closeAllConnections()
     }
 
+    fun closeConnection(username: String) {
+        client.closeConnection(username)
+    }
+
     private fun createVideoRenderer() = VideoRendererGui.create(0, 0, 100, 100,
             VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
 
