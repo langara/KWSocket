@@ -19,7 +19,7 @@ import pl.elpassion.loggers.SimpleLogger
 class CommanderImplTest {
 
     val events = PublishRelay.create<Event>()
-    val socket = mock<Socket>()
+    val socket = mock<Connection>()
     val client = mock<Client>()
     val observer = TestObserver<CommanderState>()
 

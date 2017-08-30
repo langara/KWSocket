@@ -48,6 +48,10 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
         streamingLogView.append("disconnected with $remoteUser\n")
     }
 
+    override fun onMessage(remoteUser: String, message: String) {
+        streamingLogView.append("message from $remoteUser: $message\n")
+    }
+
     private fun callUser() {
         val remoteUsername = remoteUserEditText.text.toString()
         webRtcManager?.callUser(remoteUsername)

@@ -1,8 +1,6 @@
 package pl.elpassion.iot.robot
 
 import android.app.Application
-import pl.elpassion.iot.api.Client
-import pl.elpassion.iot.api.ClientImpl
 import pl.elpassion.iot.api.Server
 import pl.elpassion.iot.api.ServerImpl
 import pl.elpassion.loggers.Logger
@@ -25,7 +23,5 @@ object DI {
 
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
 
-    var provideNewServer: () -> Server = { ServerImpl() }
-
-    var provideNewClient: () -> Client = { ClientImpl() }
+    var provideNewServer: () -> Server = { ServerImpl(9999) }
 }

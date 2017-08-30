@@ -11,9 +11,9 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     private val motorsController = MotorController()
     private var disposable: Disposable? = null
 
-    override fun start(serverPort: Int) {
+    override fun start() {
         disposable = server.events.subscribe { onEvent(it) }
-        server.start(serverPort)
+        server.start()
     }
 
     private fun onEvent(event: Event) {

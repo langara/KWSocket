@@ -21,6 +21,7 @@ class WebRtcManager(private val activity: Activity,
         fun onConnecting(remoteUser: String)
         fun onConnected(remoteUser: String)
         fun onDisconnected(remoteUser: String)
+        fun onMessage(remoteUser: String, message: String)
     }
 
     private val client by lazy { PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, username) }
@@ -47,6 +48,10 @@ class WebRtcManager(private val activity: Activity,
             listenOn(username)
             setMaxConnections(5)
         }
+    }
+
+    fun transmit(username: String, message: String) {
+        client.transmit(username, JSONObject().apply { put("message", message) })
     }
 
     fun startListening() {
@@ -130,8 +135,12 @@ class WebRtcManager(private val activity: Activity,
             VideoRendererGui.update(renderer, x, y, width, height, scalingType, mirror)
         }
 
-        override fun onMessage(peer: PnPeer?, message: Any?) {
+        override fun onMessage(peer: PnPeer, message: Any?) {
             super.onMessage(peer, message)
+            if (message !is JSONObject) return
+            if (message.has("message")) {
+                listener.onMessage(peer.id, message.getString("message"))
+            }
         }
 
         override fun onPeerStatusChanged(peer: PnPeer) {

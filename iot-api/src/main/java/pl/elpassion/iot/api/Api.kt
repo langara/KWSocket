@@ -3,24 +3,24 @@ package pl.elpassion.iot.api
 import io.reactivex.Observable
 import java.lang.Exception
 
-interface Socket : AutoCloseable {
+interface Connection : AutoCloseable {
     fun send(message: String)
 }
 
-sealed class Event(open val source: Socket? = null)
+sealed class Event(open val source: Connection? = null)
 
-data class Open(override val source: Socket? = null) : Event(source)
+data class Open(override val source: Connection? = null) : Event(source)
 
-data class Close(val code: Int, override val source: Socket? = null) : Event(source)
+data class Close(val code: Int, override val source: Connection? = null) : Event(source)
 
-data class Message(val message: String, override val source: Socket? = null) : Event(source)
+data class Message(val message: String, override val source: Connection? = null) : Event(source)
 
-data class Error(val exception: Exception, override val source: Socket? = null) : Event(source)
+data class Error(val exception: Exception, override val source: Connection? = null) : Event(source)
 
 object Start : Event()
 
 interface Endpoint : AutoCloseable {
-    val connections: List<Socket> // client will have at most one. server can have many
+    val connections: List<Connection> // client will have at most one. server can have many
     val events: Observable<Event>
 }
 
@@ -33,6 +33,6 @@ interface Client : Endpoint {
 }
 
 interface Server : Endpoint {
-    fun start(socketPort: Int = 80)
+    fun start()
 }
 

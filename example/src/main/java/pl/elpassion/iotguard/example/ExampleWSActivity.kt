@@ -30,7 +30,7 @@ class ExampleWSActivity : AppCompatActivity() {
 
         server.events.subscribe { logger.log("server got event: $it") }
         server.messages.subscribe { server.send(it) }
-        server.start(port)
+        server.start()
 
         client1.events.subscribe { logger.log("client1 got event: $it") }
         client2.events.subscribe { logger.log("client2 got event: $it") }

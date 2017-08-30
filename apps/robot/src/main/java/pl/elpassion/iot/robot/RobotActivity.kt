@@ -9,7 +9,7 @@ class RobotActivity : RxAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        robot.start(9999)
+        robot.start()
     }
 
     override fun onDestroy() {

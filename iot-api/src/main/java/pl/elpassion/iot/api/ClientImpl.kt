@@ -15,8 +15,8 @@ class ClientImpl : Client {
 
     private var client: WebSocketClient? = null
 
-    override val connections: List<Socket>
-        get() = client?.connection?.let { listOf(SocketImpl(it)) } ?: emptyList()
+    override val connections: List<Connection>
+        get() = client?.connection?.let { listOf(ConnectionImpl(it)) } ?: emptyList()
 
     override fun connect(serverURI: String) {
         close()

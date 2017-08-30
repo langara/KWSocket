@@ -48,6 +48,7 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
                 .bindToLifecycle(this)
                 .subscribe(commander.actions)
         listenButton.setOnClickListener {
+            webRtcManager?.transmit("ALIEN", "HELLO ALIEN!") // TODO: remove it later
             voiceControl = true
             speechRecognizer.start(SPEECH_REQUEST_CODE)
         }
@@ -105,6 +106,11 @@ class CommanderActivity : RxAppCompatActivity(), WebRtcManager.ConnectionListene
     override fun onConnected(remoteUser: String) = Unit
 
     override fun onDisconnected(remoteUser: String) = Unit
+
+    override fun onMessage(remoteUser: String, message: String) {
+        logger.log("commander.onMessage($remoteUser, $message)")
+    }
+
 
     inner class SpeechRecognizer {
 

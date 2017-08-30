@@ -37,6 +37,11 @@ class AlienActivity : AppCompatActivity(), WebRtcManager.ConnectionListener {
         log("disconnected with $remoteUser")
     }
 
+    override fun onMessage(remoteUser: String, message: String) {
+        log("message: $message")
+        webRtcManager?.transmit(remoteUser, "HEY") // TODO: remove it later
+    }
+
     private fun log(message: String) {
         streamingLogView.append("$message\n")
     }
