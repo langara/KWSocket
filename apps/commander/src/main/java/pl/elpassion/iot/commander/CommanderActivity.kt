@@ -85,7 +85,6 @@ class CommanderActivity : RxAppCompatActivity() {
         val username = UUID.randomUUID().toString().take(5)
         webRtcPeer = WebRTCPeer(this, surfaceView, username)
         webRtcPeer.events.subscribe(this::onEvent)
-        webRtcPeer.start() // TODO: Do I need this?
     }
 
     private fun initCommander() {
