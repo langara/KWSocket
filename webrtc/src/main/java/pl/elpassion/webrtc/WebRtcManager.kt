@@ -6,7 +6,7 @@ import android.app.Activity
 import android.opengl.GLSurfaceView
 import org.webrtc.*
 import pl.elpassion.webrtc.pubnub.PubNubClient
-import pl.elpassion.webrtc.pubnub.PubNubService
+import pl.elpassion.webrtc.pubnub.PubNubStreaming
 
 class WebRtcManager(private val activity: Activity,
                     surfaceView: GLSurfaceView,
@@ -16,7 +16,7 @@ class WebRtcManager(private val activity: Activity,
     val client: WebRtcClient by lazy {
         PubNubClient(activity, username, createMediaStream(), listener)
     }
-    val service: WebRtcService by lazy { PubNubService(username) }
+    val streaming: WebRtcStreaming by lazy { PubNubStreaming(username) }
 
     init {
         PeerConnectionFactory.initializeAndroidGlobals(

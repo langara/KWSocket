@@ -4,9 +4,9 @@ import com.pubnub.api.Callback
 import com.pubnub.api.Pubnub
 import org.json.JSONObject
 import pl.elpassion.webrtc.BuildConfig
-import pl.elpassion.webrtc.WebRtcService
+import pl.elpassion.webrtc.WebRtcStreaming
 
-class PubNubService(private val localUser: String) : WebRtcService {
+class PubNubStreaming(private val localUser: String) : WebRtcStreaming {
 
     private val pubNub by lazy { Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY) }
 

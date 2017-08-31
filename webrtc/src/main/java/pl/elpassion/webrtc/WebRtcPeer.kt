@@ -38,7 +38,7 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
     override val connections: ArrayList<WebRtcConnection> = ArrayList()
 
     override fun connect(address: String) {
-        manager.service.callUser(address) {
+        manager.streaming.callUser(address) {
             manager.client.connect(it)
         }
         // TODO: does it make sense?
@@ -49,7 +49,7 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
     }
 
     override fun start() {
-        manager.service.startListening {
+        manager.streaming.startListening {
             manager.client.acceptConnection(it)
         }
     }

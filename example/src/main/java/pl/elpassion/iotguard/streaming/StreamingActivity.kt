@@ -21,7 +21,7 @@ class StreamingActivity : AppCompatActivity(), WebRtcClient.ConnectionListener {
         setContentView(R.layout.streaming_activity)
         val username = createRandomUsername()
         webRtcManager = WebRtcManager(this, surfaceView, this, username).apply {
-            service.startListening {
+            streaming.startListening {
                 client.acceptConnection(it)
             }
         }
@@ -59,7 +59,7 @@ class StreamingActivity : AppCompatActivity(), WebRtcClient.ConnectionListener {
     private fun callUser() {
         val remoteUser = remoteUserEditText.text.toString()
         if (webRtcManager != null) {
-            webRtcManager?.service?.callUser(remoteUser) {
+            webRtcManager?.streaming?.callUser(remoteUser) {
                 webRtcManager?.client?.connect(it)
             }
         }
