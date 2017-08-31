@@ -7,10 +7,11 @@ import com.elpassion.android.view.hide
 import com.elpassion.android.view.show
 import kotlinx.android.synthetic.main.streaming_activity.*
 import pl.elpassion.iotguard.R
+import pl.elpassion.webrtc.WebRtcClient
 import pl.elpassion.webrtc.WebRtcManager
 import java.util.*
 
-class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener {
+class StreamingActivity : AppCompatActivity(), WebRtcClient.ConnectionListener {
 
     private var webRtcManager: WebRtcManager? = null
 
