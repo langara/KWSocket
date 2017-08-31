@@ -16,7 +16,7 @@ class WebRtcManager(private val activity: Activity,
     val client: WebRtcClient by lazy {
         PubNubClient(activity, username, createMediaStream(), listener)
     }
-    private val service: WebRtcService by lazy { PubNubService() }
+    val service: WebRtcService by lazy { PubNubService(username) }
 
     init {
         PeerConnectionFactory.initializeAndroidGlobals(
@@ -29,18 +29,6 @@ class WebRtcManager(private val activity: Activity,
         VideoRendererGui.setView(surfaceView, null)
         client.localRender = createVideoRender()
         client.remoteRender = createVideoRender()
-    }
-
-    fun startListening() {
-        service.startListening(username) {
-            client.acceptConnection(it)
-        }
-    }
-
-    fun callUser(remoteUsername: String) {
-        service.callUser(username, remoteUsername) {
-            client.connect(it)
-        }
     }
 
     private fun createVideoRender() = VideoRendererGui.create(0, 0, 100, 100,

@@ -6,11 +6,11 @@ import org.json.JSONObject
 import pl.elpassion.webrtc.BuildConfig
 import pl.elpassion.webrtc.WebRtcService
 
-class PubNubService : WebRtcService {
+class PubNubService(private val localUser: String) : WebRtcService {
 
     private val pubNub by lazy { Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY) }
 
-    override fun startListening(localUser: String, onCall: (String) -> Unit) {
+    override fun startListening(onCall: (String) -> Unit) {
         pubNub.uuid = localUser
         pubNub.subscribe(localUser.channel, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
@@ -23,7 +23,7 @@ class PubNubService : WebRtcService {
         })
     }
 
-    override fun callUser(localUser: String, remoteUser: String, onCall: (String) -> Unit) {
+    override fun callUser(remoteUser: String, onCall: (String) -> Unit) {
         val message = JSONObject().apply { put(CALL_USER, localUser) }
         pubNub.publish(remoteUser.channel, message, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
