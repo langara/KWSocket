@@ -4,13 +4,12 @@ package pl.elpassion.webrtc
 
 import android.app.Activity
 import android.opengl.GLSurfaceView
-import com.pubnub.api.Callback
-import com.pubnub.api.Pubnub
 import me.kevingleason.pnwebrtc.PnPeer
 import me.kevingleason.pnwebrtc.PnRTCClient
 import me.kevingleason.pnwebrtc.PnRTCListener
 import org.json.JSONObject
 import org.webrtc.*
+import pl.elpassion.webrtc.pubnub.PubNubService
 
 class WebRtcManager(private val activity: Activity,
                     surfaceView: GLSurfaceView,
@@ -25,7 +24,7 @@ class WebRtcManager(private val activity: Activity,
     }
 
     private val client by lazy { PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, username) }
-    private val pubNub by lazy { Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY) }
+    private val service: WebRtcService by lazy { PubNubService() }
 
     private var localRender: VideoRenderer.Callbacks? = null
     private var remoteRender: VideoRenderer.Callbacks? = null
@@ -50,25 +49,15 @@ class WebRtcManager(private val activity: Activity,
     }
 
     fun startListening() {
-        pubNub.uuid = username
-        pubNub.subscribe(username.channel, object : Callback() {
-            override fun successCallback(channel: String, message: Any) {
-                if (message !is JSONObject) return
-                if (message.has(CALL_USER)) {
-                    val remoteUsername = message.getString(CALL_USER)
-                    client.connect(remoteUsername, false)
-                }
-            }
-        })
+        service.startListening(username) {
+            client.connect(it, false)
+        }
     }
 
     fun callUser(remoteUsername: String) {
-        val message = JSONObject().apply { put(CALL_USER, username) }
-        pubNub.publish(remoteUsername.channel, message, object : Callback() {
-            override fun successCallback(channel: String, message: Any) {
-                client.connect(remoteUsername, true)
-            }
-        })
+        service.callUser(username, remoteUsername) {
+            client.connect(it, true)
+        }
     }
 
     fun cancelAllCalls() {
@@ -110,8 +99,6 @@ class WebRtcManager(private val activity: Activity,
         val audioSource = factory.createAudioSource(client.audioConstraints())
         return factory.createAudioTrack(AUDIO_TRACK_ID, audioSource)
     }
-
-    private val String.channel get() = this + "-channel"
 
     private inner class RtcListener : PnRTCListener() {
 
@@ -165,6 +152,5 @@ class WebRtcManager(private val activity: Activity,
         private const val VIDEO_TRACK_ID = "video-track-id"
         private const val AUDIO_TRACK_ID = "audio-track-id"
         private const val LOCAL_MEDIA_STREAM_ID = "local-media-stream"
-        private const val CALL_USER = "call_user"
     }
 }
