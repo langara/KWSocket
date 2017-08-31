@@ -1,6 +1,6 @@
 package pl.elpassion.webrtc
 
 interface WebRtcService {
-    fun startListening(localUsername: String, onCall: (String) -> Unit)
-    fun callUser(localUsername: String, remoteUsername: String, onCall: (String) -> Unit)
+    fun startListening(localUser: String, onCall: (String) -> Unit)
+    fun callUser(localUser: String, remoteUser: String, onCall: (String) -> Unit)
 }

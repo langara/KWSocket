@@ -10,24 +10,24 @@ class PubNubService : WebRtcService {
 
     private val pubNub by lazy { Pubnub(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY) }
 
-    override fun startListening(localUsername: String, onCall: (String) -> Unit) {
-        pubNub.uuid = localUsername
-        pubNub.subscribe(localUsername.channel, object : Callback() {
+    override fun startListening(localUser: String, onCall: (String) -> Unit) {
+        pubNub.uuid = localUser
+        pubNub.subscribe(localUser.channel, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
                 if (message !is JSONObject) return
                 if (message.has(CALL_USER)) {
-                    val remoteUsername = message.getString(CALL_USER)
-                    onCall(remoteUsername)
+                    val remoteUser = message.getString(CALL_USER)
+                    onCall(remoteUser)
                 }
             }
         })
     }
 
-    override fun callUser(localUsername: String, remoteUsername: String, onCall: (String) -> Unit) {
-        val message = JSONObject().apply { put(CALL_USER, localUsername) }
-        pubNub.publish(remoteUsername.channel, message, object : Callback() {
+    override fun callUser(localUser: String, remoteUser: String, onCall: (String) -> Unit) {
+        val message = JSONObject().apply { put(CALL_USER, localUser) }
+        pubNub.publish(remoteUser.channel, message, object : Callback() {
             override fun successCallback(channel: String, message: Any) {
-                onCall(remoteUsername)
+                onCall(remoteUser)
             }
         })
     }

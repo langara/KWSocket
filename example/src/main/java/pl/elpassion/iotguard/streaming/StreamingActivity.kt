@@ -53,8 +53,8 @@ class StreamingActivity : AppCompatActivity(), WebRtcManager.ConnectionListener 
     }
 
     private fun callUser() {
-        val remoteUsername = remoteUserEditText.text.toString()
-        webRtcManager?.callUser(remoteUsername)
+        val remoteUser = remoteUserEditText.text.toString()
+        webRtcManager?.callUser(remoteUser)
     }
 
     private fun cancelCall() {
