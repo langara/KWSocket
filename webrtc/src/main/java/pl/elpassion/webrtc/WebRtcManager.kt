@@ -42,12 +42,7 @@ class WebRtcManager(private val activity: Activity,
         localRender = createVideoRenderer()
         remoteRender = createVideoRenderer()
 
-        client.run {
-            attachRTCListener(RtcListener())
-            attachLocalMediaStream(createMediaStream())
-            listenOn(username)
-            setMaxConnections(5)
-        }
+        initClient()
     }
 
     fun transmit(username: String, message: String) {
@@ -82,6 +77,13 @@ class WebRtcManager(private val activity: Activity,
 
     fun closeConnection(username: String) {
         client.closeConnection(username)
+    }
+
+    private fun initClient() = client.run {
+        attachRTCListener(RtcListener())
+        attachLocalMediaStream(createMediaStream())
+        listenOn(username)
+        setMaxConnections(5)
     }
 
     private fun createVideoRenderer() = VideoRendererGui.create(0, 0, 100, 100,
