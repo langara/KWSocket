@@ -22,7 +22,7 @@ import pl.elpassion.iot.api.send
 import pl.elpassion.iot.commander.CommanderAction.*
 import pl.elpassion.loggers.TextViewLogger
 import pl.elpassion.loggers.logWifiDetails
-import pl.elpassion.webrtc.WebRTCPeer
+import pl.elpassion.webrtc.WebRtcPeer
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -38,7 +38,7 @@ class CommanderActivity : RxAppCompatActivity() {
 
     private var voiceControl = false
 
-    private lateinit var webRtcPeer: WebRTCPeer
+    private lateinit var webRtcPeer: WebRtcPeer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +83,7 @@ class CommanderActivity : RxAppCompatActivity() {
 
     private fun initWebRtc() {
         val username = UUID.randomUUID().toString().take(5)
-        webRtcPeer = WebRTCPeer(this, surfaceView, username)
+        webRtcPeer = WebRtcPeer(this, surfaceView, username)
         webRtcPeer.events.subscribe(this::onEvent)
     }
 

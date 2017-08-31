@@ -2,8 +2,7 @@ package pl.elpassion.webrtc
 
 import pl.elpassion.iot.api.Connection
 
-
-class WebRTCConnection(val address: String, private val manager: WebRtcManager) : Connection {
+class WebRtcConnection(val address: String, private val manager: WebRtcManager) : Connection {
 
     override fun send(message: String) {
         manager.transmit(address, message)
