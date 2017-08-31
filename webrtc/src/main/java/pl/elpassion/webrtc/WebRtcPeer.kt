@@ -5,7 +5,6 @@ import android.opengl.GLSurfaceView
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import pl.elpassion.iot.api.*
-import pl.elpassion.webrtc.WebRtcManager.ConnectionListener
 
 class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: String) : Client, Server {
 
@@ -13,7 +12,7 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
 
     override val events: Observable<Event> = eventsRelay.hide()
 
-    private val listener: ConnectionListener = object : ConnectionListener {
+    private val listener: WebRtcClient.ConnectionListener = object : WebRtcClient.ConnectionListener {
         override fun onConnecting(remoteUser: String) { }
 
         override fun onConnected(remoteUser: String) {
