@@ -7,8 +7,7 @@ import io.reactivex.Observable
 import pl.elpassion.iot.api.*
 import pl.elpassion.webrtc.WebRtcManager.ConnectionListener
 
-
-class WebRTCPeer(activity: Activity, surfaceView: GLSurfaceView, username: String) : Client, Server {
+class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: String) : Client, Server {
 
     private val eventsRelay = PublishRelay.create<Event>()
 
@@ -18,7 +17,7 @@ class WebRTCPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
         override fun onConnecting(remoteUser: String) { }
 
         override fun onConnected(remoteUser: String) {
-            val connection = WebRTCConnection(remoteUser, manager)
+            val connection = WebRtcConnection(remoteUser, manager)
             connections.add(connection)
             eventsRelay.accept(Open(connection))
         }
@@ -30,14 +29,14 @@ class WebRTCPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
         }
 
         override fun onMessage(remoteUser: String, message: String) {
-            val connection = connections.find { it.address == remoteUser } ?: WebRTCConnection(remoteUser, manager)
+            val connection = connections.find { it.address == remoteUser } ?: WebRtcConnection(remoteUser, manager)
             eventsRelay.accept(Message(message, connection))
         }
 
     }
     private val manager = WebRtcManager(activity, surfaceView, listener, username)
 
-    override val connections: ArrayList<WebRTCConnection> = ArrayList()
+    override val connections: ArrayList<WebRtcConnection> = ArrayList()
 
     override fun connect(address: String) {
         manager.callUser(address) // TODO: does it make sense?
