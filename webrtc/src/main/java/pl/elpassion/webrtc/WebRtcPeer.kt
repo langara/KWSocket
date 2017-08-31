@@ -16,7 +16,7 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
         override fun onConnecting(remoteUser: String) { }
 
         override fun onConnected(remoteUser: String) {
-            val connection = WebRtcConnection(remoteUser, manager)
+            val connection = WebRtcConnection(remoteUser, manager.client)
             connections.add(connection)
             eventsRelay.accept(Open(connection))
         }
@@ -28,7 +28,7 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
         }
 
         override fun onMessage(remoteUser: String, message: String) {
-            val connection = connections.find { it.address == remoteUser } ?: WebRtcConnection(remoteUser, manager)
+            val connection = connections.find { it.address == remoteUser } ?: WebRtcConnection(remoteUser, manager.client)
             eventsRelay.accept(Message(message, connection))
         }
 
@@ -42,7 +42,7 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
     }
 
     override fun close() {
-        manager.cancelAllCalls()
+        manager.client.closeAllConnections()
     }
 
     override fun start() {

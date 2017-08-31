@@ -2,13 +2,13 @@ package pl.elpassion.webrtc
 
 import pl.elpassion.iot.api.Connection
 
-class WebRtcConnection(val address: String, private val manager: WebRtcManager) : Connection {
+class WebRtcConnection(val address: String, private val client: WebRtcClient) : Connection {
 
     override fun send(message: String) {
-        manager.transmit(address, message)
+        client.transmit(address, message)
     }
 
     override fun close() {
-        manager.closeConnection(address)
+        client.closeConnection(address)
     }
 }
