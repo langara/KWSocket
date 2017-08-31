@@ -14,7 +14,6 @@ import pl.elpassion.webrtc.WebRtcClient
 
 class PubNubClient(private val activity: Activity,
                    private val username: String,
-                   private val mediaStream: MediaStream,
                    private val listener: WebRtcClient.ConnectionListener) : WebRtcClient {
 
     override var localRender: VideoRenderer.Callbacks? = null
@@ -22,13 +21,11 @@ class PubNubClient(private val activity: Activity,
 
     private val client by lazy { PnRTCClient(BuildConfig.PN_PUB_KEY, BuildConfig.PN_SUB_KEY, username) }
 
-    init {
-        client.run {
-            attachRTCListener(RtcListener())
-            attachLocalMediaStream(mediaStream)
-            listenOn(username)
-            setMaxConnections(5)
-        }
+    override fun init(mediaStream: MediaStream) = client.run {
+        attachRTCListener(RtcListener())
+        attachLocalMediaStream(mediaStream)
+        listenOn(username)
+        setMaxConnections(5)
     }
 
     override fun connect(remoteUser: String) {

@@ -1,6 +1,7 @@
 package pl.elpassion.webrtc
 
 import org.webrtc.MediaConstraints
+import org.webrtc.MediaStream
 import org.webrtc.VideoRenderer
 
 interface WebRtcClient {
@@ -15,6 +16,7 @@ interface WebRtcClient {
         fun onMessage(remoteUser: String, message: String)
     }
 
+    fun init(mediaStream: MediaStream)
     fun connect(remoteUser: String)
     fun acceptConnection(remoteUser: String)
     fun closeConnection(remoteUser: String)

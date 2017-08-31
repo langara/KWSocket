@@ -13,9 +13,7 @@ class WebRtcManager(private val activity: Activity,
                     private val listener: WebRtcClient.ConnectionListener,
                     private val username: String) {
 
-    val client: WebRtcClient by lazy {
-        PubNubClient(activity, username, createMediaStream(), listener)
-    }
+    val client: WebRtcClient by lazy { PubNubClient(activity, username, listener) }
     val streaming: WebRtcStreaming by lazy { PubNubStreaming(username) }
 
     init {
@@ -29,6 +27,8 @@ class WebRtcManager(private val activity: Activity,
         VideoRendererGui.setView(surfaceView, null)
         client.localRender = createVideoRender()
         client.remoteRender = createVideoRender()
+
+        client.init(createMediaStream())
     }
 
     private fun createVideoRender() = VideoRendererGui.create(0, 0, 100, 100,
