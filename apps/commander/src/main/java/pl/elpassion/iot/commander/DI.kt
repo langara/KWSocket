@@ -4,13 +4,14 @@ import android.app.Activity
 import android.app.Application
 import android.opengl.GLSurfaceView
 import pl.elpassion.iot.api.Client
+import pl.elpassion.iot.api.WSClient
 import pl.elpassion.loggers.SimpleLogger
 import pl.elpassion.webrtc.WebRtcPeer
 import java.util.*
 
 object DI {
 
-    private val commander by lazy { CommanderImpl(provideNewWebRTCClient(), provideLogger()) }
+    private val commander by lazy { CommanderImpl(provideNewMultiClient(), provideLogger()) }
 
     private val logger by lazy { SimpleLogger() }
 
@@ -21,6 +22,10 @@ object DI {
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
 
     var provideNewWebRTCClient: () -> Client = { WebRtcPeer(provideActivity(), provideSurfaceView(), UUID.randomUUID().toString().take(5), false) }
+
+    var provideNewWSClient: () -> Client = { WSClient() }
+
+    var provideNewMultiClient: () -> Client = { MultiClient(provideNewWebRTCClient(), provideNewWSClient()) }
 
     var provideActivity: () -> Activity = { throw UnsupportedOperationException("Activity not set") }
 

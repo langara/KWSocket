@@ -49,6 +49,17 @@ class CommanderActivity : RxAppCompatActivity() {
             voiceControl = true
             speechRecognizer.start(SPEECH_REQUEST_CODE)
         }
+        connectToAlienButton.setOnClickListener {
+            serverAddress.setText("ALIEN")
+            connectButton.performClick()
+        }
+        connectToRobotButton.setOnClickListener {
+            serverAddress.setText("ws://192.168.1.38:9999")
+            connectButton.performClick()
+        }
+        disconnectButton.setOnClickListener {
+            commander.actions.accept(Disconnect)
+        }
         logger.logWifiDetails(this)
         if (intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") == true) {
             // app started with voice command, so we immediately listen for some more commands

@@ -36,10 +36,10 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
     }
 
     private fun onEvent(event: Event) {
+        logger.log("Commander.onEvent($event)")
         when (event) {
             is Open -> states.accept(Connected)
             is Close -> states.accept(Disconnected)
-            else -> logger.log("TODO: Commander.onEvent($event)")
         }
     }
 
