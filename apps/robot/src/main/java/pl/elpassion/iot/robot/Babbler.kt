@@ -22,8 +22,10 @@ class Babbler(context: Context, private val logger: Logger) : TextToSpeech.OnIni
 
     fun say(text: String, flush: Boolean = true) {
         logger.log(text)
-        if (ttsready)
-            tts.speak(text, if(flush) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD, null, null)
+        if (ttsready) {
+            val queueMode = if (flush) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
+            tts.speak(text, queueMode, null, null)
+        }
     }
 
     fun shutdown() {
