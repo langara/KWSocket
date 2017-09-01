@@ -45,6 +45,12 @@ class CommanderImplTest {
     }
 
     @Test
+    fun `Disconnect from client`() {
+        commander.actions.accept(Disconnect)
+        verify(client).disconnect()
+    }
+
+    @Test
     fun `Send move forward command`() {
         commander.actions.accept(MoveForward)
         verify(socket).send("move forward")
