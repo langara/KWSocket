@@ -8,7 +8,7 @@ class WebRtcConnection(val address: String, private val client: WebRtcClient) : 
         client.transmit(address, message)
     }
 
-    override fun close() {
+    override fun disconnect() {
         client.closeConnection(address)
     }
 }

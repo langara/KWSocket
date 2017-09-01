@@ -11,7 +11,8 @@ import pl.elpassion.webrtc.pubnub.PubNubStreaming
 class WebRtcManager(private val activity: Activity,
                     surfaceView: GLSurfaceView,
                     private val listener: WebRtcClient.ConnectionListener,
-                    private val username: String) {
+                    private val username: String,
+                    audioEnabled: Boolean = true) {
 
     val client: WebRtcClient by lazy { PubNubClient(activity, username, listener) }
     val streaming: WebRtcStreaming by lazy { PubNubStreaming(username) }
@@ -28,17 +29,18 @@ class WebRtcManager(private val activity: Activity,
         client.localRender = createVideoRender()
         client.remoteRender = createVideoRender()
 
-        client.init(createMediaStream())
+        client.init(createMediaStream(audioEnabled))
     }
 
     private fun createVideoRender() = VideoRendererGui.create(0, 0, 100, 100,
             VideoRendererGui.ScalingType.SCALE_ASPECT_FILL, false)
 
-    private fun createMediaStream(): MediaStream {
+    private fun createMediaStream(audioEnabled: Boolean): MediaStream {
         val factory = PeerConnectionFactory()
         return factory.createLocalMediaStream(LOCAL_MEDIA_STREAM_ID).apply {
             createVideoTrack(factory)?.let { addTrack(it) }
-            addTrack(createAudioTrack(factory))
+            if (audioEnabled)
+                addTrack(createAudioTrack(factory))
         }
     }
 

@@ -17,13 +17,9 @@ import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.commander_activity.*
-import pl.elpassion.iot.api.Event
-import pl.elpassion.iot.api.send
 import pl.elpassion.iot.commander.CommanderAction.*
 import pl.elpassion.loggers.TextViewLogger
 import pl.elpassion.loggers.logWifiDetails
-import pl.elpassion.webrtc.WebRtcPeer
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class CommanderActivity : RxAppCompatActivity() {
@@ -38,19 +34,18 @@ class CommanderActivity : RxAppCompatActivity() {
 
     private var voiceControl = false
 
-    private lateinit var webRtcPeer: WebRtcPeer
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.commander_activity)
         DI.provideLogger = { logger }
+        DI.provideActivity = { this }
+        DI.provideSurfaceView = { surfaceView }
         initCommander()
         mergeActions()
-                .sample(100, TimeUnit.MILLISECONDS)
+                .sample(200, TimeUnit.MILLISECONDS)
                 .bindToLifecycle(this)
                 .subscribe(commander.actions)
         listenButton.setOnClickListener {
-            webRtcPeer.send("HELLO ALIEN!") // TODO: remove it later
             voiceControl = true
             speechRecognizer.start(SPEECH_REQUEST_CODE)
         }
@@ -59,12 +54,11 @@ class CommanderActivity : RxAppCompatActivity() {
             // app started with voice command, so we immediately listen for some more commands
             listenButton.performClick()
         }
-        initWebRtc()
     }
 
     override fun onDestroy() {
+        commander.actions.accept(Disconnect)
         super.onDestroy()
-        webRtcPeer.close()
     }
 
     private fun mergeActions() = Observable.merge(listOf(
@@ -75,17 +69,10 @@ class CommanderActivity : RxAppCompatActivity() {
             stopButton.clicks().map { Stop },
             connectButton
                     .clicks()
-                    .map { Connect(robotAddress.text.toString()) }
-                    .doOnNext { webRtcPeer.connect("ALIEN") },
+                    .map { Connect(serverAddress.text.toString()) },
             touchpad.touchActions(),
             joystick.actions()
     ))
-
-    private fun initWebRtc() {
-        val username = UUID.randomUUID().toString().take(5)
-        webRtcPeer = WebRtcPeer(this, surfaceView, username)
-        webRtcPeer.events.subscribe(this::onEvent)
-    }
 
     private fun initCommander() {
         commander.states
@@ -102,11 +89,6 @@ class CommanderActivity : RxAppCompatActivity() {
         else
             super.onActivityResult(requestCode, resultCode, data)
     }
-
-    private fun onEvent(event: Event) {
-        logger.log("CommanderActivity.onEvent($event)")
-    }
-
 
     inner class SpeechRecognizer {
 

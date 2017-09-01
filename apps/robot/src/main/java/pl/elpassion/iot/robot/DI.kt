@@ -9,19 +9,15 @@ import java.lang.UnsupportedOperationException
 
 object DI {
 
-    private val robot by lazy { RobotImpl(provideNewServer(), provideBabbler(), provideLogger()) }
+    private val robot by lazy { RobotImpl(provideNewWSServer(), provideLogger()) }
 
     private val logger by lazy { SimpleLogger() }
 
-    private val babbler by lazy { Babbler(provideApplication(), provideLogger()) }
-
     var provideRobot: () -> Robot = { robot }
-
-    var provideBabbler: () -> Babbler = { babbler }
 
     var provideLogger: () -> Logger = { logger }
 
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
 
-    var provideNewServer: () -> Server = { WSServer(9999) }
+    var provideNewWSServer: () -> Server = { WSServer(9999) }
 }

@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/robotAddress"
+                android:id="@+id/serverAddress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -29,9 +29,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="Robot address"
+                android:hint="server address"
                 android:inputType="textPersonName"
-                android:text="ws://192.168.1.38:9999" />
+                android:text="ALIEN" />
 
             <Button
                 android:id="@+id/connectButton"

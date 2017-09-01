@@ -19,11 +19,11 @@ class WSClient : Client {
         get() = client?.connection?.let { listOf(WSConnection(it)) } ?: emptyList()
 
     override fun connect(address: String) {
-        close()
+        disconnect()
         client = WSClient(address).apply { connect() }
     }
 
-    override fun close() {
+    override fun disconnect() {
         client?.closeBlocking()
         client = null
     }

@@ -6,7 +6,7 @@ import pl.elpassion.iot.api.Message
 import pl.elpassion.iot.api.Server
 import pl.elpassion.loggers.Logger
 
-class RobotImpl(private val server: Server, private val babbler: Babbler, private val logger: Logger) : Robot {
+class RobotImpl(private val server: Server, private val logger: Logger) : Robot {
 
     private val motorsController = MotorController()
     private var disposable: Disposable? = null
@@ -33,7 +33,7 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
             "stop" -> motorsController.stop()
             else ->
                 if (message.startsWith("say ")) {
-                    say(message.substring(4))
+                    throw UnsupportedOperationException("This robot does not speak")
                 } else if (message.startsWith("move wheels ")) {
                     val (left, right) = message.substring("move wheels ".length).split(" ")
                     motorsController.setupWheelsAndMove(left.toInt(), right.toInt())
@@ -46,11 +46,8 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
         }
     }
 
-    private fun say(speech: String) {
-        babbler.say(speech)
-    }
-
     override fun turnOff() {
+        server.disconnect()
         disposable?.dispose()
         motorsController.releasePins()
     }

@@ -3,8 +3,9 @@ package pl.elpassion.iot.api
 import io.reactivex.Observable
 import java.lang.Exception
 
-interface Connection : AutoCloseable {
+interface Connection {
     fun send(message: String)
+    fun disconnect()
 }
 
 sealed class Event(open val source: Connection? = null)
@@ -19,9 +20,10 @@ data class Error(val exception: Exception, override val source: Connection? = nu
 
 object Start : Event()
 
-interface Endpoint : AutoCloseable {
+interface Endpoint {
     val connections: List<Connection> // client will have at most one. server can have many
     val events: Observable<Event>
+    fun disconnect()
 }
 
 val Endpoint.messages: Observable<String> get() = events.ofType(Message::class.java).map { it.message }

@@ -21,7 +21,8 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
     private fun call(action: CommanderAction) {
         logger.log("perform($action)")
         when (action) {
-            is Connect -> client.connect(action.robotAddress)
+            is Connect -> client.connect(action.serverAddress)
+            is Disconnect -> client.disconnect()
             is Recognize -> recognize(action.speech)
             is MoveForward -> client.send("move forward")
             is MoveBackward -> client.send("move backward")

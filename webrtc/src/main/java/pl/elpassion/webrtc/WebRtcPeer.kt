@@ -6,7 +6,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable
 import pl.elpassion.iot.api.*
 
-class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: String) : Client, Server {
+class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: String, audioEnabled: Boolean = true) : Client, Server {
 
     private val eventsRelay = PublishRelay.create<Event>()
 
@@ -33,7 +33,7 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
         }
 
     }
-    private val manager = WebRtcManager(activity, surfaceView, listener, username)
+    private val manager = WebRtcManager(activity, surfaceView, listener, username, audioEnabled)
 
     override val connections: ArrayList<WebRtcConnection> = ArrayList()
 
@@ -41,10 +41,9 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
         manager.streaming.callUser(address) {
             manager.client.connect(it)
         }
-        // TODO: does it make sense?
     }
 
-    override fun close() {
+    override fun disconnect() {
         manager.client.closeAllConnections()
     }
 

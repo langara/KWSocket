@@ -21,11 +21,11 @@ class WSServer(private val port: Int) : Server {
         get() = server?.connections()?.map { WSConnection(it) } ?: emptyList()
 
     override fun start() {
-        close()
+        disconnect()
         server = WebSocketServerImpl(port).apply { start() }
     }
 
-    override fun close() {
+    override fun disconnect() {
         server?.stop()
         server = null
     }
