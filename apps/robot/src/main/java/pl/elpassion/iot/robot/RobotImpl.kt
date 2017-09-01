@@ -31,19 +31,23 @@ class RobotImpl(private val server: Server, private val logger: Logger) : Robot 
             "move left" -> motorsController.moveLeft()
             "move right" -> motorsController.moveRight()
             "stop" -> motorsController.stop()
-            else ->
-                if (message.startsWith("say ")) {
-                    logger.log("This robot does not speak")
-                } else if (message.startsWith("move wheels ")) {
-                    val (left, right) = message.substring("move wheels ".length).split(" ")
-                    motorsController.setupWheelsAndMove(left.toInt(), right.toInt())
-                } else if (message.startsWith("joystick ")) {
-                    val (degree, power) = message.substring("joystick ".length).split("#")
-                    motorsController.moveEngines(degree.toInt(), power.toDouble())
-                } else {
-                    logger.log("TODO: handle Robot.onMessage($message)")
-                }
+            else -> when {
+                message.startsWith("say ") -> logger.log("This robot does not speak")
+                message.startsWith("move wheels ") -> moveWheels(message)
+                message.startsWith("joystick ") -> moveEngines(message)
+                else -> logger.log("TODO: handle Robot.onMessage($message)")
+            }
         }
+    }
+
+    private fun moveWheels(message: String) {
+        val (left, right) = message.substring("move wheels ".length).split(" ")
+        motorsController.setupWheelsAndMove(left.toInt(), right.toInt())
+    }
+
+    private fun moveEngines(message: String) {
+        val (degree, power) = message.substring("joystick ".length).split("#")
+        motorsController.moveEngines(degree.toInt(), power.toDouble())
     }
 
     override fun turnOff() {
