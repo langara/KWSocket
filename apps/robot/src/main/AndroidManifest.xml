@@ -29,7 +29,7 @@
 
         <activity
             android:name="pl.elpassion.iot.robot.RobotActivity"
-            android:label="IoT Robot">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
