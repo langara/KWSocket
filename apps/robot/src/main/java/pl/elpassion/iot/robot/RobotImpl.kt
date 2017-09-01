@@ -33,7 +33,7 @@ class RobotImpl(private val server: Server, private val logger: Logger) : Robot 
             "stop" -> motorsController.stop()
             else ->
                 if (message.startsWith("say ")) {
-                    throw UnsupportedOperationException("This robot does not speak")
+                    logger.log("This robot does not speak")
                 } else if (message.startsWith("move wheels ")) {
                     val (left, right) = message.substring("move wheels ".length).split(" ")
                     motorsController.setupWheelsAndMove(left.toInt(), right.toInt())

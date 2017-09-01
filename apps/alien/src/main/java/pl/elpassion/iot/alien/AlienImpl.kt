@@ -8,6 +8,8 @@ class AlienImpl(private val server: Server, private val client: Client, private 
     override fun start() {
         server.start()
         server.events.subscribe { onEvent(it) }
+        client.connect("ws://192.168.1.38:9999") // TODO: remove hardcoded robot address
+        client.events.subscribe { logger.log("Alien.robotEvent($it)") }
     }
 
     override fun turnOff() {

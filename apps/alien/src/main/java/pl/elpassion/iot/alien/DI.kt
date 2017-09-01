@@ -31,7 +31,7 @@ object DI {
 
     var provideSurfaceView: () -> GLSurfaceView = { throw UnsupportedOperationException("Surface view not set") }
 
-    var provideNewWebRTCServer: () -> Server = { WebRtcPeer(provideActivity(), provideSurfaceView(), "ALIEN") }
+    var provideNewWebRTCServer: () -> Server = { WebRtcPeer(provideActivity(), provideSurfaceView(), "ALIEN", false) }
 
     var provideNewWSClient: () -> Client = { WSClient() }
 }
