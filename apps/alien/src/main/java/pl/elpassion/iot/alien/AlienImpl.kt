@@ -1,9 +1,6 @@
 package pl.elpassion.iot.alien
 
-import pl.elpassion.iot.api.Client
-import pl.elpassion.iot.api.Event
-import pl.elpassion.iot.api.Message
-import pl.elpassion.iot.api.Server
+import pl.elpassion.iot.api.*
 import pl.elpassion.loggers.Logger
 
 class AlienImpl(private val server: Server, private val client: Client, private val babbler: pl.elpassion.iot.alien.Babbler, private val logger: Logger) : pl.elpassion.iot.alien.Alien {
@@ -30,7 +27,12 @@ class AlienImpl(private val server: Server, private val client: Client, private 
             say(message.substring(4))
         }
         else {
-//            client.send(message)
+            client.send(message)
+            when (message) {
+                "move forward", "move backward", "move left", "move right", "stop" -> {
+                    say("Yes sir! $message.")
+                }
+            }
         }
     }
 
