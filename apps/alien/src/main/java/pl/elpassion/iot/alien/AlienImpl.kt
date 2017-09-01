@@ -27,8 +27,7 @@ class AlienImpl(private val server: Server, private val client: Client, private 
     private fun onMessage(message: String) {
         if (message.startsWith("say ")) {
             say(message.substring(4))
-        }
-        else {
+        } else {
             client.send(message)
             when (message) {
                 "move forward", "move backward", "move left", "move right", "stop" -> {
@@ -39,7 +38,16 @@ class AlienImpl(private val server: Server, private val client: Client, private 
     }
 
     private fun say(speech: String) {
-        babbler.say(speech)
+        when (speech) {
+            in listOf("something funny", "something stupid") -> babbler.say(randomFunnySentence)
+            in listOf("something smart", "something intelligent") -> babbler.say(randomSmartSentence)
+            else -> babbler.say(speech)
+        }
     }
 
+    private val randomFunnySentence
+        get() = FUNNY_QUOTES.random().sentence
+
+    private val randomSmartSentence
+        get() = SMART_QUOTES.random().let { (sentence, author) -> "$sentence\n$author" }
 }
