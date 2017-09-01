@@ -3,7 +3,7 @@ package pl.elpassion.iot.alien
 import pl.elpassion.iot.api.*
 import pl.elpassion.loggers.Logger
 
-class AlienImpl(private val server: Server, private val client: Client, private val babbler: pl.elpassion.iot.alien.Babbler, private val logger: Logger) : pl.elpassion.iot.alien.Alien {
+class AlienImpl(private val server: Server, private val client: Client, private val babbler: Babbler, private val logger: Logger) : Alien {
 
     override fun start() {
         server.start()
