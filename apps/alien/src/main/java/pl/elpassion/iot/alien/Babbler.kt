@@ -1,6 +1,7 @@
 package pl.elpassion.iot.alien
 
 import android.content.Context
+import android.os.Build
 import android.speech.tts.TextToSpeech
 import pl.elpassion.loggers.Logger
 import java.util.*
@@ -22,7 +23,13 @@ class Babbler(context: Context, private val logger: Logger) : TextToSpeech.OnIni
 
     fun say(text: String, flush: Boolean = true) {
         logger.log(text)
-        if (ttsready) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            logger.log("TTS not available (API < LOLLIPOP)")
+        }
+        else if (!ttsready) {
+            logger.log("TTS not ready")
+        }
+        else {
             val queueMode = if (flush) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD
             tts.speak(text, queueMode, null, null)
         }
