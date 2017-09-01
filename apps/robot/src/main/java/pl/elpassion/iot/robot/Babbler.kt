@@ -1,7 +1,6 @@
 package pl.elpassion.iot.robot
 
 import android.content.Context
-import android.os.Build
 import android.speech.tts.TextToSpeech
 import pl.elpassion.loggers.Logger
 import java.util.*
@@ -23,7 +22,7 @@ class Babbler(context: Context, private val logger: Logger) : TextToSpeech.OnIni
 
     fun say(text: String, flush: Boolean = true) {
         logger.log(text)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && ttsready)
+        if (ttsready)
             tts.speak(text, if(flush) TextToSpeech.QUEUE_FLUSH else TextToSpeech.QUEUE_ADD, null, null)
     }
 
