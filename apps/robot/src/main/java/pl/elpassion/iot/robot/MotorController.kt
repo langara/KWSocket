@@ -47,8 +47,8 @@ class MotorController {
 
     fun moveForward() = setupWheelsAndMove(FORWARD, FORWARD, 100, 100)
     fun moveBackward() = setupWheelsAndMove(BACKWARD, BACKWARD, 100, 100)
-    fun moveLeft() = setupWheelsAndMove(BACKWARD, FORWARD, 5, 5)
-    fun moveRight() = setupWheelsAndMove(FORWARD, BACKWARD,5, 5)
+    fun moveLeft() = setupWheelsAndMove(BACKWARD, FORWARD, 20, 20)
+    fun moveRight() = setupWheelsAndMove(FORWARD, BACKWARD,20, 20)
     fun stop() = setupWheels(STOP, STOP)
 
     fun releasePins() {
