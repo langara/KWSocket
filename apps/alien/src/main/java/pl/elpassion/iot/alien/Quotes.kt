@@ -127,6 +127,15 @@ val SMART_QUOTES = listOf(
         Quote("Those who cannot understand how to put their thoughts on ice should not enter into the heat of debate.", "Friedrich Nietzsche")
 )
 
+val READY_CONFIRMATIONS = listOf(
+        "Sir, yes sir",
+        "As you wish",
+        "OK",
+        "On your command",
+        "Roger that",
+        "Affirmative"
+)
+
 private val RANDOM = Random()
 
 fun <T> List<T>.random() = this[RANDOM.nextInt(size)]

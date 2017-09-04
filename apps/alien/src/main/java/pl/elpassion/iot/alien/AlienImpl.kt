@@ -21,6 +21,8 @@ class AlienImpl(private val server: Server, private val client: Client, private 
         logger.log("onEvent($event)")
         when (event) {
             is Message -> onMessage(event.message)
+            is Open -> say("connected")
+            is Close -> say("disconnected")
         }
     }
 
@@ -31,7 +33,7 @@ class AlienImpl(private val server: Server, private val client: Client, private 
             client.send(message)
             when (message) {
                 "move forward", "move backward", "move left", "move right", "stop" -> {
-                    say("Yes sir! $message.")
+                    babbler.say(randomReadyConfirmation)
                 }
             }
         }
@@ -50,4 +52,7 @@ class AlienImpl(private val server: Server, private val client: Client, private 
 
     private val randomSmartSentence
         get() = SMART_QUOTES.random().let { (sentence, author) -> "$sentence\n$author" }
+
+    private val randomReadyConfirmation
+        get() = READY_CONFIRMATIONS.random()
 }
