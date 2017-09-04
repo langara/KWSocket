@@ -30,11 +30,13 @@ class RobotImpl(private val server: Server, private val logger: Logger) : Robot 
             "move backward" -> motorsController.moveBackward()
             "move left" -> motorsController.moveLeft()
             "move right" -> motorsController.moveRight()
+            "look up" -> motorsController.lookUp()
+            "look down" -> motorsController.lookDown()
+            "look ahead" -> motorsController.lookAhead()
             "stop" -> motorsController.stop()
             else -> when {
                 message.startsWith("say ") -> logger.log("This robot does not speak")
                 message.startsWith("move wheels ") -> moveWheels(message)
-                message.startsWith("joystick ") -> moveEngines(message)
                 else -> logger.log("TODO: handle Robot.onMessage($message)")
             }
         }
@@ -43,11 +45,6 @@ class RobotImpl(private val server: Server, private val logger: Logger) : Robot 
     private fun moveWheels(message: String) {
         val (left, right) = message.substring("move wheels ".length).split(" ")
         motorsController.setupWheelsAndMove(left.toInt(), right.toInt())
-    }
-
-    private fun moveEngines(message: String) {
-        val (degree, power) = message.substring("joystick ".length).split("#")
-        motorsController.moveEngines(degree.toInt(), power.toDouble())
     }
 
     override fun turnOff() {

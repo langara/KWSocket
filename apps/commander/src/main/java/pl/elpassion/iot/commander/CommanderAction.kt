@@ -8,11 +8,14 @@ sealed class CommanderAction {
     object Stop : CommanderAction()
 
     data class MoveWheels(val left: Int, val right: Int) : CommanderAction()
-    data class MoveEnginesByJoystick(val degrees: Int, val power: Double) : CommanderAction()
     data class Connect(val serverAddress: String) : CommanderAction()
     object Disconnect : CommanderAction()
     data class Say(val sentence: String) : CommanderAction()
     data class Recognize(val speech: List<String>) : CommanderAction()
+
+    object LookUp : CommanderAction()
+    object LookDown : CommanderAction()
+    object LookAhead : CommanderAction()
 }
 
 

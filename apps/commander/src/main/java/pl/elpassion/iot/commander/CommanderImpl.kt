@@ -31,7 +31,9 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
             is MoveWheels -> client.send("move wheels ${action.left} ${action.right}")
             is Stop -> client.send("stop")
             is Say -> client.send("say ${action.sentence}")
-            is MoveEnginesByJoystick -> client.send("joystick ${action.degrees}#${action.power}")
+            is LookUp -> client.send("look up")
+            is LookDown -> client.send("look down")
+            is LookAhead -> client.send("look ahead")
         }
     }
 

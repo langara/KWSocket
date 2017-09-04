@@ -145,9 +145,9 @@ class CommanderActivity : RxAppCompatActivity() {
 
         private fun Joystick.actions() = Observable.create<CommanderAction> { emitter ->
             val listener = object : JoystickListener {
-                override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(MoveEnginesByJoystick(degrees.toInt(), (offset * offset).toDouble()))
+                override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(if (degrees > 0) LookUp else LookDown)
                 override fun onDown() = Unit
-                override fun onUp() = emitter.onNext(Stop)
+                override fun onUp() = emitter.onNext(LookAhead)
             }
             setJoystickListener(listener)
             emitter.setCancellable { setJoystickListener(null) }

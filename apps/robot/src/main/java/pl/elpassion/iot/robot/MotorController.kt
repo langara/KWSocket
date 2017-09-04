@@ -1,6 +1,5 @@
 package pl.elpassion.iot.robot
 
-import android.support.annotation.FloatRange
 import android.support.annotation.IntRange
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManagerService
@@ -14,6 +13,8 @@ class MotorController {
     private val rightMotorPower = manager.openPwm("PWM0").apply { setPwmFrequencyHz(120.0);setEnabled(true) }
     private val leftMotorForward = manager.openGpio("BCM23").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
     private val leftMotorBackward = manager.openGpio("BCM24").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
+    private val upCameraServo = manager.openGpio("BCM7").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
+    private val downCameraServo = manager.openGpio("BCM8").apply { setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW); setActiveType(Gpio.ACTIVE_HIGH) }
     private val leftMotorPower = manager.openPwm("PWM1").apply { setPwmFrequencyHz(120.0); setEnabled(true) }
 
     enum class Direction { FORWARD, BACKWARD, STOP }
@@ -60,32 +61,24 @@ class MotorController {
         rightMotorPower.close()
     }
 
+    fun lookUp() {
+        upCameraServo.value = true
+        downCameraServo.value = false
+    }
+
+    fun lookDown() {
+        upCameraServo.value = false
+        downCameraServo.value = true
+    }
+
+    fun lookAhead() {
+        upCameraServo.value = false
+        downCameraServo.value = false
+    }
+
     fun moveWheels(left: Int, right: Int) {
         leftMotorPower.setPwmDutyCycle(left.toDouble())
         rightMotorPower.setPwmDutyCycle(right.toDouble())
-    }
-
-    fun moveEngines(@IntRange(from = -180, to = 180) angle: Int, @FloatRange(from = 0.0, to = 1.0) power: Double) {
-        setMotorDirections(angle, { setupLeftWheel(BACKWARD) }, { setupLeftWheel(FORWARD) }, { setupRightWheel(FORWARD) }, { setupRightWheel(BACKWARD) })
-        if (angle < 0) {
-            setMotorsPower(angle.unaryMinus(), power)
-        } else {
-            setMotorsPower(angle, power)
-        }
-    }
-
-    private fun setMotorsPower(angle: Int, power: Double) {
-        if (angle < 90) {
-            val leftPower: Double = 100.0 * power
-            val rightPower: Double = power * 100.0 * Math.abs((angle / 45.0) - 1.0)
-            rightMotorPower.setPwmDutyCycle(rightPower)
-            leftMotorPower.setPwmDutyCycle(leftPower)
-        } else {
-            val rightPower: Double = 100.0 * power
-            val leftPower: Double = power * 100.0 * Math.abs((-angle / 45.0) + 3.0)
-            leftMotorPower.setPwmDutyCycle(leftPower)
-            rightMotorPower.setPwmDutyCycle(rightPower)
-        }
     }
 }
 
