@@ -16,6 +16,8 @@ sealed class CommanderAction {
     object LookUp : CommanderAction()
     object LookDown : CommanderAction()
     object LookAhead : CommanderAction()
+
+    data class ChangeVolume(val delta: Int) : CommanderAction()
 }
 
 

@@ -78,6 +78,8 @@ class CommanderActivity : RxAppCompatActivity() {
             leftButton.clicks().map { MoveLeft },
             rightButton.clicks().map { MoveRight },
             stopButton.clicks().map { Stop },
+            volumeMinus.clicks().map { ChangeVolume(-1) },
+            volumePlus.clicks().map { ChangeVolume(1) },
             connectButton
                     .clicks()
                     .map { Connect(serverAddress.text.toString()) },

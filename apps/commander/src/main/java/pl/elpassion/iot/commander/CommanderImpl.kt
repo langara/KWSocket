@@ -34,6 +34,7 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
             is LookUp -> client.send("look up")
             is LookDown -> client.send("look down")
             is LookAhead -> client.send("look ahead")
+            is ChangeVolume -> client.send("volume ${action.delta}")
         }
     }
 

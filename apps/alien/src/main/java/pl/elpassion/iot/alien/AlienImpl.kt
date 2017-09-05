@@ -1,9 +1,18 @@
 package pl.elpassion.iot.alien
 
+import android.content.Context
+import android.media.AudioManager
+import android.media.AudioManager.STREAM_MUSIC
 import pl.elpassion.iot.api.*
 import pl.elpassion.loggers.Logger
 
-class AlienImpl(private val server: Server, private val client: Client, private val babbler: Babbler, private val logger: Logger) : Alien {
+class AlienImpl(private val server: Server, private val client: Client, private val babbler: Babbler, private val context: Context, private val logger: Logger) : Alien {
+
+    companion object {
+        const val VOLUME_COMMAND_PREFIX = "volume "
+        const val SAY_COMMAND_PREFIX = "say "
+    }
+
 
     override fun start() {
         server.start()
@@ -27,14 +36,25 @@ class AlienImpl(private val server: Server, private val client: Client, private 
     }
 
     private fun onMessage(message: String) {
-        if (message.startsWith("say ")) {
-            say(message.substring(4))
-        } else {
-            client.send(message)
-            when (message) {
-                "move forward", "move backward", "move left", "move right", "stop" -> {
-                    babbler.say(randomReadyConfirmation)
-                }
+        when {
+            message.startsWith(SAY_COMMAND_PREFIX) -> say(message.substring(SAY_COMMAND_PREFIX.length))
+            message.startsWith(VOLUME_COMMAND_PREFIX) -> changeVolume(message.substring(VOLUME_COMMAND_PREFIX.length).toInt())
+            else -> delegateToRobot(message)
+        }
+    }
+
+    private fun changeVolume(delta: Int) {
+        val manager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val currentVolume = manager.getStreamVolume(STREAM_MUSIC)
+        val newVolume = (currentVolume + delta).coerceIn(0, manager.getStreamMaxVolume(STREAM_MUSIC))
+        manager.setStreamVolume(STREAM_MUSIC, newVolume, 0)
+    }
+
+    private fun delegateToRobot(message: String) {
+        client.send(message)
+        when (message) {
+            "move forward", "move backward", "move left", "move right", "stop" -> {
+                babbler.say(randomReadyConfirmation)
             }
         }
     }

@@ -109,10 +109,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <View
+                    <Button
+                        android:id="@+id/volumeMinus"
                         android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
+                        android:layout_height="60dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:background="#63ffffff"
+                        android:text="Vol -"
+                        android:textSize="12sp" />
 
                     <Button
                         android:id="@+id/forwardButton"
@@ -124,10 +129,15 @@
                         android:text="Forward"
                         android:textSize="12sp" />
 
-                    <View
+                    <Button
+                        android:id="@+id/volumePlus"
                         android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
+                        android:layout_height="60dp"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:background="#63ffffff"
+                        android:text="Vol +"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 

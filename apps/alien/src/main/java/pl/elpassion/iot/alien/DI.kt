@@ -13,7 +13,7 @@ import java.lang.UnsupportedOperationException
 
 object DI {
 
-    private val alien by lazy { pl.elpassion.iot.alien.AlienImpl(provideNewWebRTCServer(), provideNewWSClient(), provideBabbler(), provideLogger()) }
+    private val alien by lazy { pl.elpassion.iot.alien.AlienImpl(provideNewWebRTCServer(), provideNewWSClient(), provideBabbler(), provideApplication(), provideLogger()) }
 
     private val logger by lazy { SimpleLogger() }
 
