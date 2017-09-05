@@ -48,6 +48,7 @@ class AlienImpl(private val server: Server, private val client: Client, private 
         val currentVolume = manager.getStreamVolume(STREAM_MUSIC)
         val newVolume = (currentVolume + delta).coerceIn(0, manager.getStreamMaxVolume(STREAM_MUSIC))
         manager.setStreamVolume(STREAM_MUSIC, newVolume, 0)
+        babbler.say(randomReadyConfirmation)
     }
 
     private fun delegateToRobot(message: String) {
