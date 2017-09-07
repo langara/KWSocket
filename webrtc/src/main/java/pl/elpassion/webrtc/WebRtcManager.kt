@@ -4,6 +4,7 @@ package pl.elpassion.webrtc
 
 import android.app.Activity
 import android.opengl.GLSurfaceView
+import android.view.View.VISIBLE
 import org.webrtc.*
 import pl.elpassion.webrtc.pubnub.PubNubClient
 import pl.elpassion.webrtc.pubnub.PubNubStreaming
@@ -25,6 +26,7 @@ class WebRtcManager(private val activity: Activity,
                 true, // Hardware Acceleration Enabled
                 null) // Render EGL Context
 
+        surfaceView.run { post { visibility = VISIBLE } }
         VideoRendererGui.setView(surfaceView, null)
         client.localRender = createVideoRender()
         client.remoteRender = createVideoRender()

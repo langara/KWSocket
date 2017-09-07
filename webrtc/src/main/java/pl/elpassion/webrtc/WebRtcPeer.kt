@@ -36,7 +36,8 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
             eventsRelay.accept(DebugMessage(message))
         }
     }
-    private val manager = WebRtcManager(activity, surfaceView, listener, username, audioEnabled)
+
+    private val manager by lazy { WebRtcManager(activity, surfaceView, listener, username, audioEnabled) }
 
     override val connections: ArrayList<WebRtcConnection> = ArrayList()
 
