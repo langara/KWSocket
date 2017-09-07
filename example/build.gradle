@@ -30,8 +30,8 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation group: 'com.jakewharton.rxbinding2', name: 'rxbinding-kotlin', version: "2.0.0"
     implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: '2.0.0'
-    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.1.0"
-    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.1.0"
+    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.2.0"
+    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.2.0"
     implementation 'com.elpassion.android.commons:view:0.0.21'
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: "1.5.0"
