@@ -32,6 +32,9 @@ class WebRtcPeer(activity: Activity, surfaceView: GLSurfaceView, username: Strin
             eventsRelay.accept(Message(message, connection))
         }
 
+        override fun onDebug(message: String) {
+            eventsRelay.accept(DebugMessage(message))
+        }
     }
     private val manager = WebRtcManager(activity, surfaceView, listener, username, audioEnabled)
 

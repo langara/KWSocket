@@ -56,6 +56,10 @@ class StreamingActivity : AppCompatActivity(), WebRtcClient.ConnectionListener {
         streamingLogView.append("message from $remoteUser: $message\n")
     }
 
+    override fun onDebug(message: String) {
+        streamingLogView.append("debug: $message\n")
+    }
+
     private fun callUser() {
         val remoteUser = remoteUserEditText.text.toString()
         if (webRtcManager != null) {

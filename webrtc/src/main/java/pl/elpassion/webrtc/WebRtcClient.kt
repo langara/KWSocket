@@ -14,6 +14,7 @@ interface WebRtcClient {
         fun onConnected(remoteUser: String)
         fun onDisconnected(remoteUser: String)
         fun onMessage(remoteUser: String, message: String)
+        fun onDebug(message: String)
     }
 
     fun init(mediaStream: MediaStream)

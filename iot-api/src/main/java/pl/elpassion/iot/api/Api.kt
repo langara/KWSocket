@@ -18,6 +18,8 @@ data class Message(val message: String, override val source: Connection? = null)
 
 data class Error(val exception: Exception, override val source: Connection? = null) : Event(source)
 
+data class DebugMessage(val message: String) : Event()
+
 object Start : Event()
 
 interface Endpoint {

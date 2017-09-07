@@ -4,6 +4,7 @@ import android.app.Activity
 import me.kevingleason.pnwebrtc.PnPeer
 import me.kevingleason.pnwebrtc.PnRTCClient
 import me.kevingleason.pnwebrtc.PnRTCListener
+import me.kevingleason.pnwebrtc.PnRTCMessage
 import org.json.JSONObject
 import org.webrtc.MediaConstraints
 import org.webrtc.MediaStream
@@ -96,6 +97,14 @@ class PubNubClient(private val activity: Activity,
                     PnPeer.STATUS_CONNECTED -> listener.onConnected(peer.id)
                     PnPeer.STATUS_DISCONNECTED -> listener.onDisconnected(peer.id)
                 }
+            }
+        }
+
+        override fun onDebug(message: PnRTCMessage?) {
+            super.onDebug(message)
+            if (message !is JSONObject) return
+            if (message.has("message")) {
+                listener.onDebug(message.getString("message"))
             }
         }
     }
