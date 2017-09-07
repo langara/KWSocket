@@ -83,9 +83,8 @@ class PubNubClient(private val activity: Activity,
 
         override fun onMessage(peer: PnPeer, message: Any?) {
             super.onMessage(peer, message)
-            if (message !is JSONObject) return
-            if (message.has("message")) {
-                listener.onMessage(peer.id, message.getString("message"))
+            (message as? JSONObject)?.value?.let {
+                listener.onMessage(peer.id, it)
             }
         }
 
@@ -102,10 +101,10 @@ class PubNubClient(private val activity: Activity,
 
         override fun onDebug(message: PnRTCMessage?) {
             super.onDebug(message)
-            if (message !is JSONObject) return
-            if (message.has("message")) {
-                listener.onDebug(message.getString("message"))
-            }
+            message?.value?.let { listener.onDebug(it) }
         }
+
+        private val JSONObject.value: String?
+            get() = if (has("message")) getString("message") else null
     }
 }
