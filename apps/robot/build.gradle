@@ -28,12 +28,11 @@ dependencies {
     implementation project(':webrtc')
     implementation project(':loggers')
     implementation project(':iot-api')
-    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation 'com.android.support:appcompat-v7:26.0.2'
     implementation group: 'com.jakewharton.rxbinding2', name: 'rxbinding-kotlin', version: "2.0.0"
     implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: '2.0.0'
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.2.0"
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.2.0"
-    implementation 'com.android.support:appcompat-v7:26.0.1'
     compileOnly 'com.google.android.things:androidthings:0.5-devpreview'
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: "1.5.0"
