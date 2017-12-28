@@ -2,8 +2,8 @@
 
 package pl.elpassion.iot.robot
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
 
 class MotorController_Direction_Test {

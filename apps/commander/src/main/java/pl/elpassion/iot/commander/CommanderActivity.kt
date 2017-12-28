@@ -39,7 +39,6 @@ class CommanderActivity : RxAppCompatActivity() {
         setContentView(R.layout.commander_activity)
         DI.provideLogger = { logger }
         DI.provideActivity = { this }
-        DI.provideSurfaceView = { surfaceView }
         initCommander()
         mergeActions()
                 .sample(200, TimeUnit.MILLISECONDS)

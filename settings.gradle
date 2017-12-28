@@ -1,1 +1,1 @@
-include ':apps:alien', ':apps:commander', ':apps:robot', ':example', ':iot-api', ':loggers', ':webrtc', ':pnwebrtc'
+include ':apps:commander', ':apps:robot', ':iot-api', ':loggers'

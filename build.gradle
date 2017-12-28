@@ -14,9 +14,10 @@ buildscript {
     ext.rxbinding_version = '2.0.0'
     ext.rxrelay_version = '2.0.0'
     ext.rxandroid_version = '2.0.1'
+    ext.rxlifecycle_version = '2.2.1'
     ext.retrofit_version = '2.3.0'
     ext.okhttp_version = '3.8.1'
-    ext.mockito_kotlin_version = '1.5.0'
+    ext.mockito_kotlin_version = '2.0.0-alpha02'
     ext.mockito_android_version = '2.10.0'
     ext.junit_version = '4.12'
     repositories {

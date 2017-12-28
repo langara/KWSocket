@@ -26,15 +26,15 @@ android {
 }
 
 dependencies {
-    implementation project(':webrtc')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation project(':loggers')
     implementation project(':iot-api')
     implementation 'com.jmedeisis:bugstick:0.2.2'
     implementation group: 'com.jakewharton.rxbinding2', name: 'rxbinding-kotlin', version: rxbinding_version
     implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: rxrelay_version
-    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: "2.2.0"
-    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: "2.2.0"
+    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: rxlifecycle_version
+    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: rxlifecycle_version
     implementation group: 'com.android.support', name: 'appcompat-v7', version: android_support_version
     testImplementation "junit:junit:$junit_version"
-    testImplementation group: 'com.nhaarman', name: 'mockito-kotlin-kt1.1', version: "1.5.0"
+    testImplementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: mockito_kotlin_version
 }
