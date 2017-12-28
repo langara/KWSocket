@@ -10,8 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.touches
-import com.jmedeisis.bugstick.Joystick
-import com.jmedeisis.bugstick.JoystickListener
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
@@ -82,8 +80,7 @@ class CommanderActivity : RxAppCompatActivity() {
             connectButton
                     .clicks()
                     .map { Connect(serverAddress.text.toString()) },
-            touchpad.touchActions(),
-            joystick.actions()
+            touchpad.touchActions()
     ))
 
     private fun initCommander() {
@@ -143,16 +140,6 @@ class CommanderActivity : RxAppCompatActivity() {
     }
 
     companion object {
-
-        private fun Joystick.actions() = Observable.create<CommanderAction> { emitter ->
-            val listener = object : JoystickListener {
-                override fun onDrag(degrees: Float, offset: Float) = emitter.onNext(if (degrees > 0) LookUp else LookDown)
-                override fun onDown() = Unit
-                override fun onUp() = emitter.onNext(LookAhead)
-            }
-            setJoystickListener(listener)
-            emitter.setCancellable { setJoystickListener(null) }
-        }
 
         private fun View.touchActions() = touches().map { it.toAction(width.toFloat(), height.toFloat()) }
 

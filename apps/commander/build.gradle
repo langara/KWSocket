@@ -29,7 +29,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation project(':loggers')
     implementation project(':iot-api')
-    implementation 'com.jmedeisis:bugstick:0.2.2'
     implementation group: 'com.jakewharton.rxbinding2', name: 'rxbinding-kotlin', version: rxbinding_version
     implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: rxrelay_version
     implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: rxlifecycle_version
