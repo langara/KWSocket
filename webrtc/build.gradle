@@ -2,13 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion android_compile_sdk_version
+    buildToolsVersion android_build_tools_version
 
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion android_min_sdk_version
+        targetSdkVersion android_target_sdk_version
         versionCode 1
         versionName "1.0"
 
@@ -29,8 +29,8 @@ android {
 dependencies {
     implementation project(':pnwebrtc')
     implementation project(':iot-api')
-    implementation 'com.android.support:appcompat-v7:26.0.1'
-    implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: '2.0.0'
+    implementation group: 'com.android.support', name: 'appcompat-v7', version: android_support_version
+    implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: rxrelay_version
     implementation 'io.pristine:libjingle:9694@aar'
     implementation 'com.pubnub:pubnub-android:3.7.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
