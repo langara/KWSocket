@@ -8,14 +8,6 @@ import pl.elpassion.loggers.AndroidLogger
 
 class RobotApp : Application() {
 
-    private val logger = AndroidLogger("IoT Robot")
-
-    override fun onCreate() {
-        super.onCreate()
-        DI.provideApplication = { this }
-        DI.provideLogger = { logger }
-    }
-
     companion object {
         init {
 //            WebSocketImpl.DEBUG = true

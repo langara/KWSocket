@@ -8,7 +8,7 @@ import pl.elpassion.loggers.AndroidLogger
 
 class CommanderApp : Application() {
 
-    private val logger = AndroidLogger("IoT Commander")
+    private val logger = AndroidLogger("Commander")
 
     override fun onCreate() {
         super.onCreate()

@@ -26,7 +26,7 @@ class CommanderActivity : RxAppCompatActivity() {
 
     private val commander by lazy { DI.provideCommander() }
 
-    private val logger by lazy { TextViewLogger(commanderLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "IoT Commander") }
+    private val logger by lazy { TextViewLogger(commanderLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "Commander") }
 
     private val speechRecognizer by lazy { SpeechRecognizer() }
 
@@ -45,10 +45,6 @@ class CommanderActivity : RxAppCompatActivity() {
         listenButton.setOnClickListener {
             voiceControl = true
             speechRecognizer.start(SPEECH_REQUEST_CODE)
-        }
-        connectToAlienButton.setOnClickListener {
-            serverAddress.setText("ALIEN")
-            connectButton.performClick()
         }
         connectToRobotButton.setOnClickListener {
             serverAddress.setText("ws://192.168.1.38:9999")

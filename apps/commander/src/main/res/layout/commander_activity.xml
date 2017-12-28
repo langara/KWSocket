@@ -34,12 +34,6 @@
                 android:text="@string/connect" />
 
             <Button
-                android:id="@+id/connectToAlienButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/connect_to_alien" />
-
-            <Button
                 android:id="@+id/connectToRobotButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
