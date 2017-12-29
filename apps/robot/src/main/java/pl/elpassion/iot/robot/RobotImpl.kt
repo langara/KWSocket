@@ -22,6 +22,7 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     override fun start() {
         disposable = server.events.subscribe { onEvent(it) }
         server.start()
+        logger.log("Waiting for commands on port 9999")
     }
 
     private fun onEvent(event: Event) {
@@ -36,14 +37,14 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
 
     private fun onMessage(message: String) {
         when (message) {
-            "move forward" -> say("pretending to move forward mmmmmmmmmmmm $randomReadyConfirmation")
-            "move backward" -> say("pretending to move backward wrwrwrwrwrwrwrwrwr $randomReadyConfirmation")
-            "move left" -> say("pretending to move left $randomReadyConfirmation")
-            "move right" -> say("pretending to move right $randomReadyConfirmation")
-            "look up" -> say("pretending to look up $randomReadyConfirmation")
-            "look down" -> say("pretending to look down $randomReadyConfirmation")
-            "look ahead" -> say("pretending to look ahead $randomReadyConfirmation")
-            "stop" -> say("pretending to stop $randomReadyConfirmation")
+            "move forward" -> say("pretending to move forward. mmmmmmmmm. $randomReadyConfirmation!")
+            "move backward" -> say("pretending to move backward. rrrrrrrrr. $randomReadyConfirmation!")
+            "move left" -> say("pretending to move left. $randomReadyConfirmation!")
+            "move right" -> say("pretending to move right. $randomReadyConfirmation!")
+            "look up" -> say("pretending to look up. $randomReadyConfirmation!")
+            "look down" -> say("pretending to look down. $randomReadyConfirmation!")
+            "look ahead" -> say("pretending to look ahead. $randomReadyConfirmation!")
+            "stop" -> say("pretending to stop. $randomReadyConfirmation!")
             else -> when {
                 message.startsWith(SAY_COMMAND_PREFIX) -> say(message.substring(SAY_COMMAND_PREFIX.length))
                 message.startsWith(VOLUME_COMMAND_PREFIX) -> changeVolume(message.substring(VOLUME_COMMAND_PREFIX.length).toInt())

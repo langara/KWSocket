@@ -25,6 +25,7 @@
                 android:ems="10"
                 android:hint="server address"
                 android:inputType="textPersonName"
+                android:text="ws://10.0.2.2:9999"
                 />
 
             <Button
@@ -33,11 +34,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/connect" />
 
-            <Button
-                android:id="@+id/connectToRobotButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/connect_to_robot" />
             <Button
                 android:id="@+id/disconnectButton"
                 android:layout_width="wrap_content"

@@ -8,14 +8,6 @@ import pl.elpassion.loggers.AndroidLogger
 
 class CommanderApp : Application() {
 
-    private val logger = AndroidLogger("Commander")
-
-    override fun onCreate() {
-        super.onCreate()
-        DI.provideApplication = { this }
-        DI.provideLogger = { logger }
-    }
-
     companion object {
         init {
 //            WebSocketImpl.DEBUG = true

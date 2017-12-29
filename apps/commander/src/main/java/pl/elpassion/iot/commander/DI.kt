@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import pl.elpassion.iot.api.Client
 import pl.elpassion.iot.api.WSClient
+import pl.elpassion.loggers.Logger
 import pl.elpassion.loggers.SimpleLogger
 
 object DI {
@@ -14,7 +15,7 @@ object DI {
 
     var provideCommander: () -> Commander = { commander }
 
-    var provideLogger: () -> pl.elpassion.loggers.Logger = { logger }
+    var provideLogger: () -> Logger = { logger }
 
     var provideApplication: () -> Application = { throw UnsupportedOperationException("Application provider not initialized") }
 

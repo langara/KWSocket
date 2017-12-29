@@ -26,7 +26,7 @@ class CommanderActivity : RxAppCompatActivity() {
 
     private val commander by lazy { DI.provideCommander() }
 
-    private val logger by lazy { TextViewLogger(commanderLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "Commander") }
+    private val logger by lazy { TextViewLogger(commanderLogsTextView.apply { movementMethod = ScrollingMovementMethod() }, "KWS") }
 
     private val speechRecognizer by lazy { SpeechRecognizer() }
 
@@ -37,6 +37,7 @@ class CommanderActivity : RxAppCompatActivity() {
         setContentView(R.layout.commander_activity)
         DI.provideLogger = { logger }
         DI.provideActivity = { this }
+        DI.provideApplication = { application }
         initCommander()
         mergeActions()
                 .sample(200, TimeUnit.MILLISECONDS)
@@ -45,10 +46,6 @@ class CommanderActivity : RxAppCompatActivity() {
         listenButton.setOnClickListener {
             voiceControl = true
             speechRecognizer.start(SPEECH_REQUEST_CODE)
-        }
-        connectToRobotButton.setOnClickListener {
-            serverAddress.setText("ws://192.168.1.38:9999")
-            connectButton.performClick()
         }
         disconnectButton.setOnClickListener {
             commander.actions.accept(Disconnect)
