@@ -1,1 +1,4 @@
-# IoT Guard [![Waffle Board](https://img.shields.io/badge/waffle-board-blue.svg)](https://waffle.io/elpassion/iot-guard)
+# KWSocket
+
+Simple Web Socket library in Kotlin and RxJava2.
+With cli and android example apps.
