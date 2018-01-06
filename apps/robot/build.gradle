@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion android_compile_sdk_version
-    buildToolsVersion android_build_tools_version
+    compileSdkVersion vers.androidCompileSdk
+    buildToolsVersion vers.androidBuildTools
 
     defaultConfig {
         applicationId "pl.elpassion.iot.robot"
-        minSdkVersion android_min_sdk_version
-        targetSdkVersion android_target_sdk_version
+        minSdkVersion vers.androidMinSdk
+        targetSdkVersion vers.androidTargetSdk
         versionCode 1
         versionName "1.0"
 
@@ -25,14 +25,14 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation project(':loggers')
     implementation project(':iot-api')
-    implementation group: 'com.android.support', name: 'appcompat-v7', version: android_support_version
-    implementation group: 'com.jakewharton.rxbinding2', name: 'rxbinding-kotlin', version: rxbinding_version
-    implementation group: 'com.jakewharton.rxrelay2', name: 'rxrelay', version: rxrelay_version
-    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-components', version: rxlifecycle_version
-    implementation group: 'com.trello.rxlifecycle2', name: 'rxlifecycle-kotlin', version: rxlifecycle_version
-    testImplementation "junit:junit:$junit_version"
-    testImplementation group: 'com.nhaarman.mockitokotlin2', name: 'mockito-kotlin', version: mockito_kotlin_version
+    implementation deps.kotlinStdlib
+    implementation deps.androidSupportAppcompat
+    implementation deps.rxbindingKotlin
+    implementation deps.rxrelay
+    implementation deps.rxlifecycleComponents
+    implementation deps.rxlifecycleKotlin
+    testImplementation deps.junit
+    testImplementation deps.mockitoKotlin
 }

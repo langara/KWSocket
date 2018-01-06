@@ -1,1 +1,1 @@
-include ':apps:commander', ':apps:robot', ':iot-api', ':loggers'
+include ':apps:commander', ':apps:robot', ':iot-api', ':loggers', ':apps:miniserver'
