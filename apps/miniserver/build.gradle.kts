@@ -2,6 +2,7 @@ import java.net.URI
 
 plugins {
     application
+    kotlin("jvm")
 }
 
 application {
@@ -15,5 +16,5 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib", "1.2.10"))
+    implementation(kotlin("stdlib"))
 }

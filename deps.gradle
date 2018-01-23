@@ -3,7 +3,7 @@ private static Map<String, String> dep(String group, String name, String version
 }
 
 ext.vers = [
-        kotlin             : '1.2.10',
+        kotlin             : '1.2.20',
         androidGradlePlugin: '3.0.1',
         androidCompileSdk  : 27,
         androidMinSdk      : 21,
