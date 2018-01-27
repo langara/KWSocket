@@ -1,1 +1,1 @@
-include ':kwsocket', ':loggers', ':apps:miniserver', ':apps:commander', ':apps:robot'
+include ':kwsocket', ':loggers', ':apps:miniserver', ':apps:miniclient', ':apps:commander', ':apps:robot'

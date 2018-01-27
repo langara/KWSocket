@@ -11,7 +11,7 @@ plugins {
 }
 
 application {
-    mainClassName = "pl.mareklangiewicz.kws.miniserver.MainKt"
+    mainClassName = "pl.mareklangiewicz.kws.miniclient.MainKt"
 }
 
 repositories {
