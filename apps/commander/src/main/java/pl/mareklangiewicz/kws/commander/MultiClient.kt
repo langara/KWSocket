@@ -13,11 +13,11 @@ class MultiClient(private val webRtcClient: Client, private val wsClient: Client
     override val connections: List<Connection>
         get() = activeClient?.connections ?: emptyList()
 
-    override val events: Observable<Event>
-        get() = activeClient?.events ?: Observable.never()
+    override val eventS: Observable<Event>
+        get() = activeClient?.eventS ?: Observable.never()
 
-    override fun disconnect() {
-        activeClient?.disconnect()
+    override fun close() {
+        activeClient?.close()
         activeClient = null
     }
 

@@ -14,8 +14,28 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.commander_activity.*
-import pl.mareklangiewicz.kws.commander.CommanderAction.*
+import kotlinx.android.synthetic.main.commander_activity.backwardButton
+import kotlinx.android.synthetic.main.commander_activity.commanderLogsTextView
+import kotlinx.android.synthetic.main.commander_activity.connectButton
+import kotlinx.android.synthetic.main.commander_activity.disconnectButton
+import kotlinx.android.synthetic.main.commander_activity.forwardButton
+import kotlinx.android.synthetic.main.commander_activity.leftButton
+import kotlinx.android.synthetic.main.commander_activity.listenButton
+import kotlinx.android.synthetic.main.commander_activity.rightButton
+import kotlinx.android.synthetic.main.commander_activity.serverAddress
+import kotlinx.android.synthetic.main.commander_activity.stopButton
+import kotlinx.android.synthetic.main.commander_activity.touchpad
+import kotlinx.android.synthetic.main.commander_activity.volumeMinus
+import kotlinx.android.synthetic.main.commander_activity.volumePlus
+import pl.mareklangiewicz.kws.commander.CommanderAction.ChangeVolume
+import pl.mareklangiewicz.kws.commander.CommanderAction.Connect
+import pl.mareklangiewicz.kws.commander.CommanderAction.Disconnect
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveBackward
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveForward
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveLeft
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveRight
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveWheels
+import pl.mareklangiewicz.kws.commander.CommanderAction.Stop
 import pl.mareklangiewicz.kws.loggers.TextViewLogger
 import pl.mareklangiewicz.kws.loggers.logWifiDetails
 import java.util.concurrent.TimeUnit
@@ -42,13 +62,13 @@ class CommanderActivity : RxAppCompatActivity() {
         mergeActions()
                 .sample(200, TimeUnit.MILLISECONDS)
                 .bindToLifecycle(this)
-                .subscribe(commander.actions)
+                .subscribe(commander.actionS)
         listenButton.setOnClickListener {
             voiceControl = true
             speechRecognizer.start(SPEECH_REQUEST_CODE)
         }
         disconnectButton.setOnClickListener {
-            commander.actions.accept(Disconnect)
+            commander.actionS.accept(Disconnect)
         }
         logger.logWifiDetails(this)
         if (intent?.extras?.containsKey("KEY_HANDOVER_THROUGH_VELVET") == true) {
@@ -58,7 +78,7 @@ class CommanderActivity : RxAppCompatActivity() {
     }
 
     override fun onDestroy() {
-        commander.actions.accept(Disconnect)
+        commander.actionS.accept(Disconnect)
         super.onDestroy()
     }
 
@@ -77,7 +97,7 @@ class CommanderActivity : RxAppCompatActivity() {
     ))
 
     private fun initCommander() {
-        commander.states
+        commander.stateS
                 .bindToLifecycle(this)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { if (!isFinishing) showState(it) }
@@ -113,7 +133,7 @@ class CommanderActivity : RxAppCompatActivity() {
         fun handleSpeechRecognizerActivityResult(resultCode: Int, data: Intent?) = when (resultCode) {
             Activity.RESULT_OK -> {
                 val speech = data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                commander.actions.accept(CommanderAction.Recognize(speech))
+                commander.actionS.accept(CommanderAction.Recognize(speech))
                 if (voiceControl) {
                     listenButton.performClick()
                 }

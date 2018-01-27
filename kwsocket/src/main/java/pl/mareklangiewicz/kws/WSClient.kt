@@ -11,7 +11,7 @@ class WSClient : Client {
 
     private val eventsRelay = PublishRelay.create<Event>()
 
-    override val events: Observable<Event> = eventsRelay.hide()
+    override val eventS: Observable<Event> = eventsRelay.hide()
 
     private var client: WebSocketClient? = null
 
@@ -19,17 +19,17 @@ class WSClient : Client {
         get() = client?.connection?.let { listOf(WSConnection(it)) } ?: emptyList()
 
     override fun connect(address: String) {
-        disconnect()
+        close()
         client = WSClient(address).apply { connect() }
     }
 
-    override fun disconnect() {
+    override fun close() {
         client?.closeBlocking()
         client = null
     }
 
     private inner class WSClient(serverURI: String) : WebSocketClient(URI(serverURI)) {
-        override fun onOpen(handshakedata: ServerHandshake?) = eventsRelay.accept(Open())
+        override fun onOpen(handshake: ServerHandshake?) = eventsRelay.accept(Open())
         override fun onClose(code: Int, reason: String?, remote: Boolean) = eventsRelay.accept(Close(code))
         override fun onMessage(message: String) = eventsRelay.accept(Message(message))
         override fun onError(exception: Exception) = eventsRelay.accept(Error(exception))

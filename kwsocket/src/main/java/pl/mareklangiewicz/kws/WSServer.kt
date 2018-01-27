@@ -13,7 +13,7 @@ class WSServer(private val port: Int) : Server {
 
     private val eventsRelay = PublishRelay.create<Event>()
 
-    override val events: Observable<Event> = eventsRelay.hide()
+    override val eventS: Observable<Event> = eventsRelay.hide()
 
     private var server: WebSocketServerImpl? = null
 
@@ -21,11 +21,11 @@ class WSServer(private val port: Int) : Server {
         get() = server?.connections()?.map { WSConnection(it) } ?: emptyList()
 
     override fun start() {
-        disconnect()
+        close()
         server = WebSocketServerImpl(port).apply { start() }
     }
 
-    override fun disconnect() {
+    override fun close() {
         server?.stop()
         server = null
     }

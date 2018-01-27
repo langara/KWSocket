@@ -3,9 +3,8 @@ package pl.mareklangiewicz.kws
 import io.reactivex.Observable
 import java.lang.Exception
 
-interface Connection {
+interface Connection : AutoCloseable {
     fun send(message: String)
-    fun disconnect()
 }
 
 sealed class Event(open val source: Connection? = null)
@@ -20,13 +19,12 @@ data class Error(val exception: Exception, override val source: Connection? = nu
 
 object Start : Event()
 
-interface Endpoint {
+interface Endpoint : AutoCloseable {
     val connections: List<Connection> // client will have at most one. server can have many
-    val events: Observable<Event>
-    fun disconnect()
+    val eventS: Observable<Event>
 }
 
-val Endpoint.messages: Observable<String> get() = events.ofType(Message::class.java).map(Message::message)
+val Endpoint.messageS: Observable<String> get() = eventS.ofType(Message::class.java).map(Message::message)
 
 fun Endpoint.send(message: String) = connections.forEach { it.send(message) }
 

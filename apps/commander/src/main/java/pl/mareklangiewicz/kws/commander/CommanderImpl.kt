@@ -27,30 +27,30 @@ import pl.mareklangiewicz.kws.send
 
 class CommanderImpl(private val client: Client, private val logger: Logger) : Commander {
 
-    override val states = BehaviorRelay.createDefault<CommanderState>(Disconnected)
-    override val actions = PublishRelay.create<CommanderAction>()
+    override val stateS: BehaviorRelay<CommanderState> = BehaviorRelay.createDefault<CommanderState>(Disconnected)
+    override val actionS: PublishRelay<CommanderAction> = PublishRelay.create<CommanderAction>()
 
     init {
-        client.events.subscribe { onEvent(it) }
-        actions.subscribe(this::call)
+        client.eventS.subscribe(this::onEvent)
+        actionS.subscribe(this::call)
     }
 
     private fun call(action: CommanderAction) {
         logger.log("perform($action)")
         when (action) {
             is Connect -> client.connect(action.serverAddress)
-            is Disconnect -> client.disconnect()
+            Disconnect -> client.close()
             is Recognize -> recognize(action.speech)
-            is MoveForward -> client.send("move forward")
-            is MoveBackward -> client.send("move backward")
-            is MoveLeft -> client.send("move left")
-            is MoveRight -> client.send("move right")
+            MoveForward -> client.send("move forward")
+            MoveBackward -> client.send("move backward")
+            MoveLeft -> client.send("move left")
+            MoveRight -> client.send("move right")
             is MoveWheels -> client.send("move wheels ${action.left} ${action.right}")
-            is Stop -> client.send("stop")
+            Stop -> client.send("stop")
             is Say -> client.send("say ${action.sentence}")
-            is LookUp -> client.send("look up")
-            is LookDown -> client.send("look down")
-            is LookAhead -> client.send("look ahead")
+            LookUp -> client.send("look up")
+            LookDown -> client.send("look down")
+            LookAhead -> client.send("look ahead")
             is ChangeVolume -> client.send("volume ${action.delta}")
         }
     }
@@ -58,8 +58,8 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
     private fun onEvent(event: Event) {
         logger.log("onEvent($event)")
         when (event) {
-            is Open -> states.accept(Connected)
-            is Close -> states.accept(Disconnected)
+            is Open -> stateS.accept(Connected)
+            is Close -> stateS.accept(Disconnected)
         }
     }
 
@@ -75,7 +75,7 @@ class CommanderImpl(private val client: Client, private val logger: Logger) : Co
                 if (command.startsWith("say ")) Say(command.substring(4)) else null
             }
         }
-        action?.let { actions.accept(it) } ?: logger.log("I don't understand: $speech")
+        action?.let { actionS.accept(it) } ?: logger.log("I don't understand: $speech")
     }
 
     private fun List<String>.matchesCommand(vararg commands: String) = any { recognized ->

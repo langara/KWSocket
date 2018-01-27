@@ -20,7 +20,7 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     private var disposable: Disposable? = null
 
     override fun start() {
-        disposable = server.events.subscribe { onEvent(it) }
+        disposable = server.eventS.subscribe { onEvent(it) }
         server.start()
         logger.log("Waiting for commands on port 9999")
     }
@@ -54,7 +54,7 @@ class RobotImpl(private val server: Server, private val babbler: Babbler, privat
     }
 
     override fun turnOff() {
-        server.disconnect()
+        server.close()
         disposable?.dispose()
     }
 
