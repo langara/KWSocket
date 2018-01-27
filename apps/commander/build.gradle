@@ -8,7 +8,7 @@ android {
 
 
     defaultConfig {
-        applicationId "pl.elpassion.iot.commander"
+        applicationId "pl.mareklangiewicz.kws.commander"
         minSdkVersion vers.androidMinSdk
         targetSdkVersion vers.androidTargetSdk
         versionCode 1
@@ -27,7 +27,7 @@ android {
 
 dependencies {
     implementation project(':loggers')
-    implementation project(':iot-api')
+    implementation project(':kwsocket')
     implementation deps.kotlinStdlib
     implementation deps.rxbindingKotlin
     implementation deps.rxrelay
