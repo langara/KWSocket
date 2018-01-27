@@ -18,8 +18,6 @@ data class Message(val message: String, override val source: Connection? = null)
 
 data class Error(val exception: Exception, override val source: Connection? = null) : Event(source)
 
-data class DebugMessage(val message: String) : Event()
-
 object Start : Event()
 
 interface Endpoint {
@@ -28,7 +26,7 @@ interface Endpoint {
     fun disconnect()
 }
 
-val Endpoint.messages: Observable<String> get() = events.ofType(Message::class.java).map { it.message }
+val Endpoint.messages: Observable<String> get() = events.ofType(Message::class.java).map(Message::message)
 
 fun Endpoint.send(message: String) = connections.forEach { it.send(message) }
 
