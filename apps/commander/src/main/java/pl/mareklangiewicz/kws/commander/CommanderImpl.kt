@@ -2,11 +2,28 @@ package pl.mareklangiewicz.kws.commander
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
-import pl.mareklangiewicz.kws.api.*
-import pl.mareklangiewicz.kws.commander.CommanderAction.*
+import pl.mareklangiewicz.kws.Client
+import pl.mareklangiewicz.kws.Close
+import pl.mareklangiewicz.kws.Event
+import pl.mareklangiewicz.kws.Open
+import pl.mareklangiewicz.kws.commander.CommanderAction.ChangeVolume
+import pl.mareklangiewicz.kws.commander.CommanderAction.Connect
+import pl.mareklangiewicz.kws.commander.CommanderAction.Disconnect
+import pl.mareklangiewicz.kws.commander.CommanderAction.LookAhead
+import pl.mareklangiewicz.kws.commander.CommanderAction.LookDown
+import pl.mareklangiewicz.kws.commander.CommanderAction.LookUp
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveBackward
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveForward
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveLeft
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveRight
+import pl.mareklangiewicz.kws.commander.CommanderAction.MoveWheels
+import pl.mareklangiewicz.kws.commander.CommanderAction.Recognize
+import pl.mareklangiewicz.kws.commander.CommanderAction.Say
+import pl.mareklangiewicz.kws.commander.CommanderAction.Stop
 import pl.mareklangiewicz.kws.commander.CommanderState.Connected
 import pl.mareklangiewicz.kws.commander.CommanderState.Disconnected
 import pl.mareklangiewicz.kws.loggers.Logger
+import pl.mareklangiewicz.kws.send
 
 class CommanderImpl(private val client: Client, private val logger: Logger) : Commander {
 

@@ -2,8 +2,8 @@ package pl.mareklangiewicz.kws.commander
 
 import android.app.Activity
 import android.app.Application
-import pl.mareklangiewicz.kws.api.Client
-import pl.mareklangiewicz.kws.api.WSClient
+import pl.mareklangiewicz.kws.Client
+import pl.mareklangiewicz.kws.WSClient
 import pl.mareklangiewicz.kws.loggers.Logger
 import pl.mareklangiewicz.kws.loggers.SimpleLogger
 

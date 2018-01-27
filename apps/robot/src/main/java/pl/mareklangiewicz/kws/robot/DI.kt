@@ -1,8 +1,8 @@
 package pl.mareklangiewicz.kws.robot
 
 import android.app.Application
-import pl.mareklangiewicz.kws.api.Server
-import pl.mareklangiewicz.kws.api.WSServer
+import pl.mareklangiewicz.kws.Server
+import pl.mareklangiewicz.kws.WSServer
 import pl.mareklangiewicz.kws.loggers.Logger
 import pl.mareklangiewicz.kws.loggers.SimpleLogger
 import java.lang.UnsupportedOperationException

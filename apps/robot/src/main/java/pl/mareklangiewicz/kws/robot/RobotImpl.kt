@@ -4,11 +4,11 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.AudioManager.STREAM_MUSIC
 import io.reactivex.disposables.Disposable
-import pl.mareklangiewicz.kws.api.Close
-import pl.mareklangiewicz.kws.api.Event
-import pl.mareklangiewicz.kws.api.Message
-import pl.mareklangiewicz.kws.api.Open
-import pl.mareklangiewicz.kws.api.Server
+import pl.mareklangiewicz.kws.Close
+import pl.mareklangiewicz.kws.Event
+import pl.mareklangiewicz.kws.Message
+import pl.mareklangiewicz.kws.Open
+import pl.mareklangiewicz.kws.Server
 import pl.mareklangiewicz.kws.loggers.Logger
 
 class RobotImpl(private val server: Server, private val babbler: Babbler, private val context: Context, private val logger: Logger) : Robot {

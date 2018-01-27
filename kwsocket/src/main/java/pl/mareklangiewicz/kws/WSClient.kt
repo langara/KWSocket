@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.kws.api
+package pl.mareklangiewicz.kws
 
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Observable

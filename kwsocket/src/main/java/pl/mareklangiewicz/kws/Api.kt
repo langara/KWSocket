@@ -1,4 +1,4 @@
-package pl.mareklangiewicz.kws.api
+package pl.mareklangiewicz.kws
 
 import io.reactivex.Observable
 import java.lang.Exception

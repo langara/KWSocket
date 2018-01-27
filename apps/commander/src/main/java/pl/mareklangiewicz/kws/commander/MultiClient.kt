@@ -1,9 +1,9 @@
 package pl.mareklangiewicz.kws.commander
 
 import io.reactivex.Observable
-import pl.mareklangiewicz.kws.api.Client
-import pl.mareklangiewicz.kws.api.Connection
-import pl.mareklangiewicz.kws.api.Event
+import pl.mareklangiewicz.kws.Client
+import pl.mareklangiewicz.kws.Connection
+import pl.mareklangiewicz.kws.Event
 
 
 class MultiClient(private val webRtcClient: Client, private val wsClient: Client) : Client {

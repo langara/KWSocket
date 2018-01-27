@@ -10,11 +10,11 @@ import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import pl.mareklangiewicz.kws.api.Client
-import pl.mareklangiewicz.kws.api.Close
-import pl.mareklangiewicz.kws.api.Connection
-import pl.mareklangiewicz.kws.api.Event
-import pl.mareklangiewicz.kws.api.Open
+import pl.mareklangiewicz.kws.Client
+import pl.mareklangiewicz.kws.Close
+import pl.mareklangiewicz.kws.Connection
+import pl.mareklangiewicz.kws.Event
+import pl.mareklangiewicz.kws.Open
 import pl.mareklangiewicz.kws.commander.CommanderAction.Connect
 import pl.mareklangiewicz.kws.commander.CommanderAction.Disconnect
 import pl.mareklangiewicz.kws.commander.CommanderAction.MoveBackward
