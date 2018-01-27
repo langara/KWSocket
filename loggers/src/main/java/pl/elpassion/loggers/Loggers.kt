@@ -1,5 +1,6 @@
 package pl.elpassion.loggers
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
@@ -35,6 +36,7 @@ class TextViewLogger(private val textView: TextView, private val tag: String) : 
     }
 }
 
+@SuppressLint("MissingPermission")
 fun Logger.logWifiDetails(context: Context) {
   val manager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
   val info = manager.connectionInfo
