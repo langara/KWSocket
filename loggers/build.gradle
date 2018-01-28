@@ -12,9 +12,9 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        testInstrumentationRunner vers.androidTestRunnerClass
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,6 +29,4 @@ dependencies {
     implementation deps.androidSupportAppcompat
     testImplementation deps.junit
 }
-repositories {
-    mavenCentral()
-}
+
