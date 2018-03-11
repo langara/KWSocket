@@ -1,10 +1,5 @@
 import java.net.URI
 
-@Suppress("UNCHECKED_CAST")
-val deps = rootProject.ext.properties["deps"] as Map<String, Map<String, String>>
-// TODO: find in kotlin-dsl repo proper syntax to use ext properties in build.gradle.kts
-
-
 plugins {
     application
     kotlin("jvm")
@@ -21,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation(deps["kotlinStdlib"]!!)
-    implementation(deps["rxkotlin"]!!)
+    implementation(Deps.kotlinStdlib)
+    implementation(Deps.rxkotlin)
     implementation(project(":kwsocket"))
 }

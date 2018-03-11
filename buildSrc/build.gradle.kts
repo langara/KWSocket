@@ -1,1 +1,3 @@
-plugins { `kotlin-dsl` }
+plugins {
+    `kotlin-dsl`
+}

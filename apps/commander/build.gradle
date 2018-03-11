@@ -3,18 +3,18 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion vers.androidCompileSdk
-    buildToolsVersion vers.androidBuildTools
+    compileSdkVersion Vers.androidCompileSdk
+    buildToolsVersion Vers.androidBuildTools
 
 
     defaultConfig {
         applicationId "pl.mareklangiewicz.kws.commander"
-        minSdkVersion vers.androidMinSdk
-        targetSdkVersion vers.androidTargetSdk
+        minSdkVersion Vers.androidMinSdk
+        targetSdkVersion Vers.androidTargetSdk
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner vers.androidTestRunnerClass
+        testInstrumentationRunner Vers.androidTestRunnerClass
 
     }
     buildTypes {
@@ -28,12 +28,12 @@ android {
 dependencies {
     implementation project(':loggers')
     implementation project(':kwsocket')
-    implementation deps.kotlinStdlib
-    implementation deps.rxbindingKotlin
-    implementation deps.rxrelay
-    implementation deps.rxlifecycleComponents
-    implementation deps.rxlifecycleKotlin
-    implementation deps.androidSupportAppcompat
-    testImplementation deps.junit
-    testImplementation deps.mockitoKotlin
+    implementation Deps.kotlinStdlib
+    implementation Deps.rxbindingKotlin
+    implementation Deps.rxrelay
+    implementation Deps.rxlifecycleComponents
+    implementation Deps.rxlifecycleKotlin
+    implementation Deps.androidSupportAppcompat
+    testImplementation Deps.junit
+    testImplementation Deps.mockitoKotlin
 }

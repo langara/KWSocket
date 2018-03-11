@@ -1,8 +1,8 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    implementation deps.kotlinStdlib
-    implementation deps.javaWebsocket
-    implementation deps.rxrelay
-    testImplementation deps.junit
+    implementation Deps.kotlinStdlib
+    implementation Deps.javaWebsocket
+    implementation Deps.rxrelay
+    testImplementation Deps.junit
 }
