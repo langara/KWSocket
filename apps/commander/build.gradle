@@ -4,8 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion Vers.androidCompileSdk
-    buildToolsVersion Vers.androidBuildTools
-
 
     defaultConfig {
         applicationId "pl.mareklangiewicz.kws.commander"
